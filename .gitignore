@@ -1,0 +1,55 @@
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Packages #
+############
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Cache and logs #
+##################
+Application/Runtime/Cache/
+Application/Runtime/Logs/
+Application/Runtime/Temp/
+*.log
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+~$*
+.editorconfig
+
+# NodeJS Packages #
+###################
+node_modules
+
+# Bower Packages #
+###################
+bower
+bower_components
+
+
+# Test and Logs #
+###################
+npm-debug.log
+selenium-debug.log
+test/unit/coverage
+test/e2e/reports
