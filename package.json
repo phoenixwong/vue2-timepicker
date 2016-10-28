@@ -69,5 +69,6 @@
   "bugs": {
     "url": "https://github.com/phoenixwong/vue2-timepicker/issues"
   },
-  "homepage": "https://github.com/phoenixwong/vue2-timepicker#readme"
+  "homepage": "https://github.com/phoenixwong/vue2-timepicker#readme",
+  "main": "index.js"
 }
