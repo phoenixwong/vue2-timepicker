@@ -32,7 +32,7 @@ var webpackConfig = merge(baseWebpackConfig, {
   devtool: config.build.productionSourceMap ? '#source-map' : false,
   output: {
     path: process.env.NODE_ENV === 'demo' ? config.demo.assetsRoot : config.build.assetsRoot,
-    publicPath: process.env.NODE_ENV === 'demo' ? '/vue-timepicker/' : '/',
+    publicPath: process.env.NODE_ENV === 'demo' ? '/vue2-timepicker/' : '/',
     filename: utils.assetsPath('js/[name].[chunkhash].js'),
     chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
   },
