@@ -314,11 +314,7 @@ export default {
     updateTimeValue (fullValues) {
       this.muteWatch = true
 
-      console.log('+ + + fullValues', JSON.stringify(fullValues))
-
       const self = this
-
-      console.log('this.value', JSON.stringify(this.value), new Date().getTime())
 
       const baseTimeValue = this.value || {}
       let timeValue = {}
