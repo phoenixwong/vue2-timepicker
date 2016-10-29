@@ -2,7 +2,7 @@
   "name": "vue2-timepicker",
   "description": "A dropdown time picker (hour|minute|second) for Vue 2.x, with flexible time format support",
   "main": "index.js",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "authors": [
     "Phoenix Wong <phoenixyfwong@gmail.com>"
   ],

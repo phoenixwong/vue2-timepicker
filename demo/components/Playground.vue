@@ -116,7 +116,7 @@ export default {
       handler: 'updatePlaygroundData'
     },
 
-    'needApm': function (isNeeded) {
+    needApm (isNeeded) {
       if (isNeeded) {
         if (!this.selected.apm) {
           this.type.apm = 'A'

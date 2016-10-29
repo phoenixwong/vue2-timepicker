@@ -12,6 +12,20 @@ You can see the **Vue2 Timepicker** in action in the [Demo Page](https://phoenix
 
 [Vue.js](http://vuejs.org/) v2.0+
 
+## Installation
+
+Through NPM (recommended)
+
+```bash
+npm install vue2-timepicker --save
+```
+
+Bower
+
+```bash
+bower install vue2-timepicker --save
+```
+
 ## Get Started
 
 **Step 1:** Import VueTimepicker
