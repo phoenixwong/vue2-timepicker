@@ -58,10 +58,10 @@ export default {
 
   watch: {
     'format': 'renderFormat',
-    'minuteInterval': function (newInteval) {
+    minuteInterval (newInteval) {
       this.renderList('minute', newInteval)
     },
-    'secondInterval': function (newInteval) {
+    secondInterval (newInteval) {
       this.renderList('second', newInteval)
     },
     'value': 'readValues',
@@ -316,7 +316,7 @@ export default {
 
       const self = this
 
-      const baseTimeValue = this.value || {}
+      const baseTimeValue = JSON.parse(JSON.stringify(this.value || {}))
       let timeValue = {}
 
       Object.keys(baseTimeValue).forEach((key) => {
