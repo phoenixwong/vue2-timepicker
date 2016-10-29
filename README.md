@@ -4,6 +4,10 @@ A dropdown time picker (hour|minute|second) for **Vue 2.x**, with flexible time 
 
 > Looking for the Vue 1.x version? Please check the [vue-timepicker](https://github.com/phoenixwong/vue-timepicker) *(Vue 1.x supported)*
 
+## Migration
+
+Migrating from the Vue 1.x vertion? Please check [MIGRATION.md](https://github.com/phoenixwong/vue2-timepicker/blob/master/MIGRATION.md) for basic guidelines.
+
 ## Demo
 
 You can see the **Vue2 Timepicker** in action in the [Demo Page](https://phoenixwong.github.io/vue2-timepicker/)
@@ -243,6 +247,10 @@ npm run dev
 ```
 
 For detailed explanation on how things work, checkout the [webpack guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+
+## Change Log
+
+Detail changes for each release are documented in [CHANGELOG.md](https://github.com/phoenixwong/vue2-timepicker/blob/master/CHANGELOG.md)
 
 ## License
 
