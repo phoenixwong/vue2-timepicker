@@ -8,13 +8,17 @@ A dropdown time picker (hour|minute|second) for **Vue 2.x**, with flexible time 
 
 You can see the **Vue2 Timepicker** in action in the [Demo Page](https://phoenixwong.github.io/vue2-timepicker/)
 
+## Migration
+
+Migrating from the Vue 1.x version? Please check [MIGRATION.md](https://github.com/phoenixwong/vue2-timepicker/blob/master/MIGRATION.md) for basic guidelines.
+
 ## Dependencies
 
 [Vue.js](http://vuejs.org/) v2.0+
 
 ## Installation
 
-Through NPM (recommended)
+Through NPM **(Recommended)**
 
 ```bash
 npm install vue2-timepicker --save
@@ -30,6 +34,8 @@ bower install vue2-timepicker --save
 
 **Step 1:** Import VueTimepicker
 
+**A**: Include the single file component **(Recommended)**
+
 ```javascript
 // import
 import VueTimepicker from 'vue2-timepicker'
@@ -37,6 +43,25 @@ import VueTimepicker from 'vue2-timepicker'
 // Or, require
 var VueTimepicker = require('vue2-timepicker')
 
+```
+
+or, **B**: Include distribution files with `<script>` and `<style>`
+
+```html
+<script src="yourpath/vue/dist/vue.min.js"></script>
+<script src="yourpath/vue2-timepicker/dist/vue2-timepicker.min.js"></script>
+
+<link href="yourpath/vue2-timepicker/dist/vue2-timepicker.min.css" rel="stylesheet"></link>
+```
+
+**NOTE:** When using the `dist` files, a `Vue.use()` call is needed
+
+```javascript
+// Work with <script> block
+Vue.use(window.VueTimepicker)
+
+// Else
+Vue.use(VueTimepicker)
 ```
 
 **Step 2**: Include VueTimepicker in your component
@@ -143,7 +168,7 @@ var yourComponent = new Vue({
 
 ### Get Time Picker's Current Value
 
-**Method 1:** Read value from `v-model`
+#### **Method 1:** Read value from `v-model`
 
 ```html
 <!-- In the last section, we've set the initial value (yourTimeValue) to "10:05:00" -->
@@ -158,7 +183,7 @@ console.log(this.yourTimeValue)
 // outputs -> {HH: "14", mm: "30", ss: "15"}
 ```
 
-**Method 2:** Add `@change` event handler
+#### **Method 2:** Add `@change` event handler
 
 ```html
 <!-- A: No argument -->
@@ -243,6 +268,10 @@ npm run dev
 ```
 
 For detailed explanation on how things work, checkout the [webpack guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+
+## Change Log
+
+Detail changes for each release are documented in [CHANGELOG.md](https://github.com/phoenixwong/vue2-timepicker/blob/master/CHANGELOG.md)
 
 ## License
 

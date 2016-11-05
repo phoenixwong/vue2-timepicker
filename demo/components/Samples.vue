@@ -1,8 +1,5 @@
 <script>
-// import Vue from 'vue'
 import VueTimepicker from 'src/vue-timepicker.vue'
-
-// const eventHub = new Vue()
 
 export default {
   name: 'Samples',

@@ -20,7 +20,7 @@ However, thanks to the awesome Vue2.0 feature, which now has great support for `
 
 ### No More `vue-timepicker-update` Event
 
-The `$dispatch` event `vue-timepicker-update` been depending on, together with the `events` option, got removed in Vue2 either ([source 1](http://vuejs.org/guide/migration.html#dispatch-and-broadcast-replaced), [source 2](http://vuejs.org/guide/migration.html#events-option-removed)). Please switch to `@change` event handler instead -- check the [Documentation](https://github.com/phoenixwong/vue2-timepicker/#get-time-pickers-current-value) for detail example.
+The `$dispatch` event `vue-timepicker-update` been depending on, together with the `events` option, got removed in Vue2 either ([source 1](http://vuejs.org/guide/migration.html#dispatch-and-broadcast-replaced), [source 2](http://vuejs.org/guide/migration.html#events-option-removed)). Please switch to `@change` event handler instead -- check the [Documentation](https://github.com/phoenixwong/vue2-timepicker#method-2-add-change-event-handler) for detail example.
 
 ## Minor Changes
 
@@ -119,4 +119,4 @@ When the picker is set to "14:30:15" later --
 
 ## Miscellaneous
 
-There will be **no** ES5 support in the 2.x version
+There will be **no** standalone ES5 script in the 2.x version.
