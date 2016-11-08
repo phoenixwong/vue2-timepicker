@@ -14,7 +14,8 @@ export default {
     hideClearButton: {type: Boolean},
     format: {type: String},
     minuteInterval: {type: Number},
-    secondInterval: {type: Number}
+    secondInterval: {type: Number},
+    id: {type: String}
   },
 
   data () {
@@ -53,6 +54,12 @@ export default {
         formatString = formatString.replace(new RegExp(this.apmType, 'g'), this.apm)
       }
       return formatString
+    },
+    showClearBtn () {
+      if ((this.hour && this.hour !== '') || (this.minute && this.minute !== '')) {
+        return true
+      }
+      return false
     }
   },
 
@@ -350,14 +357,6 @@ export default {
       }
     },
 
-    showClearBtn () {
-      if ((this.hour && this.hour !== '') || (this.minute && this.minute !== '')) {
-        return true
-      } else {
-        return false
-      }
-    },
-
     clearTime () {
       this.hour = ''
       this.minute = ''
@@ -374,8 +373,8 @@ export default {
 
 <template>
 <span class="time-picker">
-  <input class="display-time" v-model="displayTime" @click="toggleDropdown" type="text" readonly />
-  <span class="clear-btn" v-if="!hideClearButton" v-show="!showDropdown && showClearBtn()" @click="clearTime">&times;</span>
+  <input class="display-time" :id="id" v-model="displayTime" @click="toggleDropdown" type="text" readonly />
+  <span class="clear-btn" v-if="!hideClearButton" v-show="!showDropdown && showClearBtn" @click="clearTime">&times;</span>
   <div class="time-picker-overlay" v-if="showDropdown" @click="toggleDropdown"></div>
   <div class="dropdown" v-show="showDropdown">
     <div class="select-list">
