@@ -14,7 +14,8 @@ export default {
     hideClearButton: {type: Boolean},
     format: {type: String},
     minuteInterval: {type: Number},
-    secondInterval: {type: Number}
+    secondInterval: {type: Number},
+    id: {type: String}
   },
 
   data () {
@@ -374,7 +375,7 @@ export default {
 
 <template>
 <span class="time-picker">
-  <input class="display-time" v-model="displayTime" @click="toggleDropdown" type="text" readonly />
+  <input class="display-time" v-bind:id="id" v-model="displayTime" @click="toggleDropdown" type="text" readonly />
   <span class="clear-btn" v-if="!hideClearButton" v-show="!showDropdown && showClearBtn()" @click="clearTime">&times;</span>
   <div class="time-picker-overlay" v-if="showDropdown" @click="toggleDropdown"></div>
   <div class="dropdown" v-show="showDropdown">
