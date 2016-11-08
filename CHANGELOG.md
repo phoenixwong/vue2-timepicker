@@ -2,6 +2,18 @@
 
 > The Change Log of Vue2 Timepicker `vue2-timepicker`
 
+## v 0.1.3
+
+### Improvements
+
+Add support to `<label for="...">` (Thanks to @Reached)
+
+```html
+<!-- Sample -->
+<label for="yourID">Your Label Text</label>
+<vue-timepicker id="yourID"></vue-timepicker>
+```
+
 ## v 0.1.2
 
 Release the `dist` files
