@@ -2,6 +2,12 @@
 
 > The Change Log of Vue2 Timepicker `vue2-timepicker`
 
+## v 0.1.4
+
+### Fixes
+
+Added stop propagation `.stop` to click events
+
 ## v 0.1.3
 
 ### Improvements
