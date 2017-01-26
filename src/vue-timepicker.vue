@@ -10,6 +10,7 @@ export default {
   name: 'VueTimepicker',
 
   props: {
+    inputClass: {type: String},
     value: {type: Object},
     hideClearButton: {type: Boolean},
     format: {type: String},
@@ -373,7 +374,7 @@ export default {
 
 <template>
 <span class="time-picker">
-  <input class="display-time" :id="id" v-model="displayTime" @click.stop="toggleDropdown" type="text" readonly />
+  <input :class="inputClass" :id="id" v-model="displayTime" @click.stop="toggleDropdown" type="text" readonly />
   <span class="clear-btn" v-if="!hideClearButton" v-show="!showDropdown && showClearBtn" @click.stop="clearTime">&times;</span>
   <div class="time-picker-overlay" v-if="showDropdown" @click.stop="toggleDropdown"></div>
   <div class="dropdown" v-show="showDropdown">
