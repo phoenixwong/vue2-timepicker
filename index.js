@@ -1,1 +1,1 @@
-module.exports = require('./src/vue-timepicker.vue')
+module.exports = require('./dist/prebuild')
