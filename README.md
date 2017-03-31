@@ -103,20 +103,20 @@ var yourComponent = new Vue({
 
 VueTimepicker will recognizes the following tokens in the format string
 
-Section    | Token | Output
----------- | ----- | ---------------
-**AM/PM**  | A     | AM PM
-           | a     | am pm
-**Hour**   | H     | 0 1 ... 22 23
-           | HH    | 00 01 ... 22 23
-           | h     | 1 2 ... 11 12
-           | hh    | 01 02 ... 11 12
-           | k     | 1 2 ... 23 24
-           | kk    | 01 02 ... 23 24
-**Minute** | m     | 0 1 ... 58 59
-           | mm    | 00 01 ... 58 59
-**Second** | s     | 0 1 ... 58 59
-           | ss    | 00 01 ... 58 59
+| Section    | Token | Output          |
+| ---------- | ----- | --------------- |
+| **AM/PM**  | A     | AM PM           |
+|            | a     | am pm           |
+| **Hour**   | H     | 0 1 ... 22 23   |
+|            | HH    | 00 01 ... 22 23 |
+|            | h     | 1 2 ... 11 12   |
+|            | hh    | 01 02 ... 11 12 |
+|            | k     | 1 2 ... 23 24   |
+|            | kk    | 01 02 ... 23 24 |
+| **Minute** | m     | 0 1 ... 58 59   |
+|            | mm    | 00 01 ... 58 59 |
+| **Second** | s     | 0 1 ... 58 59   |
+|            | ss    | 00 01 ... 58 59 |
 
 > If not set, `format` string will be default to "HH:mm"
 
@@ -254,6 +254,7 @@ Prop                  | Type      | Required | Default Value
 **minute-interval**   | _Number_  | no       | _undefined_
 **second-interval**   | _Number_  | no       | _undefined_
 **hide-clear-button** | _Boolean_ | no       | false
+**disabled**          | _Boolean_ | no       | _undefined_
 
 ## Contribution
 
