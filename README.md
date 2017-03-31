@@ -254,6 +254,7 @@ Prop                  | Type      | Required | Default Value
 **minute-interval**   | _Number_  | no       | _undefined_
 **second-interval**   | _Number_  | no       | _undefined_
 **hide-clear-button** | _Boolean_ | no       | false
+**disabled**          | _Boolean_ | no       | _undefined_
 
 ## Contribution
 
