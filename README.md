@@ -255,6 +255,7 @@ Prop                  | Type      | Required | Default Value
 **second-interval**   | _Number_  | no       | _undefined_
 **hide-clear-button** | _Boolean_ | no       | false
 **disabled**          | _Boolean_ | no       | _undefined_
+**disabledValues**    | _Object_  | no       | { hours: [], minute: [], second: [], apm: [] }
 
 ## Contribution
 
