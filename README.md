@@ -141,6 +141,12 @@ Section    | Token | Output
 <vue-timepicker hide-clear-button></vue-timepicker>
 ```
 
+### Add Minimums and Maximums for the Hours
+
+```html
+<vue-timepicker :hourmin="9" :hourmax="17"></vue-timepicker>
+```
+
 ### Bind Value with `v-model`
 
 ```javascript

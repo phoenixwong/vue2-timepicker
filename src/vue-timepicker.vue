@@ -15,7 +15,12 @@ export default {
     format: {type: String},
     minuteInterval: {type: Number},
     secondInterval: {type: Number},
-    id: {type: String}
+    id: {type: String},
+    hourmin: {
+      default: 0,
+      type: Number
+    },
+    hourmax: {type: Number}
   },
 
   data () {
@@ -136,9 +141,9 @@ export default {
     },
 
     renderHoursList () {
-      const hoursCount = (this.hourType === 'h' || this.hourType === 'hh') ? 12 : 24
+      const hoursCount = this.hourmax ? this.hourmax : (this.hourType === 'h' || this.hourType === 'hh') ? 12 : 24
       this.hours = []
-      for (let i = 0; i < hoursCount; i++) {
+      for (let i = this.hourmin; i < hoursCount; i++) {
         this.hours.push(this.formatValue(this.hourType, i))
       }
     },
