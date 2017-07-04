@@ -65,7 +65,6 @@
     "webpack-hot-middleware": "^2.12.2",
     "webpack-merge": "^0.14.1"
   },
-  "author": "Phoenix Wong <phoenixyfwong@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/phoenixwong/vue2-timepicker/issues"
