@@ -23,13 +23,7 @@ Migrating from the Vue 1.x version? Please check [MIGRATION.md](https://github.c
 Through NPM **(Recommended)**
 
 ```bash
-npm install vue2-timepicker --save
-```
-
-Bower
-
-```bash
-bower install vue2-timepicker --save
+npm install vue2-timepicker-extra --save
 ```
 
 ## Get Started
@@ -40,10 +34,10 @@ bower install vue2-timepicker --save
 
 ```javascript
 // import
-import VueTimepicker from 'vue2-timepicker'
+import VueTimepicker from 'vue2-timepicker-extra'
 
 // Or, require
-var VueTimepicker = require('vue2-timepicker')
+var VueTimepicker = require('vue2-timepicker-extra')
 
 ```
 
