@@ -1,5 +1,7 @@
 # Vue2 Time Picker
 
+This package is a fork of [vue-timepicker2](https://github.com/phoenixwong/vue2-timepicker). The package by [Phoenix](https://github.com/phoenixwong) hasn't been updates in the last 8 months, and I've been waiting for her to respond to my upstream request for 12 days. The only difference between this package and the original is that you can set Max-Min hours here; otherwise you can use the source repo.
+
 A dropdown time picker (hour|minute|second) for **Vue 2.x**, with flexible time format support.
 
 > Looking for the Vue 1.x version? Please check the [vue-timepicker](https://github.com/phoenixwong/vue-timepicker) *(Vue 1.x supported)*
