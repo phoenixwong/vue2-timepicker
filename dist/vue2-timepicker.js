@@ -535,7 +535,7 @@ module.exports =
 	        case 'A':
 	          return ['AM', 'PM'];
 	        case 'a':
-	          return ['am', 'om'];
+	          return ['am', 'pm'];
 	        default:
 	          return [];
 	      }
