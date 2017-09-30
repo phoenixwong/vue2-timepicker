@@ -4,6 +4,7 @@
   "description": "A dropdown time picker (hour|minute|second) for Vue 2.x, with flexible time format support",
   "scripts": {
     "dev": "node build/dev-server.js",
+    "build": "node build/build.js",
     "demo": "node build/demo.js",
     "minify": "node build/minify.js",
     "lint": "eslint --ext .js,.vue src"
