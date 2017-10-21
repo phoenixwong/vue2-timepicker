@@ -57,8 +57,6 @@ export default {
   data () {
     return {
       showDropdown: false,
-      muteWatch: false,
-      apm: ''
     }
   },
 
@@ -75,8 +73,8 @@ export default {
       if (this.value[this.secondType] && this.secondType) {
         formatString = formatString.replace(new RegExp(this.secondType, 'g'), this.value[this.secondType])
       }
-      if (this.apm && this.apmType) {
-        formatString = formatString.replace(new RegExp(this.apmType, 'g'), this.apm)
+      if (this.value[this.apmType] && this.apmType) {
+        formatString = formatString.replace(new RegExp(this.apmType, 'g'), this.value[this.apmType])
       }
 
       return formatString
@@ -309,7 +307,7 @@ export default {
           v-for="a in apms"
           v-text="a"
           v-show="disabledValues.apm.indexOf(a) === -1"
-          :class="{active: apm === a}"
+          :class="{active: value[apmType] === a}"
           @click.stop="onApmSelect(a)"></li>
       </ul>
     </div>
