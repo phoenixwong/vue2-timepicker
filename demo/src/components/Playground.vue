@@ -48,8 +48,6 @@ export default {
 
       playgroundData: {},
 
-      playgroundFullValue: {},
-
       muteWatch: false,
 
       scrollTop: 0
@@ -70,38 +68,6 @@ export default {
 
     needApm () {
       return this.type.hour === 'h' || this.type.hour === 'hh'
-    },
-
-    htmlCodeWithVar () {
-      let start = '<vue-timepicker'
-      let end = '\n  v-model="yourTimeValue">\n</vue-timepicker>'
-
-      start += ('\n  format="' + this.formatString + '"')
-
-      if (this.customInterval.minute) {
-        start += ('\n  :minute-interval="' + this.interval.minute + '"')
-      }
-
-      if (this.customInterval.second) {
-        start += ('\n  :second-interval="' + this.interval.second + '"')
-      }
-
-      if (!this.enableClearBtn) {
-        start += ('\n  hide-clear-button')
-      }
-
-      const htmlCode = start + end
-
-      this.refreshHighlightNextTick()
-
-      return htmlCode
-    },
-
-    yourTimeValue () {
-      let code = 'yourTimeValue: {\n'
-      code += this.listTimeValue()
-      code += '\n}'
-      return code
     }
   },
 
@@ -138,6 +104,11 @@ export default {
           this.interval.second = 1
         }
       }
+    },
+
+    playgroundData(newValues) {
+      this.updateRangeValue(newValues)
+      this.refreshHighlightNextTick()
     }
   },
 
@@ -257,12 +228,6 @@ export default {
       this.refreshHighlightNextTick()
       return {paddingTop: (Math.max(initPaddingTop - this.scrollTop, minPaddingTop)) + 'px'}
     },
-
-    changeHandler (eventData) {
-      this.playgroundFullValue = eventData.data
-      this.updateRangeValue(eventData.data)
-      this.refreshHighlightNextTick()
-    }
   },
 
   mounted () {
@@ -385,11 +350,6 @@ export default {
           </label>
         </div>
       </div>
-
-      <div class="codes">
-        <pre data-title="v-model value"><code class="javascript" v-text="yourTimeValue"></code></pre>
-      </div>
-
     </div>
 
   </main>
@@ -399,7 +359,7 @@ export default {
       <b>Format string: </b>
       <span v-text="formatString"></span>
       <p>
-        <vue-timepicker :format="formatString" v-model="playgroundData" :minute-interval="interval.minute" :second-interval="interval.second" :hide-clear-button="!enableClearBtn" @change="changeHandler"></vue-timepicker>
+        <vue-timepicker :format="formatString" v-model="playgroundData" :minute-interval="interval.minute" :second-interval="interval.second" :hide-clear-button="!enableClearBtn" />
       </p>
     </div>
 
@@ -408,7 +368,7 @@ export default {
     </div>
 
     <div id="dispatchedValue" class="codes">
-      <pre data-title="@change event data"><code class="json" v-text="playgroundFullValue"></code></pre>
+      <pre data-title="@input event data"><code class="json" v-text="playgroundData"></code></pre>
     </div>
   </aside>
 
