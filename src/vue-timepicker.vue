@@ -11,6 +11,7 @@ export default {
 
   props: {
     value: {
+      required: true,
       type: Object
     },
 
@@ -25,12 +26,24 @@ export default {
 
     minuteInterval: {
       type: Number,
-      default: 1
+      default: 1,
+      validator: val => {
+        if (val < 0) {
+          throw new Error('minute-interval must be greater than 0')
+        }
+        return true;
+      }
     },
 
     secondInterval: {
       type: Number,
-      default: 1
+      default: 1,
+      validator: val => {
+        if (val < 0) {
+          throw new Error('second-interval must be greater than 0')
+        }
+        return true;
+      }
     },
 
     disabled: { type: Boolean },
@@ -60,7 +73,7 @@ export default {
         formatString = formatString.replace(new RegExp(this.minuteType, 'g'), this.value[this.minuteType])
       }
       if (this.value[this.secondType] && this.secondType) {
-        formatString = formatString.replace(new RegExp(this.secondType, 'g'), this.second)
+        formatString = formatString.replace(new RegExp(this.secondType, 'g'), this.value[this.secondType])
       }
       if (this.apm && this.apmType) {
         formatString = formatString.replace(new RegExp(this.apmType, 'g'), this.apm)
