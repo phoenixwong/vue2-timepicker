@@ -1,5 +1,5 @@
 <script>
-import VueTimepicker from 'src/vue-timepicker.vue'
+import VueTimepicker from '../../../src/vue-timepicker.vue'
 
 export default {
   name: 'Samples',
@@ -83,10 +83,10 @@ export default {
         <p>Default to 24-hour format <code>HH:mm</code></p>
       </div>
       <div class="codes">
-        <pre data-title="HTML"><code class="html">&lt;vue-timepicker&gt;&lt;/vue-timepicker&gt;</code></pre>
+        <pre data-title="HTML"><code class="html">&lt;vue-timepicker v-model="time" /&gt;</code></pre>
       </div>
       <div class="preview">
-        <vue-timepicker></vue-timepicker>
+        <vue-timepicker :value="{ HH: '01', mm: '10' }" />
       </div>
     </div>
 
@@ -98,20 +98,20 @@ export default {
       <div>
         <div class="codes">
 <pre data-title="HTML"><code class="html">&lt;!-- 12-hour sample 1 --&gt;
-&lt;vue-timepicker format="hh:mm A"&gt;&lt;/vue-timepicker&gt;
+&lt;vue-timepicker format="hh:mm A" /&gt;
 
 &lt;!-- 12-hour sample 2 --&gt;
-&lt;vue-timepicker format="h:m a"&gt;&lt;/vue-timepicker&gt;
+&lt;vue-timepicker format="h:m a" /&gt;
 </code></pre>
         </div>
         <div class="preview">
           <b>12-hour sample 1</b>
           <p>
-            <vue-timepicker format="hh:mm A"></vue-timepicker>
+            <vue-timepicker :value="{ hh: '01', mm: '10', A: 'AM'}" format="hh:mm A" />
           </p>
           <b>12-hour sample 2</b>
           <p>
-            <vue-timepicker format="h:m a"></vue-timepicker>
+            <vue-timepicker :value="{ h: '1', m: '10', a: 'am'}" format="h:m a" />
           </p>
         </div>
       </div>
@@ -123,10 +123,10 @@ export default {
         <p>You can trigger the seconds picker by adding <code>ss</code> or <code>s</code> in your format string.</p>
       </div>
       <div class="codes">
-        <pre data-title="HTML"><code class="html">&lt;vue-timepicker format="HH:mm:ss"&gt;&lt;/vue-timepicker&gt;</code></pre>
+        <pre data-title="HTML"><code class="html">&lt;vue-timepicker format="HH:mm:ss" /&gt;</code></pre>
       </div>
       <div class="preview">
-        <vue-timepicker format="HH:mm:ss"></vue-timepicker>
+        <vue-timepicker :value="{ HH: '10', mm: '30', ss: '15' }" format="HH:mm:ss"></vue-timepicker>
       </div>
     </div>
 
@@ -137,27 +137,27 @@ export default {
       </div>
       <div class="codes">
 <pre data-title="HTML"><code class="html">&lt;!-- 10-minute interval --&gt;
-&lt;vue-timepicker :minute-interval="10"&gt;&lt;/vue-timepicker&gt;
+&lt;vue-timepicker :minute-interval="10" /&gt;
 
 &lt;!-- 15-second interval --&gt;
-&lt;vue-timepicker format="HH:mm:ss" :second-interval="15"&gt;&lt;/vue-timepicker&gt;
+&lt;vue-timepicker format="HH:mm:ss" :second-interval="15" /&gt;
 
 &lt;!-- 5-minute interval plus 10-second interval --&gt;
-&lt;vue-timepicker format="hh:mm:ss" :minute-interval="5" :second-interval="10"&gt;&lt;/vue-timepicker&gt;
+&lt;vue-timepicker format="hh:mm:ss" :minute-interval="5" :second-interval="10" /&gt;
 </code></pre>
       </div>
       <div class="preview">
         <b>10-minute interval</b>
         <p>
-          <vue-timepicker :minute-interval="10"></vue-timepicker>
+          <vue-timepicker :value="{ HH: '02', mm: '30' }" :minute-interval="10" />
         </p>
         <b>15-second interval</b>
         <p>
-          <vue-timepicker format="HH:mm:ss" :second-interval="15"></vue-timepicker>
+          <vue-timepicker :value="{ HH: '05', mm: '20', ss: '30' }" format="HH:mm:ss" :second-interval="15" />
         </p>
         <b>5-minute interval plus 10-second interval</b>
         <p>
-          <vue-timepicker format="hh:mm:ss" :minute-interval="5" :second-interval="10"></vue-timepicker>
+          <vue-timepicker :value="{ hh: '4', mm: '20', ss: '45' }" format="hh:mm:ss" :minute-interval="5" :second-interval="10" />
         </p>
       </div>
     </div>
@@ -180,11 +180,10 @@ data: {
 }</code></pre>
       </div>
       <div class="codes">
-        <pre data-title="HTML"><code class="html">&lt;vue-timepicker :format="yourFormat" v-model="yourData"&gt;&lt;/vue-timepicker&gt;</code></pre>
+        <pre data-title="HTML"><code class="html">&lt;vue-timepicker :format="yourFormat" v-model="yourData" /&gt;</code></pre>
       </div>
       <div>
         <div class="preview">
-          <!-- <vue-timepicker :format="yourFormat" v-model="yourData"></vue-timepicker> -->
           <vue-timepicker :format="yourFormat" v-model="yourData"></vue-timepicker>
         </div>
       </div>
@@ -199,10 +198,10 @@ data: {
         <p>If you don't want to expose the clear button in the UI, <code>hide-clear-button</code> property will do the trick.</p>
       </div>
       <div class="codes">
-        <pre data-title="HTML"><code class="html">&lt;vue-timepicker hide-clear-button&gt;&lt;/vue-timepicker&gt;</code></pre>
+        <pre data-title="HTML"><code class="html">&lt;vue-timepicker hide-clear-button /&gt;</code></pre>
       </div>
       <div class="preview">
-        <vue-timepicker hide-clear-button></vue-timepicker>
+        <vue-timepicker :value="{ HH: '06', mm: '30' }" hide-clear-button />
       </div>
     </div>
 
@@ -224,19 +223,19 @@ data: {
       <div class="codes">
 <pre data-title="HTML"><code class="html">
 &lt;p v-for="(day, index) in yourDaysArray"&gt;
-  &lt;label&gt;Day <span>{{</span> index + 1 <span>}}</span>: &lt;/label&gt;
-  &lt;vue-timepicker v-model="day.start_time"&gt;&lt;/vue-timepicker&gt;
+  &lt;label&gt;Day <span>{{ index + 1}}</span>: &lt;/label&gt;
+  &lt;vue-timepicker v-model="yourDaysArray[index].start_time" /&gt;
   &lt;span&gt; to &lt;/span&gt;
-  &lt;vue-timepicker v-model="day.end_time"&gt;&lt;/vue-timepicker&gt;
+  &lt;vue-timepicker v-model="yourDaysArray[index].end_time" /&gt;
 &lt;/p&gt;
 </code></pre>
       </div>
       <div class="preview">
         <p v-for="(day, index) in yourDaysArray">
           <label>Day {{ index + 1 }}: </label>
-          <vue-timepicker v-model="day.start_time"></vue-timepicker>
+          <vue-timepicker v-model="yourDaysArray[index].start_time"></vue-timepicker>
           <span> to </span>
-          <vue-timepicker v-model="day.end_time"></vue-timepicker>
+          <vue-timepicker v-model="yourDaysArray[index].end_time"></vue-timepicker>
         </p>
       </div>
       <div class="codes">
@@ -245,73 +244,8 @@ data: {
       </div>
     </div>
 
-    <div class="block">
-      <h3 class="title"><a class="anchor" id="onChangeSample">#</a>The <code>change</code> Event</h3>
-      <div class="description">
-        <p>A <code>change</code> event will be triggered every time user alters the timepicker's value.</p>
-        <p>Unlike the <code>v-model</code>, which only returns data in your predefined format, <code>@change</code> event will return a full package of all supported time tokens.</p>
-        <p>Play around with the two pickers below to see their data changes in live.</p>
-      </div>
-
-      <div class="codes">
-<pre data-title="HTML"><code class="html">&lt;!-- No argument --&gt;
-&lt;vue-timepicker v-model="demoData1" @change="changeHandler"&gt;&lt;/vue-timepicker&gt;
-
-&lt;!-- Custom argument --&gt;
-&lt;vue-timepicker v-model="demoData2" @change="otherChangeHandler($event, 'foo', 42)"&gt;&lt;/vue-timepicker&gt;
-</code></pre>
-      </div>
-
-      <div class="codes">
-<pre data-title="JS"><code class="javascript">
-methods: {
-  // No argument
-  changeHandler (eventData) {
-    // eventData -> {data: {HH:..., mm:...}}
-  },
-
-  // Customized arguments
-  otherChangeHandler (eventData, arg1, arg2) {
-    // eventData -> {data: {HH:..., mm:...}}
-    // arg1 -> 'foo'
-    // arg2 -> 42
-  }
-}
-</code></pre>
-      </div>
-
-      <div class="preview">
-        <b>No argument</b>
-        <p>
-          <vue-timepicker v-model="demoData1" @change="changeHandler"></vue-timepicker>
-        </p>
-
-        <b>Custom argument ('foo', 42)</b>
-        <p>
-          <vue-timepicker v-model="demoData2" @change="otherChangeHandler($event, 'foo', 42)"></vue-timepicker>
-        </p>
-      </div>
-
-      <div class="codes" v-if="latestDataFlow">
-<pre data-title="The `@change` eventData"><code class="javascript" v-text="latestDataFlow">
-</code></pre>
-      </div>
-
-      <div class="codes" v-if="demoArgs">
-<pre data-title="Has Custom Arguments"><code class="javascript" v-text="demoArgs">
-</code></pre>
-      </div>
-
-      <div class="codes" v-if="latestDataFlow">
-<pre data-title="`v-model` value"><code class="javascript" v-text="demoArgs ? demoData2 : demoData1">
-</code></pre>
-      </div>
-
-    </div>
-
     <div class="block footer-links">
       <slot name="footer-links"></slot>
     </div>
-
   </section>
 </template>

@@ -1,6 +1,6 @@
 <script>
-import Samples from 'components/Samples.vue'
-import Playground from 'components/Playground.vue'
+import Samples from './components/Samples.vue'
+import Playground from './components/Playground.vue'
 
 var scrollHandler
 
@@ -89,6 +89,4 @@ export default {
   </div>
 </template>
 
-<style lang="sass">
-@import "./assets/demo.scss";
-</style>
+<style lang="sass" src="./styles/demo.scss"></style>

@@ -1,5 +1,5 @@
 <script>
-import VueTimepicker from 'src/vue-timepicker.vue'
+import VueTimepicker from '../../../src/vue-timepicker.vue'
 
 var scrollHandler
 
@@ -325,7 +325,7 @@ export default {
             <input v-model="customInterval.minute" type="checkbox" /> Minute Interval
           </label>
           <label v-if="customInterval.minute" class="range-wrapper">
-            <input v-model.number="interval.minute" type="range" min="0" max="60" step="1" />
+            <input v-model.number="interval.minute" type="range" min="1" max="60" step="1" />
             <span v-text="interval.minute"></span>
           </label>
         </div>
@@ -334,7 +334,7 @@ export default {
             <input v-model="customInterval.second" type="checkbox" /> Second Interval
           </label>
           <label v-if="customInterval.second" class="range-wrapper" >
-            <input v-model.number="interval.second" type="range" min="0" max="60" step="1" />
+            <input v-model.number="interval.second" type="range" min="1" max="60" step="1" />
             <span v-text="interval.second"></span>
           </label>
         </div>

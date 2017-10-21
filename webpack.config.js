@@ -1,15 +1,26 @@
-var path = require('path')
-var webpack = require('webpack')
-var entry = process.env.NODE_ENV === 'production' ? './index.js' : './build/dev.js'
-var projectRoot = path.resolve(__dirname, './')
+var path = require('path');
+var webpack = require('webpack');
+var projectRoot = path.resolve(__dirname, './');
+
+
+var entry;
+var output;
+
+switch(process.env.NODE_ENV) {
+  case 'production':
+    entry = './src/vue-timepicker.vue';
+    output = { path: './dist', filename: 'vue2-timepicker.min.js' };
+    break;
+  case 'demo':
+    entry = './demo/src/main.js';
+    output = { path: './demo', filename: 'index.js' };
+    break;
+  default:
+}
 
 module.exports = {
   entry: entry,
-  output: {
-    path: path.resolve(__dirname, './dist'),
-    publicPath: '/dist/',
-    filename: 'vue2-timepicker.min.js'
-  },
+  output: output,
   resolveLoader: {
     root: path.join(__dirname, 'node_modules')
   },

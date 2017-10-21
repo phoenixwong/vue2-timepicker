@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "node build/dev-server.js",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
-    "demo": "node build/demo.js",
+    "demo": "cross-env NODE_ENV=demo webpack --progress --hide-modules",
     "minify": "node build/minify.js",
     "lint": "eslint --ext .js,.vue src"
   },
