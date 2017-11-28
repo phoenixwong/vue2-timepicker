@@ -151,11 +151,17 @@ export default {
     },
 
     originalHour () {
-      let hour = this.value[this.hourType] % 12
+      // If configuration is 12-hrs
+      // convert 24hr value to 12hr value
+      if (this.isTwelveHours) {
+        let hour = this.value[this.hourType] % 12
 
-      return hour === 0
-        ? '12'
-        : (hour < 10 ? '0' : '') + hour
+        return hour === 0
+          ? '12'
+          : (hour < 10 ? '0' : '') + hour
+      }
+
+      return this.value[this.hourType]
     }
   },
 
@@ -202,26 +208,14 @@ export default {
     computeHour (value) {
       value = parseInt(value)
 
-      value = (this.isTwelveHours && this.isPastNoon)
-        ? value > 12 // PM
-          ? value !== 24 // 12:00PM will become 24. Set it to noon instead.
-            ? value
-            : 12
-          : value + 12
-        : value <= 12
-          ? value !== 12 // There's no 12:00AM. Set it to 00:00 instead.
-            ? value
-            : 0
-          : value - 12
-
       return (value < 10 ? '0' : '') + value
     },
 
     onHourSelect (value) {
-      const newValue = this.value
-      newValue[this.hourType] = this.computeHour(value)
-
-      this.$emit('input', newValue)
+      this.$emit('input', {
+        ...this.value,
+        [this.hourType]: this.computeHour(value)
+      })
     },
 
     onMinuteSelect (value) {
