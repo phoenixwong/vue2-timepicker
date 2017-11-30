@@ -219,28 +219,24 @@ export default {
     },
 
     onMinuteSelect (value) {
-      const newValue = this.value
-      newValue[this.minuteType] = value
-
-      this.$emit('input', newValue)
+      this.$emit('input', {
+        ...this.value,
+        [this.minuteType]: value
+      })
     },
 
     onSecondSelect (value) {
-      const newValue = this.value
-      newValue[this.secondType] = value
-
-      this.$emit('input', newValue)
+      this.$emit('input', {
+        ...this.value,
+        [this.secondType]: value
+      })
     },
 
     onApmSelect (value) {
-      this.apm = value
-
-      if (parseFloat(this.value[this.hourType]) && isFinite(this.value[this.hourType])) {
-        const newValue = this.value
-        newValue[this.hourType] = this.computeHour(this.value[this.hourType])
-
-        this.$emit('input', newValue)
-      }
+      this.$emit('input', {
+        ...this.value,
+        [this.apmType]: value
+      })
     },
 
     clearTime () {
