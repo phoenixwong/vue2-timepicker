@@ -3,10 +3,8 @@
   "version": "0.1.4",
   "description": "A dropdown time picker (hour|minute|second) for Vue 2.x, with flexible time format support",
   "scripts": {
-    "dev": "node build/dev-server.js",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "demo": "cross-env NODE_ENV=demo webpack --progress --hide-modules",
-    "minify": "node build/minify.js",
     "lint": "eslint --ext .js,.vue src"
   },
   "repository": {
