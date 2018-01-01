@@ -65,7 +65,7 @@ export default {
       let formatString = this.format
 
       if (this.value[this.hourType]) {
-        formatString = formatString.replace(new RegExp(this.hourType, 'g'), this.originalHour)
+        formatString = formatString.replace(new RegExp(this.hourType, 'g'), this.value[this.hourType])
       }
       if (this.value[this.minuteType]) {
         formatString = formatString.replace(new RegExp(this.minuteType, 'g'), this.value[this.minuteType])
@@ -101,21 +101,44 @@ export default {
     },
 
     hours () {
-      const hoursCount = (this.hourType === 'h' || this.hourType === 'hh') ? 12 : 24
+      const hoursCount = this.isTwelveHours ? 12 : 24
+
       let hours = []
 
       for (let i = 0; i < hoursCount; i++) {
-        hours.push(this.formatValue(this.hourType, i))
+        switch(this.hourType) {
+          case 'H':
+            hours.push( String(i) )
+            break;
+          case 'HH':
+            hours.push( ('0' + i).substr(-2, 2) )
+            break;
+          case 'h':
+          case 'k':
+            hours.push( String(i + 1) )
+            break;
+          case 'hh':
+          case 'kk':
+            hours.push( ('0' + String(i + 1)).substr(-2, 2) )
+            break;
+        }
       }
 
-      return hours
+      return hours;
     },
 
     minutes () {
       let minutes = []
 
       for (let i = 0; i < 60; i += this.minuteInterval) {
-        minutes.push(this.formatValue(this.minuteType, i))
+        switch(this.minuteType) {
+          case 'm':
+            minutes.push(String(i))
+            break;
+          case 'mm':
+            minutes.push( ('0' + i).substr(-2, 2) )
+            break;
+        }
       }
 
       return minutes
@@ -125,7 +148,14 @@ export default {
       let seconds = []
 
       for (let i = 0; i < 60; i += this.secondInterval) {
-        seconds.push(this.formatValue(this.secondType, i))
+        switch(this.secondType) {
+          case 's':
+            seconds.push(i)
+            break;
+          case 'ss':
+            seconds.push( ('0' + i).substr(-2, 2) )
+            break;
+        }
       }
 
       return seconds
@@ -149,44 +179,9 @@ export default {
     isPastNoon () {
       return this.apm === 'pm' || this.apm === 'PM'
     },
-
-    originalHour () {
-      // If configuration is 12-hrs
-      // convert 24hr value to 12hr value
-      if (this.isTwelveHours) {
-        let hour = this.value[this.hourType] % 12
-
-        return hour === 0
-          ? '12'
-          : (hour < 10 ? '0' : '') + hour
-      }
-
-      return this.value[this.hourType]
-    }
   },
 
   methods: {
-    formatValue (type, i) {
-      switch (type) {
-        case 'H':
-        case 'm':
-        case 's':
-          return String(i)
-        case 'HH':
-        case 'mm':
-        case 'ss':
-          return i < 10 ? `0${i}` : String(i)
-        case 'h':
-        case 'k':
-          return String(i + 1)
-        case 'hh':
-        case 'kk':
-          return (i + 1) < 10 ? `0${i + 1}` : String(i + 1)
-        default:
-          return ''
-      }
-    },
-
     checkAcceptingType (validValues, formatString, fallbackValue) {
       if (!validValues || !formatString || !formatString.length) { return '' }
 
@@ -205,16 +200,10 @@ export default {
       this.showDropdown = !this.showDropdown && !this.disabled
     },
 
-    computeHour (value) {
-      value = parseInt(value)
-
-      return (value < 10 ? '0' : '') + value
-    },
-
     onHourSelect (value) {
       this.$emit('input', {
         ...this.value,
-        [this.hourType]: this.computeHour(value)
+        [this.hourType]: value
       })
     },
 
@@ -249,10 +238,6 @@ export default {
       this.apm = this.apms[0]
       this.$emit('input', time)
     }
-  },
-
-  mounted () {
-    this.apm = this.apms[0]
   }
 }
 </script>
@@ -270,7 +255,7 @@ export default {
           v-for="hr in hours"
           v-text="hr"
           v-show="disabledValues.hour.indexOf(hr) === -1"
-          :class="{active: originalHour === hr}"
+          :class="{active: value[hourType] === hr}"
           @click.stop="onHourSelect(hr)"></li>
       </ul>
       <ul class="minutes">
