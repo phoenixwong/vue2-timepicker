@@ -198,6 +198,11 @@ export default {
 
     toggleDropdown () {
       this.showDropdown = !this.showDropdown && !this.disabled
+      if (!this.showDropdown) {
+        this.$emit('blur', {
+          ...this.value
+        })
+      }
     },
 
     onHourSelect (value) {
