@@ -207,6 +207,19 @@ data: {
     </div>
 
     <div class="block">
+      <h3 class="title"><a class="anchor" id="disable">#</a>Disable</h3>
+      <div class="description">
+        <p>If you need to disable the timepicker, use the <code>disabled</code> property.</p>
+      </div>
+      <div class="codes">
+        <pre data-title="HTML"><code class="html">&lt;vue-timepicker :disabled="true"&gt;&lt;/vue-timepicker&gt;</code></pre>
+      </div>
+      <div class="preview">
+        <vue-timepicker :disabled="true"></vue-timepicker>
+      </div>
+    </div>
+
+    <div class="block">
       <h3 class="title"><a class="anchor" id="vForSample">#</a>Work with <code>v-for</code></h3>
       <div class="description">
         <p>Here's a quick sample of <code>v-for</code> usage</p>
