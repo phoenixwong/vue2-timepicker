@@ -65,13 +65,20 @@
 .time-picker .dropdown {
   position: absolute;
   z-index: 5;
-  top: calc(2.2em + 2px);
   left: 0;
   background: #fff;
   box-shadow: 0 1px 6px rgba(0,0,0,0.15);
   width: 10em;
   height: 10em;
   font-weight: normal;
+}
+
+.time-picker .dropdown.bottom {
+  top: 3.4em;
+}
+
+.time-picker .dropdown.top {
+  bottom: 3.4em;
 }
 
 .time-picker .dropdown .select-list {
