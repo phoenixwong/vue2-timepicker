@@ -141,6 +141,12 @@ Section    | Token | Output
 <vue-timepicker hide-clear-button></vue-timepicker>
 ```
 
+### Disable
+
+```html
+<vue-timepicker :disabled="true"></vue-timepicker>
+```
+
 ### Bind Value with `v-model`
 
 ```javascript
@@ -150,7 +156,7 @@ var yourComponent = new Vue({
   data: function () {
     return {
       yourTimeValue: {
-        HH: "10",
+        hh: "10",
         mm: "05",
         ss: "00"
       },

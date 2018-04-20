@@ -46,6 +46,8 @@ export default {
 
       enableClearBtn: true,
 
+      disable: false,
+
       playgroundData: {},
 
       playgroundFullValue: {},
@@ -352,6 +354,18 @@ export default {
         </div>
       </div>
 
+      <div class="config-block">
+        <h3 class="subtitle"><a class="anchor">#</a>Disable</h3>
+        <div class="config-row group">
+          <label for="disable_btn_true">
+            <input v-model="disable" type="radio" id="disable_btn_true" name="enable_btn" :value="false" /> Enable
+          </label>
+          <label for="disable_btn_false">
+            <input v-model="disable" type="radio" id="disable_btn_false" name="enable_btn" :value="true" /> Disable
+          </label>
+        </div>
+      </div>
+
       <div class="config-block" id="valuesSelection">
         <h3 class="subtitle"><a class="anchor">#</a>Set <code>v-model</code> data</h3>
         <div class="config-row">
@@ -399,7 +413,7 @@ export default {
       <b>Format string: </b>
       <span v-text="formatString"></span>
       <p>
-        <vue-timepicker :format="formatString" v-model="playgroundData" :minute-interval="interval.minute" :second-interval="interval.second" :hide-clear-button="!enableClearBtn" @change="changeHandler"></vue-timepicker>
+        <vue-timepicker :format="formatString" v-model="playgroundData" :minute-interval="interval.minute" :second-interval="interval.second" :hide-clear-button="!enableClearBtn" :disabled="disable" @change="changeHandler"></vue-timepicker>
       </p>
     </div>
 

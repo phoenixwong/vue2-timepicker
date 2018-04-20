@@ -12,6 +12,8 @@ export default {
   props: {
     value: {type: Object},
     hideClearButton: {type: Boolean},
+    alignment: {type: String, default: 'bottom'},
+    disabled: {type: Boolean},
     format: {type: String},
     minuteInterval: {type: Number},
     secondInterval: {type: Number},
@@ -373,10 +375,10 @@ export default {
 
 <template>
 <span class="time-picker">
-  <input class="display-time" :id="id" v-model="displayTime" @click.stop="toggleDropdown" type="text" readonly />
-  <span class="clear-btn" v-if="!hideClearButton" v-show="!showDropdown && showClearBtn" @click.stop="clearTime">&times;</span>
+  <input class="display-time" :id="id" v-model="displayTime" @click.stop="toggleDropdown" type="text" readonly :disabled="disabled" />
+  <span class="clear-btn" v-if="!hideClearButton && !disabled" v-show="!showDropdown && showClearBtn" @click.stop="clearTime">&times;</span>
   <div class="time-picker-overlay" v-if="showDropdown" @click.stop="toggleDropdown"></div>
-  <div class="dropdown" v-show="showDropdown">
+  <div class="dropdown" :class="alignment" v-show="showDropdown">
     <div class="select-list">
       <ul class="hours">
         <li class="hint" v-text="hourType"></li>
