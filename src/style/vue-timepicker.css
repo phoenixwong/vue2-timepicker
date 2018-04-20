@@ -19,6 +19,11 @@
   font-size: 1em;
 }
 
+/* TODO: this should be passed in to the component as a custom class. */
+.time-picker input:disabled {
+  border: 0;
+}
+
 .time-picker .clear-btn {
   position: absolute;
   display: flex;
