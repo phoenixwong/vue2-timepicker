@@ -15,6 +15,7 @@ export default {
     format: {type: String},
     minuteInterval: {type: Number},
     secondInterval: {type: Number},
+    boundaries: {type: Object},
     id: {type: String}
   },
 
@@ -135,11 +136,27 @@ export default {
       })
     },
 
+    checkBoundaries (time, limitType) {
+      if (typeof this.boundaries !== 'object') return false
+      let status = false
+      if (typeof this.boundaries.start_time === 'object') {
+        const startTime = this.boundaries.start_time[limitType]
+        if (parseInt(startTime) > time) status = true
+      }
+      if (typeof this.boundaries.end_time === 'object') {
+        const endTime = this.boundaries.end_time[limitType]
+        if (parseInt(endTime) < time) status = true
+      }
+      return status
+    },
+
     renderHoursList () {
       const hoursCount = (this.hourType === 'h' || this.hourType === 'hh') ? 12 : 24
       this.hours = []
       for (let i = 0; i < hoursCount; i++) {
-        this.hours.push(this.formatValue(this.hourType, i))
+        if (this.checkBoundaries(i, 'HH') === false) {
+          this.hours.push(this.formatValue(this.hourType, i))
+        }
       }
     },
 
@@ -172,9 +189,13 @@ export default {
 
       for (let i = 0; i < 60; i += interval) {
         if (listType === 'minute') {
-          this.minutes.push(this.formatValue(this.minuteType, i))
+          if (this.checkBoundaries(i, 'MM') === false) {
+            this.minutes.push(this.formatValue(this.minuteType, i))
+          }
         } else {
-          this.seconds.push(this.formatValue(this.secondType, i))
+          if (this.checkBoundaries(i, 'SS') === false) {
+            this.seconds.push(this.formatValue(this.secondType, i))
+          }
         }
       }
     },

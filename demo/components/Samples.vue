@@ -19,6 +19,16 @@ export default {
         {start_time: {HH: '', mm: ''}, end_time: {HH: '13', mm: '30'}},
         {start_time: {HH: '', mm: ''}, end_time: {HH: '', mm: ''}}
       ],
+      boundaries: {
+        start_time: {
+          HH: '08',
+          MM: '11'
+        },
+        end_time: {
+          HH: '11',
+          MM: '22'
+        }
+      },
       muteFlowListener: true,
       latestDataFlow: undefined,
       demoData1: {HH: '08', mm: '30'},
@@ -87,6 +97,32 @@ export default {
       </div>
       <div class="preview">
         <vue-timepicker></vue-timepicker>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3 class="title"><a class="anchor" id="default">#</a>Boundaries</h3>
+      <div class="description">
+        <p>Shows specific time range.</p>
+      </div>
+      <pre data-title="JS"><code class="javascript">  // Define the boundaries
+  data: {
+    your_boundaries: {
+      start_time: {
+        HH: '08',
+        MM: '11'
+      },
+      end_time: {
+        HH: '11',
+        MM: '22'
+      }
+    },
+  }</code></pre>
+      <div class="codes">
+        <pre data-title="HTML"><code class="html">&lt;vue-timepicker :boundaries="your_boundaries"&gt;&lt;/vue-timepicker&gt;</code></pre>
+      </div>
+      <div class="preview">
+        <vue-timepicker :boundaries="boundaries"></vue-timepicker>
       </div>
     </div>
 
