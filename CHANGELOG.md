@@ -2,6 +2,19 @@
 
 > The Change Log of Vue2 Timepicker `vue2-timepicker`
 
+## v 0.2.0
+
+### New
+
+- New `hour-range` support. Added capability to show which hours are available and disabled the rest.
+- New `hide-disabled-hours`. The best companion of `hour-range`, for you to hide unwanted hours in the hour picker.
+
+### Improvements
+
+- Put `12` before `1` in the hour select for 12-hour format (`hh` and `h`). It will be more natural, especially when paired with `hour-range`.
+- Support `name` parameter as regular form inputs.
+- Upgrade to support more current **vue** (2.6.10) and **vue-cli** (3.9.0).
+
 ## v 0.1.4
 
 ### Fixes
