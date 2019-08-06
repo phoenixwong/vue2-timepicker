@@ -21,6 +21,7 @@ export default {
     value: { type: Object, default: () => {} },
     id: { type: String, default: '' },
     name: { type: String, default: '' },
+    disabled: { type: Boolean, default: false },
     format: { type: String },
     hideClearButton: { type: Boolean, default: false },
     minuteInterval: { type: [ Number, String ] },
@@ -126,7 +127,7 @@ export default {
     },
 
     showClearBtn () {
-      if (this.hideClearButton) {
+      if (this.hideClearButton || this.disabled) {
         return false
       }
       if ((this.hour && this.hour !== '') || (this.minute && this.minute !== '')) {
@@ -231,6 +232,12 @@ export default {
     },
     displayTime () {
       this.fillValues()
+    },
+    disabled (toDisabled) {
+      // Force close dropdown when disabled
+      if (toDisabled && this.showDropdown) {
+        this.showDropdown = false
+      }
     }
   },
 
@@ -549,6 +556,7 @@ export default {
     },
 
     toggleDropdown () {
+      if (this.disabled) { return }
       this.showDropdown = !this.showDropdown
       if (this.restrictedHourRange && this.baseOn12Hours) {
         if (this.showDropdown) {
@@ -589,7 +597,13 @@ export default {
 
 <template>
 <span class="vue__time-picker">
-  <input class="display-time" :id="id" :name="name" :value="displayTime" @click.stop="toggleDropdown" type="text" readonly />
+  <input type="text" class="display-time"
+         :id="id"
+         :name="name"
+         :value="displayTime"
+         :disabled="disabled"
+         readonly
+         @click.stop="toggleDropdown" />
   <span class="clear-btn" v-if="!showDropdown && showClearBtn" @click.stop="clearTime">&times;</span>
   <div class="time-picker-overlay" v-if="showDropdown" @click.stop="toggleDropdown"></div>
   <div class="dropdown" v-show="showDropdown">
@@ -657,6 +671,11 @@ export default {
   height: 2.2em;
   padding: 0.3em 0.5em;
   font-size: 1em;
+}
+
+.vue__time-picker input.display-time:disabled,
+.vue__time-picker input.display-time[disabled] {
+  color: #d2d2d2;
 }
 
 .vue__time-picker .clear-btn {

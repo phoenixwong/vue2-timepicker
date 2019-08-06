@@ -1,11 +1,13 @@
 {
   "name": "vue2-timepicker",
-  "version": "0.2.0-beta.0",
+  "version": "0.2.0-beta.1",
   "description": "A dropdown time picker (hour|minute|second) for Vue 2.x, with flexible time format support",
   "scripts": {
-    "build": "vue-cli-service build --target wc --name vue-timepicker 'src/components/VueTimepicker.vue'"
+    "dev": "cd demo && yarn serve",
+    "build": "vue-cli-service build --target lib --name VueTimepicker ./src/index.js"
   },
-  "main": "dist/vue-timepicker.min.js",
+  "main": "dist/VueTimepicker.common.js",
+  "css": "dist/VueTimepicker.css",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/phoenixwong/vue2-timepicker.git"
@@ -32,6 +34,13 @@
     "eslint-plugin-vue": "^5.0.0",
     "vue-template-compiler": "^2.6.10"
   },
+  "files": [
+    "dist/*",
+    "src/*",
+    "*.json",
+    "*.js",
+    "*.md"
+  ],
   "eslintConfig": {
     "root": true,
     "env": {

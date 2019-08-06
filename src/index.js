@@ -1,2 +1,2 @@
 import VueTimepicker from './components/VueTimepicker'
-module.exports = VueTimepicker
+export default VueTimepicker

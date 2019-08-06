@@ -39,7 +39,8 @@ export default {
         { title: 'Work with v-for', anchor: 'vForSample' },
         { title: 'The change Event', anchor: 'onChangeSample' },
         { title: 'Hour Range', anchor: 'hourRange' },
-        { title: 'Hide Disabled Hours', anchor: 'hideDisabledHours' }
+        { title: 'Hide Disabled Hours', anchor: 'hideDisabledHours' },
+        { title: 'Disable Picker', anchor: 'disablePicker' }
       ]
     }
   },
@@ -313,6 +314,17 @@ section#mostlyUsedSamples
       b Hour Range Sample 2 (12-hour format) with `hide-disabled-hours`
       p
         vue-timepicker(:hour-range="['7a', '9a', '11a', '1p', ['3p', '5p'], '7p']" format="hh:mm a" hide-disabled-hours)
+
+  //- Disable Picker
+  sample-block#disablePicker
+    template(slot="title") Disable Picker
+    p(slot="description")
+      | Completely disable the picker.
+    template(slot="codes")
+      highlight-code(lang="html" data-title="HTML")
+        | &lt;vue-timepicker disabled&gt;&lt;/vue-timepicker&gt;
+    template(slot="preview")
+      vue-timepicker(disabled)
 
   //- Footer Links
   .footer-links

@@ -1,13 +1,11 @@
 <script>
 import VueTimepicker from '../../../src/components/VueTimepicker'
-import ConfigBlock from './ConfigBlock'
 import ConfigRow from './ConfigRow'
 
 export default {
   name: 'Playground',
   components: {
     VueTimepicker,
-    ConfigBlock,
     ConfigRow
   },
 
@@ -50,6 +48,8 @@ export default {
       },
 
       enableClearBtn: true,
+
+      disablePicker: false,
 
       playgroundData: {},
 
@@ -109,6 +109,10 @@ export default {
 
       if (!this.enableClearBtn) {
         start += ('\n  hide-clear-button')
+      }
+
+      if (this.disablePicker) {
+        start += ('\n  disabled')
       }
 
       const htmlCode = start + end
@@ -276,8 +280,9 @@ section#playground
     h2.section-title Timepicker Playground
 
     #configPanel
-      config-block#typesSelection
-        template(slot="title")
+      #typesSelection.config-block
+        h3.subtitle
+          a.anchor #
           | Generate&nbsp;
           code format
           | &nbsp;string
@@ -298,8 +303,10 @@ section#playground
             input(v-model="type.apm", :value="atype", :id="'apm_type' + index" type="radio" name="apm_type")
             | &nbsp;{{ atype }}
 
-      config-block#intervalSelection
-        template(slot="title") Customized Interval
+      #intervalSelection.config-block
+        h3.subtitle
+          a.anchor #
+          | Customized Interval
         config-row(is-group)
           label.options
             input(v-model="customInterval.minute" type="checkbox")
@@ -315,8 +322,10 @@ section#playground
             input(v-model.number="interval.second" type="range" min="0" max="60" step="1")
             span(v-text="interval.second")
 
-      config-block#clearButton
-        template(slot="title") Clear Button
+      #clearButton.config-block
+        h3.subtitle
+          a.anchor #
+          | Clear Button
         config-row(is-group)
           label.options(for="enable_btn_true")
             input(v-model="enableClearBtn" type="radio" id="enable_btn_true" name="enable_btn", :value="true")
@@ -325,8 +334,18 @@ section#playground
             input(v-model="enableClearBtn" type="radio" id="enable_btn_false" name="enable_btn", :value="false")
             | &nbsp;Disable
 
-      config-block#valuesSelection
-        template(slot="title")
+      #disablePicker.config-block
+        h3.subtitle
+          a.anchor #
+          | Disable Picker
+        config-row
+          label.options
+            input(v-model="disablePicker" type="checkbox")
+            | &nbsp;Disable
+
+      #valuesSelection.config-block
+        h3.subtitle
+          a.anchor #
           | Set&nbsp;
           code v-model
           | &nbsp;data
@@ -363,6 +382,7 @@ section#playground
                        :minute-interval="interval.minute"
                        :second-interval="interval.second"
                        :hide-clear-button="!enableClearBtn"
+                       :disabled="disablePicker"
                        @change="changeHandler")
 
     #htmlCodePreview.codes
@@ -382,6 +402,15 @@ section#playground
         overflow-x: auto
 
   .config-block
+    .subtitle
+      margin: 0
+      padding: 1em 0 0.5em 0
+      position: relative
+
+      a.anchor
+        position: absolute
+        left: -1em
+
     &:first-of-type
       .subtitle
         padding-top: 0
