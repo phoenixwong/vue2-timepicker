@@ -2,8 +2,6 @@
 
 A dropdown time picker (hour|minute|second) for **Vue 2.x**, with flexible time format support.
 
-> Looking for the Vue 1.x version? Please check the [vue-timepicker](https://github.com/phoenixwong/vue-timepicker) *(Vue 1.x supported)*
-
 ## Demo
 
 You can see the **Vue2 Timepicker** in action in the [Demo Page](https://phoenixwong.github.io/vue2-timepicker/)
@@ -14,11 +12,15 @@ Migrating from the Vue 1.x version? Please check [MIGRATION.md](https://github.c
 
 ## Dependencies
 
-[Vue.js](http://vuejs.org/) v2.0+
+[Vue.js](http://vuejs.org/) v2.6.5+
 
 ## Installation
 
-Through NPM **(Recommended)**
+Through YARN or NPM **(Recommended)**
+
+```bash
+yarn add vue2-timepicker
+```
 
 ```bash
 npm install vue2-timepicker --save
@@ -34,34 +36,12 @@ bower install vue2-timepicker --save
 
 **Step 1:** Import VueTimepicker
 
-**A**: Include the single file component **(Recommended)**
-
 ```javascript
-// import
+// JS
 import VueTimepicker from 'vue2-timepicker'
 
-// Or, require
-var VueTimepicker = require('vue2-timepicker')
-
-```
-
-or, **B**: Include distribution files with `<script>` and `<style>`
-
-```html
-<script src="yourpath/vue/dist/vue.min.js"></script>
-<script src="yourpath/vue2-timepicker/dist/vue2-timepicker.min.js"></script>
-
-<link href="yourpath/vue2-timepicker/dist/vue2-timepicker.min.css" rel="stylesheet"></link>
-```
-
-**NOTE:** When using the `dist` files, a `Vue.use()` call is needed
-
-```javascript
-// Work with <script> block
-Vue.use(window.VueTimepicker)
-
-// Else
-Vue.use(VueTimepicker)
+// CSS
+import 'vue2-timepicker/dist/VueTimepicker.css'
 ```
 
 **Step 2**: Include VueTimepicker in your component
@@ -106,17 +86,17 @@ VueTimepicker will recognizes the following tokens in the format string
 Section    | Token | Output
 ---------- | ----- | ---------------
 **AM/PM**  | A     | AM PM
-           | a     | am pm
+&nbsp;     | a     | am pm
 **Hour**   | H     | 0 1 ... 22 23
-           | HH    | 00 01 ... 22 23
-           | h     | 1 2 ... 11 12
-           | hh    | 01 02 ... 11 12
-           | k     | 1 2 ... 23 24
-           | kk    | 01 02 ... 23 24
+&nbsp;     | HH    | 00 01 ... 22 23
+&nbsp;     | h     | 1 2 ... 11 12
+&nbsp;     | hh    | 01 02 ... 11 12
+&nbsp;     | k     | 1 2 ... 23 24
+&nbsp;     | kk    | 01 02 ... 23 24
 **Minute** | m     | 0 1 ... 58 59
-           | mm    | 00 01 ... 58 59
+&nbsp;     | mm    | 00 01 ... 58 59
 **Second** | s     | 0 1 ... 58 59
-           | ss    | 00 01 ... 58 59
+&nbsp;     | ss    | 00 01 ... 58 59
 
 > If not set, `format` string will be default to "HH:mm"
 
@@ -245,29 +225,61 @@ Whereas the `v-model` will only return the data with defined tokens
 }
 ```
 
+### Define Hour Range
+
+Sometime you may want to limit hours picker to a specific range. The `hour-range` parameter is here to help.
+
+```html
+<vue-timepicker :hour-range="[5, [8, 12], [14, 17], 19]"></vue-timepicker>
+```
+
+Valid (selectable) hours in this example are: 5, 8, 9, 10, 11, 12, 14, 15, 16, 17, 19
+
+### Hide Disabled Hour Ranges
+
+```html
+<vue-timepicker :hour-range="[5, [8, 12], [14, 17], 19]" hide-disabled-hours></vue-timepicker>
+```
+
+Paired with the above `hour-range` parameter. In this sample, the hour picker will hide the invalid hours (0, 1, 2, 3, 4, 6, 7, 13, 18, 20, 21, 22, 23) and display the valid hours (5, 8, 9, ...) only.
+
+### Disable Picker
+
+```html
+<vue-timepicker disabled></vue-timepicker>
+```
+
+Used to disable dropdown picker and clear button in the UI. To prevent users from changing values again.
+
 ## Props API
 
-Prop                  | Type      | Required | Default Value
---------------------- | --------- | -------- | -------------
-**v-model**           | _Object_  | no       | _undefined_
-**format**            | _String_  | no       | "HH:mm"
-**minute-interval**   | _Number_  | no       | _undefined_
-**second-interval**   | _Number_  | no       | _undefined_
-**hide-clear-button** | _Boolean_ | no       | false
+Prop                    | Type      | Required | Default Value
+----------------------- | --------- | -------- | -------------
+**v-model**             | _Object_  | no       | _undefined_
+**format**              | _String_  | no       | "HH:mm"
+**minute-interval**     | _Number_  | no       | _undefined_
+**second-interval**     | _Number_  | no       | _undefined_
+**hide-clear-button**   | _Boolean_ | no       | false
+**hour-range**          | _Array_   | no       | _undefined_
+**hide-disabled-hours** | _Boolean_ | no       | false
+**disabled**            | _Boolean_ | no       | false
 
 ## Contribution
 
 Please feel free to fork and help developing.
 
 ```bash
-# install dependencies
-npm install
+# Install dependencies
+yarn install
 
-# serve with hot reload at localhost:8080
-npm run dev
+# Init development dependencies
+yarn dev:init
+
+# Start developing. Serve with hot reload at localhost:8080
+yarn serve
 ```
 
-For detailed explanation on how things work, checkout the [webpack guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+For detailed explanation on how things work, checkout the [Vue Cli Guide](https://cli.vuejs.org/guide/).
 
 ## Change Log
 

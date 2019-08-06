@@ -582,6 +582,7 @@ export default {
     },
 
     clearTime () {
+      if (this.disabled) { return }
       this.hour = ''
       this.minute = ''
       this.second = ''

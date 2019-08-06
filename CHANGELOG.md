@@ -8,6 +8,7 @@
 
 - New `hour-range` support. Added capability to show which hours are available and disabled the rest.
 - New `hide-disabled-hours`. The best companion of `hour-range`, for you to hide unwanted hours in the hour picker.
+- New `disabled` parameter. To disable dropdown picker and clear button in the UI.
 
 ### Improvements
 
