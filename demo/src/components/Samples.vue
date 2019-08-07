@@ -118,7 +118,7 @@ section#mostlyUsedSamples
     template(slot="codes")
       highlight-code(lang="html" data-title="HTML")
         | &lt;!-- Custom Class --&gt;
-        | &lt;vue-timepicker :inputClass="form-control"&gt;&lt;/vue-timepicker&gt;
+        | &lt;vue-timepicker :input-class="form-control"&gt;&lt;/vue-timepicker&gt;
         | &nbsp;
     template(slot="preview")
       b 12-hour sample with custom class
