@@ -284,7 +284,7 @@ Prop                    | Type      | Required | Default Value
 **id**                  | _String_  | no       | _undefined_
 **name**                | _String_  | no       | _undefined_
 
-> `id` and `name` will be assign to the <input type="text" class="display-time"> within the component
+> `id` and `name` will be assigned to the \<input type="text" class="display-time"\> within the component
 
 ## Contribution
 
@@ -303,7 +303,8 @@ yarn dev
 
 For detailed explanation on how things work, checkout the [Vue Cli Guide](https://cli.vuejs.org/guide/).
 
-> NOTE: From `^0.2.0` on, we develop demos page with **yarn**, **pug**, and **stylus**
+> NOTE: Start from `^0.2.0`, we develop Demo pages with [**Yarn**](
+https://yarnpkg.com/), [**Pug**](https://pugjs.org/), and [**Stylus**](http://stylus-lang.com/)
 
 ## Change Log
 
