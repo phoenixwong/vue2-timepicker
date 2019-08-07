@@ -344,6 +344,7 @@ export default {
 
     toggleDropdown () {
       this.showDropdown = !this.showDropdown
+      this.showDropdown ? this.$emit('open') : this.$emit('close')
     },
 
     select (type, value) {

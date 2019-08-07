@@ -2,6 +2,12 @@
 
 > The Change Log of Vue2 Timepicker `vue2-timepicker`
 
+## v 0.1.5
+
+### Improvements
+
+Emit open, and close events when the dropdown for the picker is opened and closed.
+
 ## v 0.1.4
 
 ### Fixes
