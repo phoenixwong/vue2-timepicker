@@ -40,16 +40,38 @@ Thumbs.db
 # NodeJS Packages #
 ###################
 node_modules
+yarn.lock*
+package.lock*
 
 # Bower Packages #
 ###################
 bower
 bower_components
 
-
 # Test and Logs #
-###################
+#################
 npm-debug.log
+yarn-debug.log*
+yarn-error.log*
 selenium-debug.log
 test/unit/coverage
 test/e2e/reports
+
+# local env files #
+###################
+.env.local
+.env.*.local
+
+# Editor directories and files #
+################################
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Others  #
+###########
+gh-pages
