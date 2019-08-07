@@ -1301,13 +1301,6 @@ exports.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
 
 /***/ }),
 
-/***/ "9276":
-/***/ (function(module, exports, __webpack_require__) {
-
-// extracted by mini-css-extract-plugin
-
-/***/ }),
-
 /***/ "9b43":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1536,6 +1529,17 @@ module.exports = exporter;
 
 /***/ }),
 
+/***/ "aab0":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var _node_modules_mini_css_extract_plugin_dist_loader_js_ref_6_oneOf_1_0_node_modules_css_loader_index_js_ref_6_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_oneOf_1_2_node_modules_cache_loader_dist_cjs_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_vue_timepicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("bfaf");
+/* harmony import */ var _node_modules_mini_css_extract_plugin_dist_loader_js_ref_6_oneOf_1_0_node_modules_css_loader_index_js_ref_6_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_oneOf_1_2_node_modules_cache_loader_dist_cjs_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_vue_timepicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_mini_css_extract_plugin_dist_loader_js_ref_6_oneOf_1_0_node_modules_css_loader_index_js_ref_6_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_oneOf_1_2_node_modules_cache_loader_dist_cjs_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_vue_timepicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* unused harmony reexport * */
+ /* unused harmony default export */ var _unused_webpack_default_export = (_node_modules_mini_css_extract_plugin_dist_loader_js_ref_6_oneOf_1_0_node_modules_css_loader_index_js_ref_6_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_oneOf_1_2_node_modules_cache_loader_dist_cjs_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_vue_timepicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
 /***/ "aae3":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1642,6 +1646,13 @@ module.exports = function (it) {
   return it;
 };
 
+
+/***/ }),
+
+/***/ "bfaf":
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
 
 /***/ }),
 
@@ -1828,17 +1839,6 @@ module.exports = function (it) {
 
 /***/ }),
 
-/***/ "ccbf":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var _node_modules_mini_css_extract_plugin_dist_loader_js_ref_6_oneOf_1_0_node_modules_css_loader_index_js_ref_6_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_oneOf_1_2_node_modules_cache_loader_dist_cjs_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_VueTimepicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("9276");
-/* harmony import */ var _node_modules_mini_css_extract_plugin_dist_loader_js_ref_6_oneOf_1_0_node_modules_css_loader_index_js_ref_6_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_oneOf_1_2_node_modules_cache_loader_dist_cjs_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_VueTimepicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_mini_css_extract_plugin_dist_loader_js_ref_6_oneOf_1_0_node_modules_css_loader_index_js_ref_6_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_oneOf_1_2_node_modules_cache_loader_dist_cjs_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_VueTimepicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
-/* unused harmony reexport * */
- /* unused harmony default export */ var _unused_webpack_default_export = (_node_modules_mini_css_extract_plugin_dist_loader_js_ref_6_oneOf_1_0_node_modules_css_loader_index_js_ref_6_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_oneOf_1_2_node_modules_cache_loader_dist_cjs_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_VueTimepicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
-
-/***/ }),
-
 /***/ "ce10":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1999,12 +1999,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"119194fb-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VueTimepicker.vue?vue&type=template&id=070285aa&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"vue__time-picker"},[_c('input',{staticClass:"display-time",attrs:{"type":"text","id":_vm.id,"name":_vm.name,"disabled":_vm.disabled,"readonly":""},domProps:{"value":_vm.displayTime},on:{"click":function($event){$event.stopPropagation();return _vm.toggleDropdown($event)}}}),(!_vm.showDropdown && _vm.showClearBtn)?_c('span',{staticClass:"clear-btn",on:{"click":function($event){$event.stopPropagation();return _vm.clearTime($event)}}},[_vm._v("×")]):_vm._e(),(_vm.showDropdown)?_c('div',{staticClass:"time-picker-overlay",on:{"click":function($event){$event.stopPropagation();return _vm.toggleDropdown($event)}}}):_vm._e(),_c('div',{directives:[{name:"show",rawName:"v-show",value:(_vm.showDropdown),expression:"showDropdown"}],staticClass:"dropdown"},[_c('div',{staticClass:"select-list"},[_c('ul',{staticClass:"hours"},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.hourType)}}),_vm._l((_vm.hours),function(hr,hIndex){return [(!_vm.opts.hideDisabledHours || (_vm.opts.hideDisabledHours && !_vm.isDisabledHour(hr)))?_c('li',{key:hIndex,class:{active: _vm.hour === hr},attrs:{"disabled":_vm.isDisabledHour(hr)},domProps:{"textContent":_vm._s(hr)},on:{"click":function($event){$event.stopPropagation();return _vm.select('hour', hr)}}}):_vm._e()]})],2),_c('ul',{staticClass:"minutes"},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.minuteType)}}),_vm._l((_vm.minutes),function(m,mIndex){return _c('li',{key:mIndex,class:{active: _vm.minute === m},domProps:{"textContent":_vm._s(m)},on:{"click":function($event){$event.stopPropagation();return _vm.select('minute', m)}}})})],2),(_vm.secondType)?_c('ul',{staticClass:"seconds"},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.secondType)}}),_vm._l((_vm.seconds),function(s,sIndex){return _c('li',{key:sIndex,class:{active: _vm.second === s},domProps:{"textContent":_vm._s(s)},on:{"click":function($event){$event.stopPropagation();return _vm.select('second', s)}}})})],2):_vm._e(),(_vm.apmType)?_c('ul',{staticClass:"apms"},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.apmType)}}),_vm._l((_vm.apms),function(a,aIndex){return [(!_vm.opts.hideDisabledHours || (_vm.opts.hideDisabledHours && _vm.has[a.toLowerCase()]))?_c('li',{key:aIndex,class:{active: _vm.apm === a},attrs:{"disabled":!_vm.has[a.toLowerCase()]},domProps:{"textContent":_vm._s(a)},on:{"click":function($event){$event.stopPropagation();return _vm.select('apm', a)}}}):_vm._e()]})],2):_vm._e()])])])}
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"119194fb-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/vue-timepicker.vue?vue&type=template&id=8ce46d72&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"vue__time-picker time-picker"},[_c('input',{staticClass:"display-time",class:{disabled: _vm.disabled},attrs:{"type":"text","id":_vm.id,"name":_vm.name,"disabled":_vm.disabled,"readonly":""},domProps:{"value":_vm.displayTime},on:{"click":function($event){$event.stopPropagation();return _vm.toggleDropdown($event)}}}),(!_vm.showDropdown && _vm.showClearBtn)?_c('span',{staticClass:"clear-btn",on:{"click":function($event){$event.stopPropagation();return _vm.clearTime($event)}}},[_vm._v("×")]):_vm._e(),(_vm.showDropdown)?_c('div',{staticClass:"time-picker-overlay",on:{"click":function($event){$event.stopPropagation();return _vm.toggleDropdown($event)}}}):_vm._e(),_c('div',{directives:[{name:"show",rawName:"v-show",value:(_vm.showDropdown),expression:"showDropdown"}],staticClass:"dropdown"},[_c('div',{staticClass:"select-list"},[_c('ul',{staticClass:"hours"},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.hourType)}}),_vm._l((_vm.hours),function(hr,hIndex){return [(!_vm.opts.hideDisabledHours || (_vm.opts.hideDisabledHours && !_vm.isDisabledHour(hr)))?_c('li',{key:hIndex,class:{active: _vm.hour === hr},attrs:{"disabled":_vm.isDisabledHour(hr)},domProps:{"textContent":_vm._s(hr)},on:{"click":function($event){$event.stopPropagation();return _vm.select('hour', hr)}}}):_vm._e()]})],2),_c('ul',{staticClass:"minutes"},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.minuteType)}}),_vm._l((_vm.minutes),function(m,mIndex){return _c('li',{key:mIndex,class:{active: _vm.minute === m},domProps:{"textContent":_vm._s(m)},on:{"click":function($event){$event.stopPropagation();return _vm.select('minute', m)}}})})],2),(_vm.secondType)?_c('ul',{staticClass:"seconds"},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.secondType)}}),_vm._l((_vm.seconds),function(s,sIndex){return _c('li',{key:sIndex,class:{active: _vm.second === s},domProps:{"textContent":_vm._s(s)},on:{"click":function($event){$event.stopPropagation();return _vm.select('second', s)}}})})],2):_vm._e(),(_vm.apmType)?_c('ul',{staticClass:"apms"},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.apmType)}}),_vm._l((_vm.apms),function(a,aIndex){return [(!_vm.opts.hideDisabledHours || (_vm.opts.hideDisabledHours && _vm.has[a.toLowerCase()]))?_c('li',{key:aIndex,class:{active: _vm.apm === a},attrs:{"disabled":!_vm.has[a.toLowerCase()]},domProps:{"textContent":_vm._s(a)},on:{"click":function($event){$event.stopPropagation();return _vm.select('apm', a)}}}):_vm._e()]})],2):_vm._e()])])])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/VueTimepicker.vue?vue&type=template&id=070285aa&
+// CONCATENATED MODULE: ./src/vue-timepicker.vue?vue&type=template&id=8ce46d72&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
 var es6_regexp_match = __webpack_require__("4917");
@@ -2033,7 +2033,7 @@ var es6_object_assign = __webpack_require__("f751");
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.number.constructor.js
 var es6_number_constructor = __webpack_require__("c5f6");
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VueTimepicker.vue?vue&type=script&lang=js&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/vue-timepicker.vue?vue&type=script&lang=js&
 
 
 
@@ -2057,7 +2057,7 @@ var DEFAULT_OPTIONS = {
   hourRange: null,
   hideDisabledHours: false
 };
-/* harmony default export */ var VueTimepickervue_type_script_lang_js_ = ({
+/* harmony default export */ var vue_timepickervue_type_script_lang_js_ = ({
   name: 'VueTimepicker',
   props: {
     value: {
@@ -2065,12 +2065,10 @@ var DEFAULT_OPTIONS = {
       default: function _default() {}
     },
     id: {
-      type: String,
-      default: ''
+      type: String
     },
     name: {
-      type: String,
-      default: ''
+      type: String
     },
     disabled: {
       type: Boolean,
@@ -2658,8 +2656,10 @@ var DEFAULT_OPTIONS = {
       if (this.restrictedHourRange && this.baseOn12Hours) {
         if (this.showDropdown) {
           this.forceApmSelection();
+          this.$emit('open');
         } else {
           this.emptyApmSelection();
+          this.$emit('close');
         }
       }
     },
@@ -2697,10 +2697,10 @@ var DEFAULT_OPTIONS = {
     this.renderFormat();
   }
 });
-// CONCATENATED MODULE: ./src/components/VueTimepicker.vue?vue&type=script&lang=js&
- /* harmony default export */ var components_VueTimepickervue_type_script_lang_js_ = (VueTimepickervue_type_script_lang_js_); 
-// EXTERNAL MODULE: ./src/components/VueTimepicker.vue?vue&type=style&index=0&lang=css&
-var VueTimepickervue_type_style_index_0_lang_css_ = __webpack_require__("ccbf");
+// CONCATENATED MODULE: ./src/vue-timepicker.vue?vue&type=script&lang=js&
+ /* harmony default export */ var src_vue_timepickervue_type_script_lang_js_ = (vue_timepickervue_type_script_lang_js_); 
+// EXTERNAL MODULE: ./src/vue-timepicker.vue?vue&type=style&index=0&lang=css&
+var vue_timepickervue_type_style_index_0_lang_css_ = __webpack_require__("aab0");
 
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/runtime/componentNormalizer.js
 /* globals __VUE_SSR_CONTEXT__ */
@@ -2797,7 +2797,7 @@ function normalizeComponent (
   }
 }
 
-// CONCATENATED MODULE: ./src/components/VueTimepicker.vue
+// CONCATENATED MODULE: ./src/vue-timepicker.vue
 
 
 
@@ -2807,7 +2807,7 @@ function normalizeComponent (
 /* normalize component */
 
 var component = normalizeComponent(
-  components_VueTimepickervue_type_script_lang_js_,
+  src_vue_timepickervue_type_script_lang_js_,
   render,
   staticRenderFns,
   false,
@@ -2817,10 +2817,10 @@ var component = normalizeComponent(
   
 )
 
-/* harmony default export */ var VueTimepicker = (component.exports);
+/* harmony default export */ var vue_timepicker = (component.exports);
 // CONCATENATED MODULE: ./src/index.js
 
-/* harmony default export */ var src = (VueTimepicker);
+/* harmony default export */ var src = (vue_timepicker);
 // CONCATENATED MODULE: ./node_modules/@vue/cli-service/lib/commands/build/entry-lib.js
 
 
