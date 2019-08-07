@@ -14,6 +14,7 @@
 
 - Put `12` before `1` in the hour select for 12-hour format (`hh` and `h`). It will be more natural, especially when paired with `hour-range`.
 - Support `name` parameter as regular form inputs.
+- Emit `open` and `close` events to help tracking the dropdown toggle status.
 - Upgrade to support more current **vue** (2.6.10) and **vue-cli** (3.9.0).
 
 ## v 0.1.4

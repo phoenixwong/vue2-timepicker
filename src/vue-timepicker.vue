@@ -561,8 +561,10 @@ export default {
       if (this.restrictedHourRange && this.baseOn12Hours) {
         if (this.showDropdown) {
           this.forceApmSelection()
+          this.$emit('open')
         } else {
           this.emptyApmSelection()
+          this.$emit('close')
         }
       }
     },
