@@ -68,6 +68,9 @@ export default {
       li
         a(href="https://github.com/phoenixwong/vue2-timepicker" target="_blank") Documentation
 
+    span.version
+      img(alt="GitHub package.json version" src="https://img.shields.io/github/package-json/v/phoenixwong/vue2-timepicker?label=latest&style=flat-square")
+
   main.content(:class="{'nav-affixed': stickyNav}")
     transition(name="fade" mode="out-in")
       component(:is="currentView")

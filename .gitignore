@@ -71,3 +71,7 @@ test/e2e/reports
 *.njsproj
 *.sln
 *.sw?
+
+# Others  #
+###########
+gh-pages

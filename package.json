@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "cd demo && yarn serve",
     "dev:init": "cd demo && yarn install",
-    "build": "vue-cli-service build --target lib --name VueTimepicker ./src/index.js"
+    "build": "vue-cli-service build --target lib --name VueTimepicker ./src/index.js",
+    "build:demo": "cd demo && yarn build"
   },
   "main": "src/index.js",
   "css": "dist/VueTimepicker.css",
