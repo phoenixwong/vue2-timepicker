@@ -27,7 +27,8 @@ export default {
     minuteInterval: { type: [ Number, String ] },
     secondInterval: { type: [ Number, String ] },
     hourRange: { type: Array },
-    hideDisabledHours: { type: Boolean, default: false }
+    hideDisabledHours: { type: Boolean, default: false },
+    inputClass: { type: String }
   },
 
   data () {
@@ -600,8 +601,8 @@ export default {
 
 <template>
 <span class="vue__time-picker time-picker">
-  <input type="text" class="display-time"
-         :class="{disabled: disabled}"
+  <input type="text"
+          :class="['display-time', inputClass, disabled]"
          :id="id"
          :name="name"
          :value="displayTime"
