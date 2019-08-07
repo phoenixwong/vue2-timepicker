@@ -1,4 +1,4 @@
-# Vue2 Time Picker  ![GitHub package.json version](https://img.shields.io/github/package-json/v/phoenixwong/vue2-timepicker?color=success&style=flat-square) ![GitHub release](https://img.shields.io/github/release/phoenixwong/vue2-timepicker?label=github&style=flat-square) ![GitHub package.json version (branch)](https://img.shields.io/github/package-json/v/phoenixwong/vue2-timepicker/beta?style=flat-square)
+# Vue2 Time Picker  ![GitHub package.json version](https://img.shields.io/github/package-json/v/phoenixwong/vue2-timepicker?color=success&style=flat-square) ![npm](https://img.shields.io/npm/v/vue2-timepicker?style=flat-square) ![GitHub release](https://img.shields.io/github/release/phoenixwong/vue2-timepicker?label=github&style=flat-square)
 
 ---
 
