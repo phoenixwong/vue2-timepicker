@@ -108,6 +108,23 @@ section#mostlyUsedSamples
       p
         vue-timepicker(format="h:m a")
 
+
+  //- Custom Class
+  sample-block#format12hours
+    template(slot="title") Custom Class
+    p(slot="description")
+      | You can style input box by providing
+      code custom class
+    template(slot="codes")
+      highlight-code(lang="html" data-title="HTML")
+        | &lt;!-- Custom Class --&gt;
+        | &lt;vue-timepicker :class="form-control"&gt;&lt;/vue-timepicker&gt;
+        | &nbsp;
+    template(slot="preview")
+      b 12-hour sample with custom class
+      p
+        vue-timepicker(format="hh:mm A" inputClass="form-control")
+
   //- Seconds Picker
   sample-block#seconds
     template(slot="title") Seconds Picker
