@@ -7,7 +7,7 @@
     "dev:init": "cd demo && yarn install",
     "build": "vue-cli-service build --target lib --name VueTimepicker ./src/index.js"
   },
-  "main": "dist/VueTimepicker.common.js",
+  "main": "src/index.js",
   "css": "dist/VueTimepicker.css",
   "repository": {
     "type": "git",

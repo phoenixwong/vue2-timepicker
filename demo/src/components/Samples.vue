@@ -1,5 +1,5 @@
 <script>
-import VueTimepicker from '../../../src/components/VueTimepicker'
+import VueTimepicker from '../../../src/vue-timepicker'
 import SampleBlock from './SampleBlock'
 
 export default {

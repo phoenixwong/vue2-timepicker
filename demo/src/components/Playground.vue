@@ -1,5 +1,5 @@
 <script>
-import VueTimepicker from '../../../src/components/VueTimepicker'
+import VueTimepicker from '../../../src/vue-timepicker'
 import ConfigRow from './ConfigRow'
 
 export default {

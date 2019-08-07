@@ -19,8 +19,8 @@ export default {
   name: 'VueTimepicker',
   props: {
     value: { type: Object, default: () => {} },
-    id: { type: String, default: '' },
-    name: { type: String, default: '' },
+    id: { type: String },
+    name: { type: String },
     disabled: { type: Boolean, default: false },
     format: { type: String },
     hideClearButton: { type: Boolean, default: false },
@@ -599,8 +599,9 @@ export default {
 </script>
 
 <template>
-<span class="vue__time-picker">
+<span class="vue__time-picker time-picker">
   <input type="text" class="display-time"
+         :class="{disabled: disabled}"
          :id="id"
          :name="name"
          :value="displayTime"
@@ -677,7 +678,7 @@ export default {
 }
 
 .vue__time-picker input.display-time:disabled,
-.vue__time-picker input.display-time[disabled] {
+.vue__time-picker input.display-time.disabled {
   color: #d2d2d2;
 }
 

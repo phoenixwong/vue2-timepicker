@@ -4,6 +4,10 @@
 
 ## v 0.2.0
 
+### Breaking Changes
+
+- Upgraded to support more current **vue** (2.6.10) and **vue-cli** (3.9.0) with Webpack 4.
+
 ### New
 
 - New `hour-range` support. Added capability to show which hours are available and disabled the rest.
@@ -13,9 +17,8 @@
 ### Improvements
 
 - Put `12` before `1` in the hour select for 12-hour format (`hh` and `h`). It will be more natural, especially when paired with `hour-range`.
-- Support `name` parameter as regular form inputs.
-- Emit `open` and `close` events to help tracking the dropdown toggle status.
-- Upgrade to support more current **vue** (2.6.10) and **vue-cli** (3.9.0).
+- Support `name` parameter as regular form inputs. (Thanks to @dilipgurung)
+- Emit `open` and `close` events to help tracking the dropdown toggle status. (Thanks to @tprashan)
 
 ## v 0.1.4
 

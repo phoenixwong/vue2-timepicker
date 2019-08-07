@@ -1,4 +1,10 @@
-# Vue2 Time Picker
+# Vue2 Time Picker  ![GitHub package.json version](https://img.shields.io/github/package-json/v/phoenixwong/vue2-timepicker?color=success&style=flat-square) ![GitHub release](https://img.shields.io/github/release/phoenixwong/vue2-timepicker?label=github&style=flat-square) ![GitHub package.json version (branch)](https://img.shields.io/github/package-json/v/phoenixwong/vue2-timepicker/beta?style=flat-square)
+
+---
+
+💡 Dead repo recharged in 2019 🔋
+
+---
 
 A dropdown time picker (hour|minute|second) for **Vue 2.x**, with flexible time format support.
 
@@ -16,7 +22,7 @@ Migrating from the Vue 1.x version? Please check [MIGRATION.md](https://github.c
 
 ## Installation
 
-Through YARN or NPM **(Recommended)**
+Through YARN or NPM
 
 ```bash
 yarn add vue2-timepicker
@@ -26,19 +32,27 @@ yarn add vue2-timepicker
 npm install vue2-timepicker --save
 ```
 
-Bower
-
-```bash
-bower install vue2-timepicker --save
-```
-
 ## Get Started
 
 **Step 1:** Import VueTimepicker
 
+**A:** Include the single file component (Recommended)
+
 ```javascript
-// JS
+// Import the *.vue file (CSS included)
 import VueTimepicker from 'vue2-timepicker'
+```
+
+or, **B:** Include distribution files base on your needs
+
+```javascript
+// JAVASCRIPT
+// - commonJS
+import VueTimepicker from 'vue2-timepicker/dist/VueTimepicker.common.js'
+// - UMD
+import VueTimepicker from 'vue2-timepicker/dist/VueTimepicker.umd.js'
+// - UMD Minified
+import VueTimepicker from 'vue2-timepicker/dist/VueTimepicker.umd.min.js'
 
 // CSS
 import 'vue2-timepicker/dist/VueTimepicker.css'
@@ -230,10 +244,14 @@ Whereas the `v-model` will only return the data with defined tokens
 Sometime you may want to limit hours picker to a specific range. The `hour-range` parameter is here to help.
 
 ```html
+<!-- 24-Hour Format -->
 <vue-timepicker :hour-range="[5, [8, 12], [14, 17], 19]"></vue-timepicker>
-```
+<!-- >> Equals to :hour-range="[5, 8, 9, 10, 11, 12, 14, 15, 16, 17, 19]" -->
 
-Valid (selectable) hours in this example are: 5, 8, 9, 10, 11, 12, 14, 15, 16, 17, 19
+<!-- 12-Hour Format -->
+<vue-timepicker(:hour-range="['7a', '9a', '11a', '1p', ['3p', '5p'], '7p']" format="hh:mm a">
+<!-- >> Equals to :hour-range="['7a', '9a', '11a', '1p', '3p', '4p', '5p', '7p']" -->
+```
 
 ### Hide Disabled Hour Ranges
 
@@ -241,7 +259,7 @@ Valid (selectable) hours in this example are: 5, 8, 9, 10, 11, 12, 14, 15, 16, 1
 <vue-timepicker :hour-range="[5, [8, 12], [14, 17], 19]" hide-disabled-hours></vue-timepicker>
 ```
 
-Paired with the above `hour-range` parameter. In this sample, the hour picker will hide the invalid hours (0, 1, 2, 3, 4, 6, 7, 13, 18, 20, 21, 22, 23) and display the valid hours (5, 8, 9, ...) only.
+Paired with the above `hour-range` parameter. In this sample, the hour picker will hide the invalid hours (_0, 1, 2, 3, 4, 6, 7, 13, 18, 20, 21, 22, 23_) and display the valid hours (_5, 8, 9, ..._) only.
 
 ### Disable Picker
 
@@ -263,6 +281,10 @@ Prop                    | Type      | Required | Default Value
 **hour-range**          | _Array_   | no       | _undefined_
 **hide-disabled-hours** | _Boolean_ | no       | false
 **disabled**            | _Boolean_ | no       | false
+**id**                  | _String_  | no       | _undefined_
+**name**                | _String_  | no       | _undefined_
+
+> `id` and `name` will be assign to the <input type="text" class="display-time"> within the component
 
 ## Contribution
 
@@ -276,10 +298,12 @@ yarn install
 yarn dev:init
 
 # Start developing. Serve with hot reload at localhost:8080
-yarn serve
+yarn dev
 ```
 
 For detailed explanation on how things work, checkout the [Vue Cli Guide](https://cli.vuejs.org/guide/).
+
+> NOTE: From `^0.2.0` on, we develop demos page with **yarn**, **pug**, and **stylus**
 
 ## Change Log
 
