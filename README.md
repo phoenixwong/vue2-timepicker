@@ -269,6 +269,36 @@ Paired with the above `hour-range` parameter. In this sample, the hour picker wi
 
 Used to disable dropdown picker and clear button in the UI. To prevent users from changing values again.
 
+### Input Id, Name and Placeholder Support
+
+Supports `id`, `name`, and `placeholder` like ordinary form elements. Values will be assigned to the
+\<input type="text" class="display-time"\> within the component.
+
+**`id` and `name`**
+
+```html
+<!-- id -->
+<vue-timepicker id="myFistPicker"></vue-timepicker>
+
+<!-- name -->
+<vue-timepicker name="nameInForm"></vue-timepicker>
+```
+
+**The `placeholder`**
+
+When `placeholder` is not set, your defined format string will be used.
+
+```html
+<!-- placeholder is set -->
+<vue-timepicker placeholder="Start Time"></vue-timepicker>
+<!-- -> "Start Time" -->
+
+<!-- placeholder not set -->
+<vue-timepicker format="hh:mm A"></vue-timepicker>
+<!-- -> "hh:mm A" -->
+```
+
+
 ## Props API
 
 Prop                    | Type      | Required | Default Value
@@ -283,8 +313,8 @@ Prop                    | Type      | Required | Default Value
 **disabled**            | _Boolean_ | no       | false
 **id**                  | _String_  | no       | _undefined_
 **name**                | _String_  | no       | _undefined_
+**placeholder**         | _String_  | no       | _undefined_
 
-> `id` and `name` will be assigned to the \<input type="text" class="display-time"\> within the component
 
 ## Contribution
 

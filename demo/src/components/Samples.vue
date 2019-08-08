@@ -235,16 +235,16 @@ section#mostlyUsedSamples
       highlight-code(lang="html" data-title="HTML")
         | &lt;p v-for="(day, index) in yourDaysArray"&gt;
         |   &lt;label&gt;Day <span>{{</span> index + 1 <span>}}</span>: &lt;/label&gt;
-        |   &lt;vue-timepicker v-model="day.start_time"&gt;&lt;/vue-timepicker&gt;
+        |   &lt;vue-timepicker v-model="day.start_time" placeholder="Start Time"&gt;&lt;/vue-timepicker&gt;
         |   &lt;span&gt; to &lt;/span&gt;
-        |   &lt;vue-timepicker v-model="day.end_time"&gt;&lt;/vue-timepicker&gt;
+        |   &lt;vue-timepicker v-model="day.end_time" placeholder="End Time"&gt;&lt;/vue-timepicker&gt;
         | &lt;/p&gt;
     template(slot="preview")
       p(v-for="(day, index) in yourDaysArray")
         label Day {{ index + 1 }}:&nbsp;
-        vue-timepicker(v-model="day.start_time")
+        vue-timepicker(v-model="day.start_time" placeholder="Start Time")
         span &nbsp;to&nbsp;
-        vue-timepicker(v-model="day.end_time")
+        vue-timepicker(v-model="day.end_time" placeholder="End Time")
     template(slot="data")
       highlight-code(lang="json" data-title="`yourDaysArray` JSON in live") {{ yourDaysArray }}
 

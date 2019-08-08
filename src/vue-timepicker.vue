@@ -28,7 +28,8 @@ export default {
     secondInterval: { type: [ Number, String ] },
     hourRange: { type: Array },
     hideDisabledHours: { type: Boolean, default: false },
-    inputClass: { type: String }
+    inputClass: { type: String },
+    placeholder: { type: String }
   },
 
   data () {
@@ -110,8 +111,12 @@ export default {
       return options
     },
 
+    formatString () {
+      return this.opts.format || DEFAULT_OPTIONS.format
+    },
+
     displayTime () {
-      let formatString = String((this.opts.format || DEFAULT_OPTIONS.format))
+      let formatString = String(this.formatString)
       if (this.hour) {
         formatString = formatString.replace(new RegExp(this.hourType, 'g'), this.hour)
       }
@@ -125,6 +130,10 @@ export default {
         formatString = formatString.replace(new RegExp(this.apmType, 'g'), this.apm)
       }
       return formatString
+    },
+
+    inputIsEmpty () {
+      return this.formatString === this.displayTime
     },
 
     showClearBtn () {
@@ -602,10 +611,11 @@ export default {
 <template>
 <span class="vue__time-picker time-picker">
   <input type="text"
-          :class="['display-time', inputClass, disabled]"
+         :class="['display-time', inputClass, disabled]"
          :id="id"
          :name="name"
-         :value="displayTime"
+         :value="inputIsEmpty ? null : displayTime"
+         :placeholder="placeholder || formatString"
          :disabled="disabled"
          readonly
          @click.stop="toggleDropdown" />
