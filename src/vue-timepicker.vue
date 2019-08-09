@@ -27,7 +27,9 @@ export default {
     minuteInterval: { type: [ Number, String ] },
     secondInterval: { type: [ Number, String ] },
     hourRange: { type: Array },
-    hideDisabledHours: { type: Boolean, default: false }
+    hideDisabledHours: { type: Boolean, default: false },
+    inputClass: { type: String },
+    placeholder: { type: String }
   },
 
   data () {
@@ -109,8 +111,12 @@ export default {
       return options
     },
 
+    formatString () {
+      return this.opts.format || DEFAULT_OPTIONS.format
+    },
+
     displayTime () {
-      let formatString = String((this.opts.format || DEFAULT_OPTIONS.format))
+      let formatString = String(this.formatString)
       if (this.hour) {
         formatString = formatString.replace(new RegExp(this.hourType, 'g'), this.hour)
       }
@@ -124,6 +130,10 @@ export default {
         formatString = formatString.replace(new RegExp(this.apmType, 'g'), this.apm)
       }
       return formatString
+    },
+
+    inputIsEmpty () {
+      return this.formatString === this.displayTime
     },
 
     showClearBtn () {
@@ -558,13 +568,14 @@ export default {
     toggleDropdown () {
       if (this.disabled) { return }
       this.showDropdown = !this.showDropdown
+
+      this.showDropdown ? this.$emit('open') : this.$emit('close')
+
       if (this.restrictedHourRange && this.baseOn12Hours) {
         if (this.showDropdown) {
           this.forceApmSelection()
-          this.$emit('open')
         } else {
           this.emptyApmSelection()
-          this.$emit('close')
         }
       }
     },
@@ -601,16 +612,17 @@ export default {
 <template>
 <span class="vue__time-picker time-picker">
   <input type="text" class="display-time"
-         :class="{disabled: disabled}"
+         :class="[inputClass, {'disabled': disabled}]"
          :id="id"
          :name="name"
-         :value="displayTime"
+         :value="inputIsEmpty ? null : displayTime"
+         :placeholder="placeholder || formatString"
          :disabled="disabled"
          readonly
-         @click.stop="toggleDropdown" />
-  <span class="clear-btn" v-if="!showDropdown && showClearBtn" @click.stop="clearTime">&times;</span>
-  <div class="time-picker-overlay" v-if="showDropdown" @click.stop="toggleDropdown"></div>
-  <div class="dropdown" v-show="showDropdown">
+         @click="toggleDropdown" />
+  <span class="clear-btn" v-if="!showDropdown && showClearBtn" @click="clearTime">&times;</span>
+  <div class="time-picker-overlay" v-if="showDropdown" @click="toggleDropdown"></div>
+  <div class="dropdown" v-show="showDropdown" @click.stop="">
     <div class="select-list">
       <ul class="hours">
         <li class="hint" v-text="hourType"></li>
@@ -620,7 +632,7 @@ export default {
               :class="{active: hour === hr}"
               v-text="hr"
               :disabled="isDisabledHour(hr)"
-              @click.stop="select('hour', hr)"></li>
+              @click="select('hour', hr)"></li>
         </template>
       </ul>
       <ul class="minutes">
@@ -629,7 +641,7 @@ export default {
             :key="mIndex"
             :class="{active: minute === m}"
             v-text="m"
-            @click.stop="select('minute', m)"></li>
+            @click="select('minute', m)"></li>
       </ul>
       <ul class="seconds" v-if="secondType">
         <li class="hint" v-text="secondType"></li>
@@ -637,7 +649,7 @@ export default {
             :key="sIndex"
             :class="{active: second === s}"
             v-text="s"
-            @click.stop="select('second', s)"></li>
+            @click="select('second', s)"></li>
       </ul>
       <ul class="apms" v-if="apmType">
         <li class="hint" v-text="apmType"></li>
@@ -647,7 +659,7 @@ export default {
               :class="{active: apm === a}"
               v-text="a"
               :disabled="!has[a.toLowerCase()]"
-              @click.stop="select('apm', a)"></li>
+              @click="select('apm', a)"></li>
         </template>
       </ul>
     </div>
@@ -747,7 +759,7 @@ export default {
   margin: 0;
   list-style: none;
 
-  flex: 1;
+  flex: 1 1 0.00001px;
   overflow-x: hidden;
   overflow-y: auto;
 }
@@ -759,6 +771,7 @@ export default {
 }
 
 .vue__time-picker .dropdown ul li {
+  list-style: none;
   text-align: center;
   padding: 0.3em 0;
   color: #161616;

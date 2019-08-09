@@ -14,12 +14,12 @@ Vue.config.productionTip = false
 * Use Vue Highlight.js
 */
 Vue.use(VueHighlightJS, {
-	// Register only languages that you want
-	languages: {
-		javascript,
+  // Register only languages that you want
+  languages: {
+    javascript,
     json,
-		vue
-	}
+    vue
+  }
 })
 
 new Vue({

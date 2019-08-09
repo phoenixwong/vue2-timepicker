@@ -269,7 +269,8 @@ Paired with the above `hour-range` parameter. In this sample, the hour picker wi
 
 Used to disable dropdown picker and clear button in the UI. To prevent users from changing values again.
 
-## Props API
+
+## Main Props API
 
 Prop                    | Type      | Required | Default Value
 ----------------------- | --------- | -------- | -------------
@@ -281,10 +282,82 @@ Prop                    | Type      | Required | Default Value
 **hour-range**          | _Array_   | no       | _undefined_
 **hide-disabled-hours** | _Boolean_ | no       | false
 **disabled**            | _Boolean_ | no       | false
+
+
+## Input Props API
+
+Prop                    | Type      | Required | Default Value
+----------------------- | --------- | -------- | -------------
 **id**                  | _String_  | no       | _undefined_
 **name**                | _String_  | no       | _undefined_
+**placeholder**         | _String_  | no       | _undefined_
+**input-class**         | _String_  | no       | _undefined_
 
-> `id` and `name` will be assigned to the \<input type="text" class="display-time"\> within the component
+Timepicker now supports `id`, `name`, and `placeholder` like ordinary form elements. Values will be assigned to the
+\<input type="text" class="display-time"\> within the component.
+
+**`id` and `name`**
+
+```html
+<!-- id -->
+<vue-timepicker id="myFistPicker"></vue-timepicker>
+
+<!-- name -->
+<vue-timepicker name="nameInForm"></vue-timepicker>
+```
+
+**`placeholder`**
+
+When `placeholder` is not set, your defined format string will be used.
+
+```html
+<!-- placeholder is set -->
+<vue-timepicker placeholder="Start Time"></vue-timepicker>
+<!-- -> "Start Time" -->
+
+<!-- placeholder not set -->
+<vue-timepicker format="hh:mm A"></vue-timepicker>
+<!-- -> "hh:mm A" -->
+
+<!-- both placeholder and format are not set -->
+<vue-timepicker></vue-timepicker>
+<!-- -> "HH:mm" -->
+```
+
+**The `input-class`**
+
+The `input-class` will also be assigned to text input in the component
+
+```html
+<!-- Set `input-class` -->
+<vue-timepicker input-class="my-awesome-picker"></vue-timepicker>
+
+<!-- html result -->
+<span class="vue__time-picker time-picker">
+  <input class="display-time my-awesome-picker" type="text" readonly="readonly">
+  <!-- ... -->
+</span>
+
+```
+
+## Helper Events
+
+### The `@open` and `@close` Event of the Dropdown Picker
+
+Help identifying current status of the dropdown picker
+
+```javascript
+// Define a variable for logging the status
+data () {
+  return {
+    dropdownStatus: 'closed'
+  }
+}
+```
+
+```html
+<vue-timepicker @open="dropdownStatus = 'opened'" @close="dropdownStatus = 'closed'"></vue-timepicker>
+```
 
 ## Contribution
 

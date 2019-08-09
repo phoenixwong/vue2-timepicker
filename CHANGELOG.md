@@ -2,6 +2,21 @@
 
 > The Change Log of Vue2 Timepicker `vue2-timepicker`
 
+## v 0.2.1
+
+### New
+
+- New `input-class` support. The custom input class will be assigned to the `<input type="text">` within the component. ([#57](https://github.com/phoenixwong/vue2-timepicker/issues/57))
+- Add support to `placeholder`, just like other regular form elements ([#55](https://github.com/phoenixwong/vue2-timepicker/issues/55))
+
+### Improvements
+
+Refined `@click.stop` logic ([#38](https://github.com/phoenixwong/vue2-timepicker/issues/38))
+
+### Fixes
+
+Fixes possible loader issue in some Webpack configs ([#68](https://github.com/phoenixwong/vue2-timepicker/issues/68), Thanks to @RaphaelJ)
+
 ## v 0.2.0
 
 ### Breaking Changes

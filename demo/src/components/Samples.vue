@@ -28,6 +28,7 @@ export default {
       demoData1: {HH: '08', mm: '30'},
       demoData2: {HH: '10', mm: '45'},
       demoArgs: undefined,
+      dropdownStatus: 'closed',
 
       sideNav: [
         { title: 'Default', anchor: 'default' },
@@ -218,16 +219,16 @@ section#mostlyUsedSamples
       highlight-code(lang="html" data-title="HTML")
         | &lt;p v-for="(day, index) in yourDaysArray"&gt;
         |   &lt;label&gt;Day <span>{{</span> index + 1 <span>}}</span>: &lt;/label&gt;
-        |   &lt;vue-timepicker v-model="day.start_time"&gt;&lt;/vue-timepicker&gt;
+        |   &lt;vue-timepicker v-model="day.start_time" placeholder="Start Time"&gt;&lt;/vue-timepicker&gt;
         |   &lt;span&gt; to &lt;/span&gt;
-        |   &lt;vue-timepicker v-model="day.end_time"&gt;&lt;/vue-timepicker&gt;
+        |   &lt;vue-timepicker v-model="day.end_time" placeholder="End Time"&gt;&lt;/vue-timepicker&gt;
         | &lt;/p&gt;
     template(slot="preview")
       p(v-for="(day, index) in yourDaysArray")
         label Day {{ index + 1 }}:&nbsp;
-        vue-timepicker(v-model="day.start_time")
+        vue-timepicker(v-model="day.start_time" placeholder="Start Time")
         span &nbsp;to&nbsp;
-        vue-timepicker(v-model="day.end_time")
+        vue-timepicker(v-model="day.end_time" placeholder="End Time")
     template(slot="data")
       highlight-code(lang="json" data-title="`yourDaysArray` JSON in live") {{ yourDaysArray }}
 
@@ -325,6 +326,28 @@ section#mostlyUsedSamples
         | &lt;vue-timepicker disabled&gt;&lt;/vue-timepicker&gt;
     template(slot="preview")
       vue-timepicker(disabled)
+
+  //- Default
+  sample-block#openAndClose
+    template(slot="title") `@open` and `@close` event
+    p(slot="description")
+      | Help identifying current status of the dropdown picker
+    template(slot="codes")
+      highlight-code(lang="javascript" data-title="JS")
+        | // Define a variable for logging the status
+        | data () {
+        |   return {
+        |     dropdownStatus: 'closed'
+        |   }
+        | }
+      highlight-code(lang="html" data-title="HTML")
+        | &lt;vue-timepicker @open="dropdownStatus = 'opened'" @close="dropdownStatus = 'closed'"&gt;&lt;/vue-timepicker&gt;
+    template(slot="preview")
+      p
+        b Picker Status:
+        | &nbsp;I'm {{dropdownStatus}}!
+      p
+        vue-timepicker(@open="dropdownStatus = 'opened'" @close="dropdownStatus = 'closed'")
 
   //- Footer Links
   .footer-links
