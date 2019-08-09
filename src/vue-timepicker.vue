@@ -618,10 +618,10 @@ export default {
          :placeholder="placeholder || formatString"
          :disabled="disabled"
          readonly
-         @click.stop="toggleDropdown" />
+         @click="toggleDropdown" />
   <span class="clear-btn" v-if="!showDropdown && showClearBtn" @click.stop="clearTime">&times;</span>
-  <div class="time-picker-overlay" v-if="showDropdown" @click.stop="toggleDropdown"></div>
-  <div class="dropdown" v-show="showDropdown">
+  <div class="time-picker-overlay" v-if="showDropdown" @click="toggleDropdown"></div>
+  <div class="dropdown" v-show="showDropdown" @click.stop="">
     <div class="select-list">
       <ul class="hours">
         <li class="hint" v-text="hourType"></li>
@@ -631,7 +631,7 @@ export default {
               :class="{active: hour === hr}"
               v-text="hr"
               :disabled="isDisabledHour(hr)"
-              @click.stop="select('hour', hr)"></li>
+              @click="select('hour', hr)"></li>
         </template>
       </ul>
       <ul class="minutes">
@@ -640,7 +640,7 @@ export default {
             :key="mIndex"
             :class="{active: minute === m}"
             v-text="m"
-            @click.stop="select('minute', m)"></li>
+            @click="select('minute', m)"></li>
       </ul>
       <ul class="seconds" v-if="secondType">
         <li class="hint" v-text="secondType"></li>
@@ -648,7 +648,7 @@ export default {
             :key="sIndex"
             :class="{active: second === s}"
             v-text="s"
-            @click.stop="select('second', s)"></li>
+            @click="select('second', s)"></li>
       </ul>
       <ul class="apms" v-if="apmType">
         <li class="hint" v-text="apmType"></li>
@@ -658,7 +658,7 @@ export default {
               :class="{active: apm === a}"
               v-text="a"
               :disabled="!has[a.toLowerCase()]"
-              @click.stop="select('apm', a)"></li>
+              @click="select('apm', a)"></li>
         </template>
       </ul>
     </div>
