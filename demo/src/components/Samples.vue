@@ -28,6 +28,7 @@ export default {
       demoData1: {HH: '08', mm: '30'},
       demoData2: {HH: '10', mm: '45'},
       demoArgs: undefined,
+      dropdownStatus: 'closed',
 
       sideNav: [
         { title: 'Default', anchor: 'default' },
@@ -107,23 +108,6 @@ section#mostlyUsedSamples
       b 12-hour sample 2
       p
         vue-timepicker(format="h:m a")
-
-
-  //- Custom Class
-  sample-block#format12hours
-    template(slot="title") Custom Class
-    p(slot="description")
-      | You can style input box by providing
-      code custom class
-    template(slot="codes")
-      highlight-code(lang="html" data-title="HTML")
-        | &lt;!-- Custom Class --&gt;
-        | &lt;vue-timepicker :input-class="'form-control'"&gt;&lt;/vue-timepicker&gt;
-        | &nbsp;
-    template(slot="preview")
-      b 12-hour sample with custom class
-      p
-        vue-timepicker(format="hh:mm A" inputClass="form-control")
 
   //- Seconds Picker
   sample-block#seconds
@@ -342,6 +326,28 @@ section#mostlyUsedSamples
         | &lt;vue-timepicker disabled&gt;&lt;/vue-timepicker&gt;
     template(slot="preview")
       vue-timepicker(disabled)
+
+  //- Default
+  sample-block#openAndClose
+    template(slot="title") `@open` and `@close` event
+    p(slot="description")
+      | Help identifying current status of the dropdown picker
+    template(slot="codes")
+      highlight-code(lang="javascript" data-title="JS")
+        | // Define a variable for logging the status
+        | data () {
+        |   return {
+        |     dropdownStatus: 'closed'
+        |   }
+        | }
+      highlight-code(lang="html" data-title="HTML")
+        | &lt;vue-timepicker @open="dropdownStatus = 'opened'" @close="dropdownStatus = 'closed'"&gt;&lt;/vue-timepicker&gt;
+    template(slot="preview")
+      p
+        b Picker Status:
+        | &nbsp;I'm {{dropdownStatus}}!
+      p
+        vue-timepicker(@open="dropdownStatus = 'opened'" @close="dropdownStatus = 'closed'")
 
   //- Footer Links
   .footer-links
