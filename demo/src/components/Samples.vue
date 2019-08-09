@@ -38,10 +38,11 @@ export default {
         { title: 'Using v-model', anchor: 'vModel' },
         { title: 'Hide Clear Button', anchor: 'hideClearButton' },
         { title: 'Work with v-for', anchor: 'vForSample' },
-        { title: 'The change Event', anchor: 'onChangeSample' },
+        { title: 'The @change Event', anchor: 'onChangeSample' },
         { title: 'Hour Range', anchor: 'hourRange' },
         { title: 'Hide Disabled Hours', anchor: 'hideDisabledHours' },
-        { title: 'Disable Picker', anchor: 'disablePicker' }
+        { title: 'Disable Picker', anchor: 'disablePicker' },
+        { title: '@open and @close event', anchor: 'openAndClose' }
       ]
     }
   },
@@ -236,8 +237,8 @@ section#mostlyUsedSamples
   sample-block#onChangeSample
     template(slot="title")
       | The&nbsp;
-      code change
-      | Event
+      code @change
+      | &nbsp;Event
     template(slot="description")
       p A <code>change</code> event will be triggered every time user alters the timepicker's value.
       p Unlike the <code>v-model</code>, which only returns data in your predefined format, <code>@change</code> event will return a full package of all supported time tokens.
@@ -327,9 +328,13 @@ section#mostlyUsedSamples
     template(slot="preview")
       vue-timepicker(disabled)
 
-  //- Default
+  //- Open And Close Event
   sample-block#openAndClose
-    template(slot="title") `@open` and `@close` event
+    template(slot="title")
+      code @open
+      | &nbsp;and&nbsp;
+      code @close
+      | &nbsp;event
     p(slot="description")
       | Help identifying current status of the dropdown picker
     template(slot="codes")
