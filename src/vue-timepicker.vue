@@ -237,8 +237,11 @@ export default {
     'opts.secondInterval' (newInteval) {
       this.renderList('second', newInteval)
     },
-    value () {
-      this.readValues()
+    value: {
+      deep: true,
+      handler () {
+        this.readValues()
+      }
     },
     displayTime () {
       this.fillValues()
