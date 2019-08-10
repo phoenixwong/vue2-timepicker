@@ -237,8 +237,11 @@ export default {
     'opts.secondInterval' (newInteval) {
       this.renderList('second', newInteval)
     },
-    value () {
-      this.readValues()
+    value: {
+      deep: true,
+      handler () {
+        this.readValues()
+      }
     },
     displayTime () {
       this.fillValues()
@@ -506,7 +509,10 @@ export default {
       })
 
       this.$emit('input', JSON.parse(JSON.stringify(timeValue)))
-      this.$emit('change', {data: fullVals})
+      this.$emit('change', {
+        data: fullVals,
+        displayTime: String(this.displayTime)
+      })
     },
 
     is12hRange (value) {

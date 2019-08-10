@@ -52,8 +52,8 @@ export default {
       disablePicker: false,
 
       playgroundData: {},
-
       playgroundFullValue: {},
+      playgroundDisplayTime: undefined,
 
       muteWatch: false,
 
@@ -252,6 +252,7 @@ export default {
 
     changeHandler (eventData) {
       this.playgroundFullValue = eventData.data
+      this.playgroundDisplayTime = eventData.displayTime
       this.updateRangeValue(eventData.data)
     }
   },
@@ -390,6 +391,7 @@ section#playground
 
     #dispatchedValue.codes
       highlight-code(lang="json" data-title="@change event data") {{ playgroundFullValue }}
+      highlight-code(lang="json" data-title="@change event displayTime") {{ playgroundDisplayTime }}
 </template>
 
 <style lang="stylus">

@@ -191,13 +191,13 @@ console.log(this.yourTimeValue)
 // A: No argument
 changeHandler (eventData) {
   console.log(eventData)
-  // -> {data: {HH:..., mm:... }}
+  // -> {data: {HH:..., mm:... }, displayTime: HH:mm}
 }
 
 // B: Custom arguments
 otherChangeHandler (eventData, yourArg1, yourArg2) {
   console.log(eventData)
-  // -> {data: {HH:..., mm:... }}
+  // -> {data: {HH:..., mm:... }, displayTime: HH:mm}
   console.log(yourArg1)
   // -> 'foo'
   console.log(yourArg2)
@@ -212,18 +212,22 @@ In the example above, when picker is set to "14:30:15" in HH:mm:ss format, `chan
 ```javascript
 // `@change` event data
 {
-  HH: "14",
-  H: "14",
-  hh: "14",
-  a: "am",
-  A: "AM",
-  h: "14",
-  kk: "14",
-  k: "14",
-  m: "30",
-  mm: "30",
-  s: "15",
-  ss: "15"
+  data: {
+    HH: "14",
+    H: "14",
+    hh: "14",
+    a: "am",
+    A: "AM",
+    h: "14",
+    kk: "14",
+    k: "14",
+    m: "30",
+    mm: "30",
+    s: "15",
+    ss: "15"
+  },
+  // extra `displayTime` added since v0.2.2
+  displayTime: '14:30:15'
 }
 ```
 
