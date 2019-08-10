@@ -389,4 +389,4 @@ Detail changes for each release are documented in [CHANGELOG.md](https://github.
 
 ## License
 
-[MIT](http://opensource.org/licenses/MIT)
+[MIT](https://github.com/phoenixwong/vue2-timepicker/blob/master/LICENSE.md)
