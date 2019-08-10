@@ -509,7 +509,10 @@ export default {
       })
 
       this.$emit('input', JSON.parse(JSON.stringify(timeValue)))
-      this.$emit('change', {data: fullVals})
+      this.$emit('change', {
+        data: fullVals,
+        displayTime: String(this.displayTime)
+      })
     },
 
     is12hRange (value) {

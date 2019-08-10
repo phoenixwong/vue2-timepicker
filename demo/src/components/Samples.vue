@@ -240,8 +240,9 @@ section#mostlyUsedSamples
       code @change
       | &nbsp;Event
     template(slot="description")
-      p A <code>change</code> event will be triggered every time user alters the timepicker's value.
+      p A <code>@change</code> event will be triggered every time user alters the timepicker's value.
       p Unlike the <code>v-model</code>, which only returns data in your predefined format, <code>@change</code> event will return a full package of all supported time tokens.
+      p Start from <code>v0.2.2</code>, a <code>displayTime</code> string value is also included in the <code>@change</code> event.
       p Play around with the two pickers below to see their data changes in live.
     template(slot="codes")
       highlight-code(lang="html" data-title="HTML")
@@ -254,12 +255,12 @@ section#mostlyUsedSamples
         | methods: {
         |   // No argument
         |   changeHandler (eventData) {
-        |     // eventData -&gt; {data: {HH:..., mm:...}}
+        |     // eventData -&gt; {data: {HH:..., mm:...}, displayTime: 'HH:mm'}
         |   },
         |
         |   // Customized arguments
         |   otherChangeHandler (eventData, arg1, arg2) {
-        |     // eventData -&gt; {data: {HH:..., mm:...}}
+        |     // eventData -&gt; {data: {HH:..., mm:...}, displayTime: 'HH:mm'}
         |     // arg1 -&gt; 'foo'
         |     // arg2 -&gt; 42
         |   }
