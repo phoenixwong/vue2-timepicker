@@ -78,31 +78,31 @@ section#mostlyUsedSamples
 
   //- Default
   sample-block#default
-    template(slot="title") Default
+    template(v-slot:title) Default
     p(slot="description")
       | Default to 24-hour format
       code HH:mm
-    template(slot="codes")
+    template(v-slot:codes)
       highlight-code(lang="html" data-title="HTML")
         | &lt;vue-timepicker&gt;&lt;/vue-timepicker&gt;
-    template(slot="preview")
+    template(v-slot:preview)
       vue-timepicker
 
   //- 12 Hours
   sample-block#format12hours
-    template(slot="title") 12 Hours
+    template(v-slot:title) 12 Hours
     p(slot="description")
       | By properly define the
       code format
       | string, you can set timepicker in form of 12 hours
-    template(slot="codes")
+    template(v-slot:codes)
       highlight-code(lang="html" data-title="HTML")
         | &lt;!-- 12-hour sample 1 --&gt;
         | &lt;vue-timepicker format="hh:mm A"&gt;&lt;/vue-timepicker&gt;
         | &nbsp;
         | &lt;!-- 12-hour sample 2 --&gt;
         | &lt;vue-timepicker format="h:m a"&gt;&lt;/vue-timepicker&gt;
-    template(slot="preview")
+    template(v-slot:preview)
       b 12-hour sample 1
       p
         vue-timepicker(format="hh:mm A")
@@ -112,27 +112,27 @@ section#mostlyUsedSamples
 
   //- Seconds Picker
   sample-block#seconds
-    template(slot="title") Seconds Picker
+    template(v-slot:title) Seconds Picker
     p(slot="description")
       | You can trigger the seconds picker by adding
       code ss
       | or
       code s
       | in your format string.
-    template(slot="codes")
+    template(v-slot:codes)
       highlight-code(lang="html" data-title="HTML")
         | &lt;vue-timepicker format="HH:mm:ss"&gt;&lt;/vue-timepicker&gt;
-    template(slot="preview")
+    template(v-slot:preview)
       vue-timepicker(format="HH:mm:ss")
 
   //- Customized Interval
   sample-block#interval
-    template(slot="title") Customized Interval
+    template(v-slot:title) Customized Interval
     p(slot="description")
       | Timepicker also allows you to display minutes or seconds picker with certain interval, like a 10-minute interval
       code 0, 10, 20, ... 50, 60
       | for example
-    template(slot="codes")
+    template(v-slot:codes)
       highlight-code(lang="html" data-title="HTML")
         | &lt;!-- 10-minute interval --&gt;
         | &lt;vue-timepicker :minute-interval="10"&gt;&lt;/vue-timepicker&gt;
@@ -142,7 +142,7 @@ section#mostlyUsedSamples
         | &nbsp;
         | &lt;!-- 5-minute interval plus 10-second interval --&gt;
         | &lt;vue-timepicker format="hh:mm:ss" :minute-interval="5" :second-interval="10"&gt;&lt;/vue-timepicker&gt;
-    template(slot="preview")
+    template(v-slot:preview)
       b 10-minute interval
       p
         vue-timepicker(:minute-interval="10")
@@ -155,14 +155,14 @@ section#mostlyUsedSamples
 
   //- Using v-model
   sample-block#vModel
-    template(slot="title")
+    template(v-slot:title)
       | Using&nbsp;
       code v-model
     p(slot="description")
       | Thanks to the awesome Vue2.0 feature, you can manipulate timepicker's data with
       code v-model
       | now
-    template(slot="codes")
+    template(v-slot:codes)
       highlight-code(lang="javascript" data-title="JS")
         | // Define format and initial data
         | data () {
@@ -178,34 +178,34 @@ section#mostlyUsedSamples
         | }
       highlight-code(lang="html" data-title="HTML")
         | &lt;vue-timepicker :format="yourFormat" v-model="yourData"&gt;&lt;/vue-timepicker&gt;
-    template(slot="preview")
+    template(v-slot:preview)
       vue-timepicker(:format="yourFormat" v-model="yourData")
-    template(slot="data")
+    template(v-slot:data)
       highlight-code(lang="json" data-title="`yourData` in live (JSON)") {{ yourData }}
 
   //- Hide Clear Button
   sample-block#hideClearButton
-    template(slot="title") Hide Clear Button
+    template(v-slot:title) Hide Clear Button
     p(slot="description")
       | If you don't want to expose the clear button in the UI,
       code hide-clear-button
       | property will do the trick.
-    template(slot="codes")
+    template(v-slot:codes)
       highlight-code(lang="html" data-title="HTML")
         | &lt;vue-timepicker hide-clear-button&gt;&lt;/vue-timepicker&gt;
-    template(slot="preview")
+    template(v-slot:preview)
       vue-timepicker(hide-clear-button)
 
   //- v-for Example
   sample-block#vForSample
-    template(slot="title")
+    template(v-slot:title)
       | Work with&nbsp;
       code v-for
     p(slot="description")
       | Here's a quick sample of
       code v-for
       | usage
-    template(slot="codes")
+    template(v-slot:codes)
       highlight-code(lang="javascript" data-title="JS")
         | data () {
         |   return {
@@ -224,27 +224,27 @@ section#mostlyUsedSamples
         |   &lt;span&gt; to &lt;/span&gt;
         |   &lt;vue-timepicker v-model="day.end_time" placeholder="End Time"&gt;&lt;/vue-timepicker&gt;
         | &lt;/p&gt;
-    template(slot="preview")
+    template(v-slot:preview)
       p(v-for="(day, index) in yourDaysArray")
         label Day {{ index + 1 }}:&nbsp;
         vue-timepicker(v-model="day.start_time" placeholder="Start Time")
         span &nbsp;to&nbsp;
         vue-timepicker(v-model="day.end_time" placeholder="End Time")
-    template(slot="data")
+    template(v-slot:data)
       highlight-code(lang="json" data-title="`yourDaysArray` JSON in live") {{ yourDaysArray }}
 
   //- @change Sample
   sample-block#onChangeSample
-    template(slot="title")
+    template(v-slot:title)
       | The&nbsp;
       code @change
       | &nbsp;Event
-    template(slot="description")
+    template(v-slot:description)
       p A <code>@change</code> event will be triggered every time user alters the timepicker's value.
       p Unlike the <code>v-model</code>, which only returns data in your predefined format, <code>@change</code> event will return a full package of all supported time tokens.
       p Start from <code>v0.2.2</code>, a <code>displayTime</code> string value is also included in the <code>@change</code> event.
       p Play around with the two pickers below to see their data changes in live.
-    template(slot="codes")
+    template(v-slot:codes)
       highlight-code(lang="html" data-title="HTML")
         | &lt;!-- No argument --&gt;
         | &lt;vue-timepicker v-model="demoData1" @change="changeHandler"&gt;&lt;/vue-timepicker&gt;
@@ -265,7 +265,7 @@ section#mostlyUsedSamples
         |     // arg2 -&gt; 42
         |   }
         | }
-    template(slot="preview")
+    template(v-slot:preview)
       b No argument
       p
         vue-timepicker(v-model="demoData1" @change="changeHandler")
@@ -279,16 +279,18 @@ section#mostlyUsedSamples
 
   //- Hour Range
   sample-block#hourRange
-    template(slot="title") Hour Range
+    template(v-slot:title) Hour Range
     p(slot="description") To define hour values you want and disable the rest
-    template(slot="codes")
+    template(v-slot:codes)
       highlight-code(lang="html" data-title="HTML")
         | &lt;!-- Hour Range Sample 1 --&gt;
         | &lt;vue-timepicker :hour-range="[5, [8, 12], [14, 17], 19]"&gt;&lt;/vue-timepicker&gt;
+        | &lt;!-- >> Equals to :hour-range="[5, 8, 9, 10, 11, 12, 14, 15, 16, 17, 19]" --&gt;
         | &nbsp;
         | &lt;!-- Hour Range Sample 2 (12-hour format) --&gt;
         | &lt;vue-timepicker :hour-range="['7a', '9a', '11a', '1p', ['3p', '5p'], '7p']" format="hh:mm a"&gt;&lt;/vue-timepicker&gt;
-    template(slot="preview")
+        | &lt;!-- >> Equals to :hour-range="['7a', '9a', '11a', '1p', '3p', '4p', '5p', '7p']" --&gt;
+    template(v-slot:preview)
       b Hour Range Sample 1
       p
         vue-timepicker(:hour-range="[5, [8, 12], [14, 17], 19]")
@@ -298,19 +300,19 @@ section#mostlyUsedSamples
 
   //- Hide Disabled Hours
   sample-block#hideDisabledHours
-    template(slot="title") Hide Disabled Hours
+    template(v-slot:title) Hide Disabled Hours
     p(slot="description")
       | Paired with
       code hour-range
       | , help hiding those disabled values
-    template(slot="codes")
+    template(v-slot:codes)
       highlight-code(lang="html" data-title="HTML")
         | &lt;!-- Hour Range Sample 1 with `hide-disabled-hours` --&gt;
         | &lt;vue-timepicker hide-disabled-hours :hour-range="[5, [8, 12], [14, 17], 19]"&gt;&lt;/vue-timepicker&gt;
         | &nbsp;
         | &lt;!-- Hour Range Sample 2 (12-hour format) with `hide-disabled-hours` --&gt;
         | &lt;vue-timepicker hide-disabled-hours :hour-range="['7a', '9a', '11a', '1p', ['3p', '5p'], '7p']" format="hh:mm a"&gt;&lt;/vue-timepicker&gt;
-    template(slot="preview")
+    template(v-slot:preview)
       b Hour Range Sample 1 with `hide-disabled-hours`
       p
         vue-timepicker(:hour-range="[5, [8, 12], [14, 17], 19]" hide-disabled-hours)
@@ -320,25 +322,25 @@ section#mostlyUsedSamples
 
   //- Disable Picker
   sample-block#disablePicker
-    template(slot="title") Disable Picker
+    template(v-slot:title) Disable Picker
     p(slot="description")
       | Completely disable the picker.
-    template(slot="codes")
+    template(v-slot:codes)
       highlight-code(lang="html" data-title="HTML")
         | &lt;vue-timepicker disabled&gt;&lt;/vue-timepicker&gt;
-    template(slot="preview")
+    template(v-slot:preview)
       vue-timepicker(disabled)
 
   //- Open And Close Event
   sample-block#openAndClose
-    template(slot="title")
+    template(v-slot:title)
       code @open
       | &nbsp;and&nbsp;
       code @close
       | &nbsp;event
     p(slot="description")
       | Help identifying current status of the dropdown picker
-    template(slot="codes")
+    template(v-slot:codes)
       highlight-code(lang="javascript" data-title="JS")
         | // Define a variable for logging the status
         | data () {
@@ -347,10 +349,12 @@ section#mostlyUsedSamples
         |   }
         | }
       highlight-code(lang="html" data-title="HTML")
+        | &lt;p&gt;Dropdown Status: I'm <pre>{{</pre>dropdownStatus<pre>}}</pre>!&lt;/p&gt;
+        | &nbsp;
         | &lt;vue-timepicker @open="dropdownStatus = 'opened'" @close="dropdownStatus = 'closed'"&gt;&lt;/vue-timepicker&gt;
-    template(slot="preview")
+    template(v-slot:preview)
       p
-        b Picker Status:
+        b Dropdown Status:
         | &nbsp;I'm {{dropdownStatus}}!
       p
         vue-timepicker(@open="dropdownStatus = 'opened'" @close="dropdownStatus = 'closed'")

@@ -71,11 +71,23 @@ nav.top-nav
   .title
     display: none
 
+  span.version,
+  span.downloads
+    a
+      border: 0
+      text-decoration: none
+
   span.version
     position: absolute
     z-index: 301
     right: 1em
-    top: .7em
+    bottom: .5em
+
+  span.downloads
+    position: absolute
+    z-index: 301
+    left: .8em
+    bottom: .5em
 
   &.stick
     position: fixed
@@ -91,6 +103,9 @@ nav.top-nav
       z-index: 301
       left: 1em
       top: .8em
+
+    span.downloads
+      display: none
 
   ul
     list-style: none

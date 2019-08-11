@@ -15,27 +15,44 @@ export default {
       currentView: 'samples',
       stickyNav: false,
 
-      scrollHandler: undefined,
       scrollTop: 0
     }
   },
 
   methods: {
     switchView (target) {
+      try {
+        history.replaceState(null, null, ' ')
+      } catch (e) {
+        // Failsafe for outdated browsers. Do nothing here.
+      }
       this.currentView = target
-      document.body.scrollTop = 0
+      this.$nextTick(() => {
+        if (document.documentElement && document.documentElement.scrollTop) {
+          document.documentElement.scrollTop = 0
+        } else if (document.body.parentNode && document.body.parentNode.scrollTop) {
+          document.body.parentNode.scrollTop = 0
+        } else {
+          document.body.scrollTop = 0
+        }
+      })
+    },
+
+    scrollHandler (evt) {
+      this.scrollTop = (evt.target.scrollingElement || (document.documentElement || document.body.parentNode)).scrollTop || 0
+      if (this.scrollTop > 150) {
+        if (!this.stickyNav) {
+          this.stickyNav = true
+        }
+      } else {
+        if (this.stickyNav) {
+          this.stickyNav = false
+        }
+      }
     }
   },
 
   mounted () {
-    this.scrollHandler = (evt) => {
-      this.scrollTop = (evt.target.scrollingElement || (document.documentElement || document.body.parentNode)).scrollTop || 0
-      if (this.scrollTop > 150) {
-        this.stickyNav = true
-      } else {
-        this.stickyNav = false
-      }
-    }
     window.addEventListener('scroll', this.scrollHandler)
   },
 
@@ -66,10 +83,14 @@ export default {
       li
         a(:class="{active: currentView === 'playground'}" @click="switchView('playground')") Playground
       li
-        a(href="https://github.com/phoenixwong/vue2-timepicker" target="_blank") Documentation
+        a(href="https://github.com/phoenixwong/vue2-timepicker/blob/master/README.md" target="_blank") Documentation
 
     span.version
-      img(alt="GitHub package.json version" src="https://img.shields.io/github/package-json/v/phoenixwong/vue2-timepicker?label=latest&style=flat-square")
+      a(href="https://www.npmjs.com/package/vue2-timepicker" target="_blank")
+        img(alt="NPM latest version" src="https://img.shields.io/npm/v/vue2-timepicker?style=flat-square")
+    span.downloads
+      a(href="https://www.npmjs.com/package/vue2-timepicker" target="_blank")
+        img(alt="NPM downloads" src="https://img.shields.io/npm/dm/vue2-timepicker?style=flat-square")
 
   main.content(:class="{'nav-affixed': stickyNav}")
     transition(name="fade" mode="out-in")
@@ -85,7 +106,7 @@ export default {
               | Didn't find what you need? Please check the&nbsp;
               a(@click="switchView('playground')") Playground
               | &nbsp;or&nbsp;
-              a(href="https://github.com/phoenixwong/vue2-timepicker" target="_blank" title="Vue2-Timepicker Documentation") Documentation
+              a(href="https://github.com/phoenixwong/vue2-timepicker/blob/master/README.md" target="_blank" title="Vue2-Timepicker Documentation") Documentation
               | &nbsp;for more inspiration.
 </template>
 
