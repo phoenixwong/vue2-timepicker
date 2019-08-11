@@ -1,3 +1,8 @@
+# Table of Contents
+
+- [Migrating from Vue 1.x vue-timepicker](https://github.com/phoenixwong/vue2-timepicker/blob/master/MIGRATION.md#migrating-from-vue-1x-vue-timepicker)
+- [Migrating from Bower to Yarn or NPM](https://github.com/phoenixwong/vue2-timepicker/blob/master/MIGRATION.md#migrating-from-bower-to-yarn-or-npm)
+
 # Migrating from Vue 1.x vue-timepicker
 
 There are bunch of [notable changes in Vue2](http://vuejs.org/guide/migration.html), and quite some of the key features our original `vue-timepicker` has been relying on, got deprecated since 2.0. So here we are, a brand new version compatible with Vue 2.x.
@@ -125,6 +130,6 @@ There will be **no** standalone ES5 script in the 2.x version.
 
 # Migrating from Bower to Yarn or NPM
 
-Because [Bower](https://bower.io/) itself stopped maintain since 2017, VueTimepicker drops support to Bower from version `v0.2.0+`.
+Because [Bower](https://bower.io/) itself stopped maintaining since 2017, VueTimepicker drops support for Bower from version `0.2.0+`.
 
-Please check the Bower official guidelines of [How to migrate away from Bower?](https://bower.io/blog/2017/how-to-migrate-away-from-bower/)
+Please check Bower's official guidelines for [How to migrate away from Bower?](https://bower.io/blog/2017/how-to-migrate-away-from-bower/)

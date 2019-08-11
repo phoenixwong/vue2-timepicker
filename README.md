@@ -1,7 +1,7 @@
 # Vue2 Timepicker  
 
-![GitHub package.json version](https://img.shields.io/github/package-json/v/phoenixwong/vue2-timepicker?color=success&style=flat-square)
-![npm](https://img.shields.io/npm/v/vue2-timepicker?style=flat-square)
+![GitHub version](https://img.shields.io/github/package-json/v/phoenixwong/vue2-timepicker?color=success&style=flat-square)
+![npm version](https://img.shields.io/npm/v/vue2-timepicker?style=flat-square)
 ![GitHub release](https://img.shields.io/github/release/phoenixwong/vue2-timepicker?label=github&style=flat-square)
 ![npm downloads](https://img.shields.io/npm/dm/vue2-timepicker?style=flat-square)
 
@@ -27,7 +27,7 @@ Please check [MIGRATION.md](https://github.com/phoenixwong/vue2-timepicker/blob/
 
 ## Dependencies
 
-[Vue.js](http://vuejs.org/) ![npm peer dependency version](https://img.shields.io/npm/dependency-version/vue2-timepicker/peer/vue?style=flat-square)
+[Vue.js](http://vuejs.org/)&nbsp;&nbsp;&nbsp;![npm peer dependency version](https://img.shields.io/npm/dependency-version/vue2-timepicker/peer/vue?style=flat-square)
 
 ## Installation
 
@@ -39,7 +39,7 @@ yarn add vue2-timepicker
 npm install vue2-timepicker --save
 ```
 
-> NOTE: We stop Bower support from `0.2.0+`, please check [MIGRATION.md](https://github.com/phoenixwong/vue2-timepicker/blob/master/MIGRATION.md) for migration guidelines.
+> NOTE: We stop Bower support from `0.2.0+`, please check [MIGRATION.md](https://github.com/phoenixwong/vue2-timepicker/blob/master/MIGRATION.md#migrating-from-bower-to-yarn-or-npm) for migration guidelines.
 
 ## Get Started
 
