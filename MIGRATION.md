@@ -120,3 +120,11 @@ When the picker is set to "14:30:15" later --
 ## Miscellaneous
 
 There will be **no** standalone ES5 script in the 2.x version.
+
+---
+
+# Migrating from Bower to Yarn or NPM
+
+Because [Bower](https://bower.io/) itself stopped maintain since 2017, VueTimepicker drops support to Bower from version `v0.2.0+`.
+
+Please check the Bower official guidelines of [How to migrate away from Bower?](https://bower.io/blog/2017/how-to-migrate-away-from-bower/)

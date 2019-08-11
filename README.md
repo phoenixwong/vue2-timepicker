@@ -1,4 +1,9 @@
-# Vue2 Time Picker  ![GitHub package.json version](https://img.shields.io/github/package-json/v/phoenixwong/vue2-timepicker?color=success&style=flat-square) ![npm](https://img.shields.io/npm/v/vue2-timepicker?style=flat-square) ![GitHub release](https://img.shields.io/github/release/phoenixwong/vue2-timepicker?label=github&style=flat-square)
+# Vue2 Timepicker  
+
+![GitHub package.json version](https://img.shields.io/github/package-json/v/phoenixwong/vue2-timepicker?color=success&style=flat-square)
+![npm](https://img.shields.io/npm/v/vue2-timepicker?style=flat-square)
+![GitHub release](https://img.shields.io/github/release/phoenixwong/vue2-timepicker?label=github&style=flat-square)
+![npm downloads](https://img.shields.io/npm/dm/vue2-timepicker?style=flat-square)
 
 ---
 
@@ -14,15 +19,17 @@ You can see the **Vue2 Timepicker** in action in the [Demo Page](https://phoenix
 
 ## Migration
 
-Migrating from the Vue 1.x version? Please check [MIGRATION.md](https://github.com/phoenixwong/vue2-timepicker/blob/master/MIGRATION.md) for basic guidelines.
+Please check [MIGRATION.md](https://github.com/phoenixwong/vue2-timepicker/blob/master/MIGRATION.md) for basic guidelines if you are about to:
+
+- Migrate from the Vue 1.x version **[vue-time-picker](https://github.com/phoenixwong/vue-timepicker)**
+- Migrate from Bower to Yarn or NPM (Vue2 Timepicker `v0.1.x` -> `v0.2.x+`)
+
 
 ## Dependencies
 
-[Vue.js](http://vuejs.org/) v2.6.5+
+[Vue.js](http://vuejs.org/) ![npm peer dependency version](https://img.shields.io/npm/dependency-version/vue2-timepicker/peer/vue?style=flat-square)
 
 ## Installation
-
-Through YARN or NPM
 
 ```bash
 yarn add vue2-timepicker
@@ -31,6 +38,8 @@ yarn add vue2-timepicker
 ```bash
 npm install vue2-timepicker --save
 ```
+
+> NOTE: We stop Bower support from `0.2.0+`, please check [MIGRATION.md](https://github.com/phoenixwong/vue2-timepicker/blob/master/MIGRATION.md) for migration guidelines.
 
 ## Get Started
 
@@ -73,9 +82,9 @@ var yourComponent = new Vue({
 <vue-timepicker></vue-timepicker>
 ```
 
-## Usage
+## Basic Usage
 
-### Basic Usage
+### Base
 
 ```html
 <!-- Default to 24-Hour format HH:mm -->
@@ -243,6 +252,8 @@ Whereas the `v-model` will only return the data with defined tokens
 }
 ```
 
+## Advance Usage
+
 ### Define Hour Range
 
 Sometime you may want to limit hours picker to a specific range. The `hour-range` parameter is here to help.
@@ -300,7 +311,7 @@ Prop                    | Type      | Required | Default Value
 Timepicker now supports `id`, `name`, and `placeholder` like ordinary form elements. Values will be assigned to the
 \<input type="text" class="display-time"\> within the component.
 
-**`id` and `name`**
+### Input `id` And `name`
 
 ```html
 <!-- id -->
@@ -310,7 +321,7 @@ Timepicker now supports `id`, `name`, and `placeholder` like ordinary form eleme
 <vue-timepicker name="nameInForm"></vue-timepicker>
 ```
 
-**`placeholder`**
+### Input `placeholder`
 
 When `placeholder` is not set, your defined format string will be used.
 
@@ -328,15 +339,15 @@ When `placeholder` is not set, your defined format string will be used.
 <!-- -> "HH:mm" -->
 ```
 
-**The `input-class`**
+### The `input-class`
 
 The `input-class` will also be assigned to text input in the component
 
 ```html
-<!-- Set `input-class` -->
+<!-- Set `input-class` in Vue template -->
 <vue-timepicker input-class="my-awesome-picker"></vue-timepicker>
 
-<!-- html result -->
+<!-- HTML result -->
 <span class="vue__time-picker time-picker">
   <input class="display-time my-awesome-picker" type="text" readonly="readonly">
   <!-- ... -->
@@ -360,6 +371,8 @@ data () {
 ```
 
 ```html
+<p>Dropdown Status: I'm {{dropdownStatus}}!</p>
+
 <vue-timepicker @open="dropdownStatus = 'opened'" @close="dropdownStatus = 'closed'"></vue-timepicker>
 ```
 
