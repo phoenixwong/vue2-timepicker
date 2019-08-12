@@ -43,16 +43,27 @@ npm install vue2-timepicker --save
 
 ## Get Started
 
-**Step 1:** Import VueTimepicker
+### **Step 1:** Import VueTimepicker
 
-**A:** Include the single file component (Recommended)
+**Option A:** Import component JS and CSS
+
+```javascript
+// Main JS (in UMD format)
+import VueTimepicker from 'vue2-timepicker'
+
+// CSS
+import 'vue2-timepicker/dist/VueTimepicker.css'
+```
+
+**Option B:** Import the single file component for SSR Usage
 
 ```javascript
 // Import the *.vue file (CSS included)
-import VueTimepicker from 'vue2-timepicker'
+// Note the `/sfc` suffix here
+import VueTimepicker from 'vue2-timepicker/sfc'
 ```
 
-or, **B:** Include distribution files base on your needs
+**Option C:** Choose any bundle version base on your needs
 
 ```javascript
 // JAVASCRIPT
@@ -65,9 +76,12 @@ import VueTimepicker from 'vue2-timepicker/dist/VueTimepicker.umd.min.js'
 
 // CSS
 import 'vue2-timepicker/dist/VueTimepicker.css'
+
+// *.vue (with CSS)
+import VueTimepicker from 'vue2-timepicker/src/vue-timepicker.vue'
 ```
 
-**Step 2**: Include VueTimepicker in your component
+### **Step 2**: Include VueTimepicker in your component
 
 ```javascript
 var yourComponent = new Vue({
@@ -76,7 +90,9 @@ var yourComponent = new Vue({
 })
 ```
 
-**Step 3**: Then, you can introduce the `vue-timepicker` tag anywhere you like in your component's template
+### **Step 3**: Introduce `vue-timepicker` in template
+
+Then, you can introduce the `vue-timepicker` tag anywhere you like in your component's template
 
 ```html
 <vue-timepicker></vue-timepicker>
