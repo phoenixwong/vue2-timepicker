@@ -37,4 +37,9 @@ export default {
   .preview,
   .codes
     margin-left: 1.5em
+
+  .inline-data-preview
+    display: inline-block
+    margin-left: 1em
+    font-size: 0.9em
 </style>

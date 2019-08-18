@@ -23,6 +23,11 @@ export default {
         {start_time: {HH: '', mm: ''}, end_time: {HH: '13', mm: '30'}},
         {start_time: {HH: '', mm: ''}, end_time: {HH: '', mm: ''}}
       ],
+
+      simpleStringValue: '02:30',
+      yourStringValue: '3:mm:05 A',
+      unsetStringValue: '',
+
       muteFlowListener: true,
       latestDataFlow: undefined,
       demoData1: {HH: '08', mm: '30'},
@@ -36,12 +41,13 @@ export default {
         { title: 'Seconds Picker', anchor: 'seconds' },
         { title: 'Customized Interval', anchor: 'interval' },
         { title: 'Using v-model', anchor: 'vModel' },
-        { title: 'Hide Clear Button', anchor: 'hideClearButton' },
+        { title: 'v-model with String Value', anchor: 'vModelWithString' },
         { title: 'Work with v-for', anchor: 'vForSample' },
-        { title: 'The @change Event', anchor: 'onChangeSample' },
         { title: 'Hour Range', anchor: 'hourRange' },
         { title: 'Hide Disabled Hours', anchor: 'hideDisabledHours' },
+        { title: 'Hide Clear Button', anchor: 'hideClearButton' },
         { title: 'Disable Picker', anchor: 'disablePicker' },
+        { title: 'The @change Event', anchor: 'onChangeSample' },
         { title: '@open and @close event', anchor: 'openAndClose' }
       ]
     }
@@ -151,7 +157,7 @@ section#mostlyUsedSamples
         vue-timepicker(format="HH:mm:ss" :second-interval="15")
       b 5-minute interval plus 10-second interval
       p
-        vue-timepicker( format="hh:mm:ss" :minute-interval="5" :second-interval="10")
+        vue-timepicker(format="hh:mm:ss" :minute-interval="5" :second-interval="10")
 
   //- Using v-model
   sample-block#vModel
@@ -159,9 +165,7 @@ section#mostlyUsedSamples
       | Using&nbsp;
       code v-model
     p(slot="description")
-      | Thanks to the awesome Vue2.0 feature, you can manipulate timepicker's data with
-      code v-model
-      | now
+      | Timepicker takes <code>v-model</code> value in object format by default.
     template(v-slot:codes)
       highlight-code(lang="javascript" data-title="JS")
         | // Define format and initial data
@@ -183,18 +187,54 @@ section#mostlyUsedSamples
     template(v-slot:data)
       highlight-code(lang="json" data-title="`yourData` in live (JSON)") {{ yourData }}
 
-  //- Hide Clear Button
-  sample-block#hideClearButton
-    template(v-slot:title) Hide Clear Button
+  //- String format `v-model`
+  sample-block#vModelWithString
+    template(v-slot:title)
+      code v-model
+      | &nbsp;with String Value
     p(slot="description")
-      | If you don't want to expose the clear button in the UI,
-      code hide-clear-button
-      | property will do the trick.
+      | From <code>v1.0.0+</code>, timepicker also supports <code>v-model</code> value in string format.
     template(v-slot:codes)
+      highlight-code(lang="javascript" data-title="JS")
+        | // Set initial data in string format
+        | data () {
+        |   return {
+        |     simpleStringValue: '02:30',
+        |
+        |     // paired with format 'h:mm:ss A'
+        |     yourStringValue: '3:mm:05 A',
+        |
+        |     unsetStringValue: ''
+        |   }
+        | }
       highlight-code(lang="html" data-title="HTML")
-        | &lt;vue-timepicker hide-clear-button&gt;&lt;/vue-timepicker&gt;
+        | &lt;!-- default 24-hour sample --&gt;
+        | &lt;vue-timepicker v-model="simpleStringValue"&gt;&lt;/vue-timepicker&gt;
+        |
+        | &lt;!-- 12-hour format with partial value set --&gt;
+        | &lt;vue-timepicker v-model="yourStringValue" format="h:mm:ss A"&gt;&lt;/vue-timepicker&gt;
+        |
+        | &lt;!-- unset/unknown initial value --&gt;
+        | &lt;vue-timepicker v-model="unsetStringValue"&gt;&lt;/vue-timepicker&gt;
     template(v-slot:preview)
-      vue-timepicker(hide-clear-button)
+      b default 24-hour sample
+      p
+        vue-timepicker(v-model="simpleStringValue")
+        span.inline-data-preview
+          | simpleStringValue&nbsp;
+          code "{{ simpleStringValue }}"
+      b 12-hour format with partial value set
+      p
+        vue-timepicker(v-model="yourStringValue" format="h:mm:ss A")
+        span.inline-data-preview
+          | yourStringValue:&nbsp;
+          code "{{ yourStringValue }}"
+      b unset/unknown initial value
+      p
+        vue-timepicker(v-model="unsetStringValue")
+        span.inline-data-preview
+          | unsetStringValue:&nbsp;
+          code "{{ unsetStringValue }}"
 
   //- v-for Example
   sample-block#vForSample
@@ -232,50 +272,6 @@ section#mostlyUsedSamples
         vue-timepicker(v-model="day.end_time" placeholder="End Time")
     template(v-slot:data)
       highlight-code(lang="json" data-title="`yourDaysArray` JSON in live") {{ yourDaysArray }}
-
-  //- @change Sample
-  sample-block#onChangeSample
-    template(v-slot:title)
-      | The&nbsp;
-      code @change
-      | &nbsp;Event
-    template(v-slot:description)
-      p A <code>@change</code> event will be triggered every time user alters the timepicker's value.
-      p Unlike the <code>v-model</code>, which only returns data in your predefined format, <code>@change</code> event will return a full package of all supported time tokens.
-      p Start from <code>v0.2.2</code>, a <code>displayTime</code> string value is also included in the <code>@change</code> event.
-      p Play around with the two pickers below to see their data changes in live.
-    template(v-slot:codes)
-      highlight-code(lang="html" data-title="HTML")
-        | &lt;!-- No argument --&gt;
-        | &lt;vue-timepicker v-model="demoData1" @change="changeHandler"&gt;&lt;/vue-timepicker&gt;
-        | &nbsp;
-        | &lt;!-- Custom argument --&gt;
-        | &lt;vue-timepicker v-model="demoData2" @change="otherChangeHandler($event, 'foo', 42)"&gt;&lt;/vue-timepicker&gt;
-      highlight-code(lang="javascript" data-title="JS")
-        | methods: {
-        |   // No argument
-        |   changeHandler (eventData) {
-        |     // eventData -&gt; {data: {HH:..., mm:...}, displayTime: 'HH:mm'}
-        |   },
-        |
-        |   // Customized arguments
-        |   otherChangeHandler (eventData, arg1, arg2) {
-        |     // eventData -&gt; {data: {HH:..., mm:...}, displayTime: 'HH:mm'}
-        |     // arg1 -&gt; 'foo'
-        |     // arg2 -&gt; 42
-        |   }
-        | }
-    template(v-slot:preview)
-      b No argument
-      p
-        vue-timepicker(v-model="demoData1" @change="changeHandler")
-      b With Custom arguments ('foo', 42)
-      p
-        vue-timepicker(v-model="demoData2" @change="otherChangeHandler($event, 'foo', 42)")
-    template(v-if="latestDataFlow || demoArgs" slot="data")
-      highlight-code(v-if="latestDataFlow" lang="json" data-title="The `@change` eventData") {{ latestDataFlow }}
-      highlight-code(v-if="demoArgs" lang="json" data-title="Received Custom Arguments") {{ demoArgs }}
-      highlight-code(v-if="latestDataFlow" lang="json" data-title="`v-model` value") {{ demoArgs ? demoData2 : demoData1 }}
 
   //- Hour Range
   sample-block#hourRange
@@ -320,6 +316,19 @@ section#mostlyUsedSamples
       p
         vue-timepicker(:hour-range="['7a', '9a', '11a', '1p', ['3p', '5p'], '7p']" format="hh:mm a" hide-disabled-hours)
 
+  //- Hide Clear Button
+  sample-block#hideClearButton
+    template(v-slot:title) Hide Clear Button
+    p(slot="description")
+      | If you don't want to expose the clear button in the UI,
+      code hide-clear-button
+      | property will do the trick.
+    template(v-slot:codes)
+      highlight-code(lang="html" data-title="HTML")
+        | &lt;vue-timepicker hide-clear-button&gt;&lt;/vue-timepicker&gt;
+    template(v-slot:preview)
+      vue-timepicker(hide-clear-button)
+
   //- Disable Picker
   sample-block#disablePicker
     template(v-slot:title) Disable Picker
@@ -330,6 +339,50 @@ section#mostlyUsedSamples
         | &lt;vue-timepicker disabled&gt;&lt;/vue-timepicker&gt;
     template(v-slot:preview)
       vue-timepicker(disabled)
+
+  //- @change Sample
+  sample-block#onChangeSample
+    template(v-slot:title)
+      | The&nbsp;
+      code @change
+      | &nbsp;Event
+    template(v-slot:description)
+      p A <code>@change</code> event will be triggered every time the user alters timepicker's value.
+      p Unlike the <code>v-model</code>, which only returns data in your predefined format, <code>@change</code> event will return a full package of all supported time tokens.
+      p Started from <code>v0.2.2</code>, a <code>displayTime</code> string value is also included in the return data of <code>@change</code> event.
+      p Play around with the two pickers below to see their data changes in live.
+    template(v-slot:codes)
+      highlight-code(lang="html" data-title="HTML")
+        | &lt;!-- No argument --&gt;
+        | &lt;vue-timepicker v-model="demoData1" @change="changeHandler"&gt;&lt;/vue-timepicker&gt;
+        | &nbsp;
+        | &lt;!-- Custom argument --&gt;
+        | &lt;vue-timepicker v-model="demoData2" @change="otherChangeHandler($event, 'foo', 42)"&gt;&lt;/vue-timepicker&gt;
+      highlight-code(lang="javascript" data-title="JS")
+        | methods: {
+        |   // No argument
+        |   changeHandler (eventData) {
+        |     // eventData -&gt; {data: {HH:..., mm:...}, displayTime: 'HH:mm'}
+        |   },
+        |
+        |   // Customized arguments
+        |   otherChangeHandler (eventData, arg1, arg2) {
+        |     // eventData -&gt; {data: {HH:..., mm:...}, displayTime: 'HH:mm'}
+        |     // arg1 -&gt; 'foo'
+        |     // arg2 -&gt; 42
+        |   }
+        | }
+    template(v-slot:preview)
+      b No argument
+      p
+        vue-timepicker(v-model="demoData1" @change="changeHandler")
+      b With Custom arguments ('foo', 42)
+      p
+        vue-timepicker(v-model="demoData2" @change="otherChangeHandler($event, 'foo', 42)")
+    template(v-if="latestDataFlow || demoArgs" slot="data")
+      highlight-code(v-if="latestDataFlow" lang="json" data-title="The `@change` eventData") {{ latestDataFlow }}
+      highlight-code(v-if="demoArgs" lang="json" data-title="Received Custom Arguments") {{ demoArgs }}
+      highlight-code(v-if="latestDataFlow" lang="json" data-title="`v-model` value") {{ demoArgs ? demoData2 : demoData1 }}
 
   //- Open And Close Event
   sample-block#openAndClose

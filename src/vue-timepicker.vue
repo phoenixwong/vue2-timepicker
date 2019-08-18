@@ -18,18 +18,21 @@ const DEFAULT_OPTIONS = {
 export default {
   name: 'VueTimepicker',
   props: {
-    value: { type: Object, default: () => {} },
-    id: { type: String },
-    name: { type: String },
-    disabled: { type: Boolean, default: false },
+    value: { type: [ Object, String ] },
     format: { type: String },
     hideClearButton: { type: Boolean, default: false },
     minuteInterval: { type: [ Number, String ] },
     secondInterval: { type: [ Number, String ] },
     hourRange: { type: Array },
     hideDisabledHours: { type: Boolean, default: false },
+    disabled: { type: Boolean, default: false },
+
+    id: { type: String },
+    name: { type: String },
     inputClass: { type: String },
-    placeholder: { type: String }
+    placeholder: { type: String },
+
+    debugMode: { type: Boolean, default: false }
   },
 
   data () {
@@ -74,10 +77,12 @@ export default {
         if (options.minuteInterval === 0) {
           options.minuteInterval = 60
         } else {
-          if (options.minuteInterval > 60) {
-            window.console.warn(`'minute-interval' should be less than 60. Current value is ${this.minuteInterval}`)
-          } else if (options.minuteInterval < 1) {
-            window.console.warn(`'minute-interval' should be NO less than 1. Current value is ${this.minuteInterval}`)
+          if (this.debugMode) {
+            if (options.minuteInterval > 60) {
+              this.debugLog(`"minute-interval" should be less than 60. Current value is ${this.minuteInterval}`)
+            } else if (options.minuteInterval < 1) {
+              this.debugLog(`"minute-interval" should be NO less than 1. Current value is ${this.minuteInterval}`)
+            }
           }
           options.minuteInterval = 1
         }
@@ -91,10 +96,12 @@ export default {
         if (options.secondInterval === 0) {
           options.secondInterval = 60
         } else {
-          if (options.secondInterval > 60) {
-            window.console.warn(`'second-interval' should be less than 60. Current value is ${this.secondInterval}`)
-          } else if (options.secondInterval < 1) {
-            window.console.warn(`'second-interval' should be NO less than 1. Current value is ${this.secondInterval}`)
+          if (this.debugMode) {
+            if (options.secondInterval > 60) {
+              this.debugLog(`"second-interval" should be less than 60. Current value is ${this.secondInterval}`)
+            } else if (options.secondInterval < 1) {
+              this.debugLog(`"second-interval" should be NO less than 1. Current value is ${this.secondInterval}`)
+            }
           }
           options.secondInterval = 1
         }
@@ -140,10 +147,7 @@ export default {
       if (this.hideClearButton || this.disabled) {
         return false
       }
-      if ((this.hour && this.hour !== '') || (this.minute && this.minute !== '')) {
-        return true
-      }
-      return false
+      return !this.inputIsEmpty
     },
 
     baseOn12Hours () {
@@ -155,8 +159,8 @@ export default {
         let range = []
         this.opts.hourRange.forEach((value) => {
           if (value instanceof Array) {
-            if (value.length > 2) {
-              window.console.warn('Nested array within `hour-range` must contain no more than two items. Only the first two items of', value, 'will be taking into account.')
+            if (value.length > 2 && this.debugMode) {
+              this.debugLog(`Nested array within "hour-range" must contain no more than two items. Only the first two items of ${JSON.stringify(value)} will be taking into account.`)
             }
 
             let start = value[0]
@@ -187,7 +191,9 @@ export default {
         return range
       }
       if (this.opts.hourRange && !this.opts.hourRange.length) {
-        window.console.log('NOTICE: The `hour-range` array is empty (length === 0)')
+        if (this.debugMode) {
+          this.debugLog('The "hour-range" array is empty (length === 0)')
+        }
         return []
       }
       return false
@@ -224,6 +230,10 @@ export default {
       }
 
       return result
+    },
+
+    useStringValue () {
+      return typeof this.value === 'string'
     }
   },
 
@@ -328,12 +338,12 @@ export default {
     },
 
     renderList (listType, interval) {
-      if (listType === 'second') {
-        interval = interval || this.opts.secondInterval || DEFAULT_OPTIONS.secondInterval
-      } else if (listType === 'minute') {
+      if (!listType || (listType !== 'minute' && listType !== 'second')) { return }
+
+      if (listType === 'minute') {
         interval = interval || this.opts.minuteInterval || DEFAULT_OPTIONS.minuteInterval
       } else {
-        return
+        interval = interval || this.opts.secondInterval || DEFAULT_OPTIONS.secondInterval
       }
 
       const result = []
@@ -361,37 +371,158 @@ export default {
     },
 
     readValues () {
-      const timeValue = JSON.parse(JSON.stringify(this.value || {}))
+      if (this.useStringValue) {
+        if (this.debugMode) {
+          this.debugLog(`Received a string value: "${this.value}"`)
+        }
+        this.readStringValues(this.value)
+      } else {
+        if (this.debugMode) {
+          this.debugLog(`Received an object value: "${JSON.stringify(this.value || {})}"`)
+        }
+        this.readObjectValues(this.value)
+      }
+    },
+
+    readObjectValues (objValue) {
+      const timeValue = JSON.parse(JSON.stringify(objValue || {}))
       const values = Object.keys(timeValue)
 
-      // Failsafe for empty `v-model`
+      // Failsafe for empty `v-model` object
       if (values.length === 0) {
-        timeValue[this.hourType] = ''
-        timeValue[this.minuteType] = ''
-        if (this.secondType) {
-          timeValue[this.secondType] = ''
-        }
-        if (this.apmType) {
-          timeValue[this.apmType] = ''
-        }
-      // `v-model` with defined value
-      } else {
-        if (values.indexOf(this.hourType) > -1) {
-          this.hour = timeValue[this.hourType]
-        }
-        if (values.indexOf(this.minuteType) > -1) {
-          this.minute = timeValue[this.minuteType]
-        }
-        if (values.indexOf(this.secondType) > -1) {
-          this.second = timeValue[this.secondType]
+        this.addFallbackValues()
+        return
+      }
+
+      ['hour', 'minute', 'second', 'apm'].forEach(section => {
+        const sectionType = this[`${section}Type`]
+        if (values.indexOf(sectionType) > -1) {
+          const sanitizedValue = this.sanitizedValue(sectionType, timeValue[sectionType])
+          this[section] = sanitizedValue
+          timeValue[sectionType] = sanitizedValue
         } else {
-          this.second = 0
+          this[section] = ''
         }
-        if (values.indexOf(this.apmType) > -1) {
-          this.apm = timeValue[this.apmType]
+      })
+      this.timeValue = timeValue
+    },
+
+    readStringValues (stringValue) {
+      // Failsafe for empty `v-model` string
+      if (!stringValue || !stringValue.length) {
+        this.addFallbackValues()
+        return
+      }
+
+      const formatString = String(this.formatString)
+
+      let regxStr = `${this.hourType}|${this.minuteType}`
+      if (this.secondType) {
+        regxStr += `|${this.secondType}`
+      }
+      if (this.apmType) {
+        regxStr += `|${this.apmType}`
+      }
+
+      const tokensRegxStr = `[(${regxStr})]+`
+      const othersRegxStr = `[^(${regxStr})]+`
+      const tokensMatchAll = formatString.matchAll(new RegExp(tokensRegxStr, 'g'))
+      const othersMatchAll = formatString.matchAll(new RegExp(othersRegxStr, 'g'))
+
+      const chunks = []
+      const tokenChunks = []
+
+      for (let tkMatch of tokensMatchAll) {
+        const tokenMatchItem = {
+          index: tkMatch.index,
+          token: tkMatch[0],
+          isValueToken: true
+        }
+        chunks.push(tokenMatchItem)
+        tokenChunks.push(tokenMatchItem)
+      }
+
+      for (let otMatch of othersMatchAll) {
+        chunks.push({
+          index: otMatch.index,
+          token: otMatch[0]
+        })
+      }
+
+      chunks.sort((l, r) => l.index < r.index ? -1 : 1)
+
+      let regexCombo = ''
+      chunks.forEach(chunk => {
+        if (chunk.isValueToken) {
+          const tokenRegex = this.getTokenRegex(chunk.token) || ''
+          regexCombo += tokenRegex
+        } else {
+          const safeChars = chunk.token.replace(/\\{0}(\*|\?|\.|\+)/g, '\\$1')
+          regexCombo += `(?:${safeChars})`
+        }
+      })
+
+      const comboReg = new RegExp(regexCombo)
+
+      // Do test before match
+      if (comboReg.test(stringValue)) {
+        const matchResults = stringValue.match(new RegExp(regexCombo))
+        const valueResults = matchResults.slice(1, tokenChunks.length + 1)
+        const timeValue = {}
+        valueResults.forEach((value, vrIndex) => {
+          if (tokenChunks[vrIndex]) {
+            const tokenType = tokenChunks[vrIndex].token
+            timeValue[tokenType] = this.setValueFromString(value, tokenType)
+          }
+        })
+        this.timeValue = timeValue
+
+        if (this.debugMode) {
+          const tokenChunksForLog = tokenChunks.map(tChunk => tChunk && tChunk.token)
+          this.debugLog(`Successfully parsed values ${JSON.stringify(valueResults)}\nfor ${JSON.stringify(tokenChunksForLog)}\nin format pattern '${this.formatString}'`)
+        }
+      } else {
+        if (this.debugMode) {
+          this.debugLog(`The input string in 'v-model' does NOT match the 'format' pattern\nformat: ${this.formatString}\nv-model: ${this.value}`)
         }
       }
+    },
+
+    addFallbackValues () {
+      const timeValue = {}
+      timeValue[this.hourType] = ''
+      timeValue[this.minuteType] = ''
+      if (this.secondType) {
+        timeValue[this.secondType] = ''
+      }
+      if (this.apmType) {
+        timeValue[this.apmType] = ''
+      }
       this.timeValue = timeValue
+    },
+
+    setValueFromString (parsedValue, tokenType) {
+      if (!tokenType || !parsedValue) { return '' }
+      let stdValue = ''
+      switch (tokenType) {
+        case `${this.hourType}`:
+          stdValue = (parsedValue !== this.hourType) ? parsedValue : ''
+          this.hour = stdValue
+          break
+        case `${this.minuteType}`:
+          stdValue = (parsedValue !== this.minuteType) ? parsedValue : ''
+          this.minute = stdValue
+          break
+        case `${this.secondType}`:
+          stdValue = (parsedValue !== this.secondType) ? parsedValue : ''
+          this.second = stdValue
+          break
+        case `${this.apmType}`:
+          stdValue = (parsedValue !== this.apmType) ? parsedValue : ''
+          this.apm = stdValue
+          break
+      }
+      return stdValue
     },
 
     fillValues () {
@@ -508,15 +639,16 @@ export default {
         timeValue[key] = fullValues[key] || ''
       })
 
-      this.$emit('input', JSON.parse(JSON.stringify(timeValue)))
+      if (this.useStringValue) {
+        this.$emit('input', this.inputIsEmpty ? '' : String(this.displayTime))
+      } else {
+        this.$emit('input', JSON.parse(JSON.stringify(timeValue)))
+      }
+
       this.$emit('change', {
         data: fullVals,
-        displayTime: String(this.displayTime)
+        displayTime: this.inputIsEmpty ? '' : String(this.displayTime)
       })
-    },
-
-    is12hRange (value) {
-      return /^\d{1,2}(a|p|A|P)$/.test(value)
     },
 
     translate12hRange (value) {
@@ -567,10 +699,6 @@ export default {
       }
     },
 
-    isNumber (value) {
-      return !isNaN(parseFloat(value)) && isFinite(value)
-    },
-
     toggleDropdown () {
       if (this.disabled) { return }
       this.showDropdown = !this.showDropdown
@@ -606,6 +734,85 @@ export default {
       this.minute = ''
       this.second = ''
       this.apm = ''
+    },
+
+    // Helpers
+
+    is12hRange (value) {
+      return /^\d{1,2}(a|p|A|P)$/.test(value)
+    },
+
+    isNumber (value) {
+      return !isNaN(parseFloat(value)) && isFinite(value)
+    },
+
+    getTokenRegex (typeToken) {
+      switch (typeToken) {
+        case 'HH':
+          return '([01][0-9]|2[0-3]|H{2})'
+        case 'H':
+          return '([0-9]{1}|1[0-9]|2[0-3]|H{1})'
+        case 'hh':
+          return '(0[1-9]|1[0-2]|h{2})'
+        case 'h':
+          return '([1-9]{1}|1[0-2]|h{1})'
+        case 'kk':
+          return '(0[1-9]|1[0-9]|2[0-4]|k{2})'
+        case 'k':
+          return '([1-9]{1}|1[0-9]|2[0-4]|k{1})'
+        case 'mm':
+          return '([0-5][0-9]|m{2})'
+        case 'ss':
+          return '([0-5][0-9]|s{2})'
+        case 'm':
+          return '([0-9]{1}|[1-5][0-9]|m{1})'
+        case 's':
+          return '([0-9]{1}|[1-5][0-9]|s{1})'
+        case 'A':
+          return '(AM|PM|A{1})'
+        case 'a':
+          return '(am|pm|a{1})'
+        default:
+          return ''
+      }
+    },
+
+    isEmptyValue (typeToken, testValue) {
+      return (!testValue || !testValue.length) || (testValue && testValue === typeToken)
+    },
+
+    isValidValue (typeToken, testValue) {
+      if (!typeToken || this.isEmptyValue(typeToken, testValue)) { return false }
+      const tokenRegexStr = this.getTokenRegex(typeToken)
+      if (!tokenRegexStr || !tokenRegexStr.length) { return false }
+      return (new RegExp(`^${tokenRegexStr}$`)).test(testValue)
+    },
+
+    sanitizedValue (typeToken, inputValue) {
+      if (this.isValidValue(typeToken, inputValue)) {
+        return inputValue
+      }
+      return ''
+    },
+
+    debugLog (logText) {
+      if (!logText || !logText.length) { return }
+      let identifier = ''
+      if (this.id) {
+        identifier += `#${this.id}`
+      }
+      if (this.name) {
+        identifier += `[name=${this.name}]`
+      }
+      if (this.inputClass) {
+        identifier += `.${this.inputClass}`
+      }
+      const finalLogText = `DEBUG: ${logText}${identifier ? `\n\t(${identifier})` : '' }`
+      if (window.console.debug && typeof window.console.debug === 'function') {
+        window.console.debug(finalLogText)
+      } else {
+        window.console.log(finalLogText)
+      }
     }
   },
 
