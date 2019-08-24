@@ -45,7 +45,7 @@ npm install vue2-timepicker --save
 
 **Step 1:** Import VueTimepicker
 
-**A:** Include the single file component (Recommended)
+**A:** Include the single file component
 
 ```javascript
 // Import the *.vue file (CSS included)
@@ -66,6 +66,9 @@ import VueTimepicker from 'vue2-timepicker/dist/VueTimepicker.umd.min.js'
 // CSS
 import 'vue2-timepicker/dist/VueTimepicker.css'
 ```
+
+> NOTE: Users who meet bundle/loader issue with `v0.2.2` or any previous versions, please try [v0.2.2-rc.0](https://github.com/phoenixwong/vue2-timepicker/releases/tag/v0.2.2-rc.0) and check the [updated documentation here](https://github.com/phoenixwong/vue2-timepicker/blob/alpha/README.md#get-started) for the latest import methods.
+
 
 **Step 2**: Include VueTimepicker in your component
 
@@ -264,7 +267,7 @@ Sometime you may want to limit hours picker to a specific range. The `hour-range
 <!-- >> Equals to :hour-range="[5, 8, 9, 10, 11, 12, 14, 15, 16, 17, 19]" -->
 
 <!-- 12-Hour Format -->
-<vue-timepicker(:hour-range="['7a', '9a', '11a', '1p', ['3p', '5p'], '7p']" format="hh:mm a">
+<vue-timepicker :hour-range="['7a', '9a', '11a', '1p', ['3p', '5p'], '7p']" format="hh:mm a">
 <!-- >> Equals to :hour-range="['7a', '9a', '11a', '1p', '3p', '4p', '5p', '7p']" -->
 ```
 
@@ -315,7 +318,7 @@ Timepicker now supports `id`, `name`, and `placeholder` like ordinary form eleme
 
 ```html
 <!-- id -->
-<vue-timepicker id="myFistPicker"></vue-timepicker>
+<vue-timepicker id="myFirstPicker"></vue-timepicker>
 
 <!-- name -->
 <vue-timepicker name="nameInForm"></vue-timepicker>
