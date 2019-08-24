@@ -193,10 +193,10 @@ console.log(this.yourTimeValue)
 
 ```html
 <!-- A: No argument -->
-<vue-timepicker :time-value.sync="yourTimeValue" @change="changeHandler"></vue-timepicker>
+<vue-timepicker v-model="yourTimeValue" @change="changeHandler"></vue-timepicker>
 
 <!-- B: Custom arguments -->
-<vue-timepicker :time-value.sync="yourTimeValue" @change="otherChangeHandler($event, 'foo', 'bar')"></vue-timepicker>
+<vue-timepicker v-model="yourTimeValue" @change="otherChangeHandler($event, 'foo', 42)"></vue-timepicker>
 ```
 
 ```javascript
@@ -213,7 +213,7 @@ otherChangeHandler (eventData, yourArg1, yourArg2) {
   console.log(yourArg1)
   // -> 'foo'
   console.log(yourArg2)
-  // -> 'bar'
+  // -> 42
 }
 ```
 
@@ -259,7 +259,7 @@ Whereas the `v-model` will only return the data with defined tokens
 
 ### Define Hour Range
 
-Sometime you may want to limit hours picker to a specific range. The `hour-range` parameter is here to help.
+Sometimes you may want to limit hours picker to a specific range. The `hour-range` parameter is here to help.
 
 ```html
 <!-- 24-Hour Format -->
@@ -312,7 +312,7 @@ Prop                    | Type      | Required | Default Value
 **input-class**         | _String_  | no       | _undefined_
 
 Timepicker now supports `id`, `name`, and `placeholder` like ordinary form elements. Values will be assigned to the
-\<input type="text" class="display-time"\> within the component.
+`<input type="text" class="display-time">` within the component.
 
 ### Input `id` And `name`
 
