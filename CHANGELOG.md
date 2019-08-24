@@ -2,6 +2,41 @@
 
 > The Change Log of Vue2 Timepicker `vue2-timepicker`
 
+## v 1.0.0-beta (Prerelease)
+
+### Breaking Changes
+
+**⚠️ IMPORTANT:** The default **import** source in `V1.0.0+` is different from the `v0.x` versions.
+
+From `v1.0.0+`, CSS is excluded from the main source. Please import the CSS files separately.
+
+```javascript
+// v1.0.0+
+
+import VueTimepicker from 'vue2-timepicker'
+// -> Imports the JS in UMD form
+
+// CSS
+import 'vue2-timepicker/dist/VueTimepicker.css'
+```
+
+Please check the README.md for more available import formats.
+
+```javascript
+// While in the v0.x versions
+import VueTimepicker from 'vue2-timepicker'
+// -> Imports the *.vue Single File Component together with CSS
+```
+
+### New
+
+- Support using _String_ value in `v-model`.
+- Added `debug-mode` to help developers investigating the input -> output process
+
+### Fixes
+
+Added ES "module" and other version fields in _package.json_ to resolving more loader issues. (Thanks to @Trainmaster)
+
 ## v 0.2.2
 
 ### Fixes
@@ -10,7 +45,7 @@ Fixes `v-model` watcher for cases like changing the input value programmatically
 
 ### Improvements
 
-Added `displayTime` in the return data of `@change` event.
+Added `displayTime` in the return data of `change` event.
 
 ## v 0.2.1
 
@@ -38,12 +73,12 @@ Fixes possible loader issue in some Webpack configs (Thanks to @RaphaelJ)
 - New `hour-range` support. Added capability to show which hours are available and disabled the rest.
 - New `hide-disabled-hours`. The best companion of `hour-range`, for you to hide unwanted hours in the hour picker.
 - New `disabled` parameter. To disable dropdown picker and clear button in the UI.
+- Emit `open` and `close` events to help tracking the dropdown toggle status. (Thanks to @tprashan)
 
 ### Improvements
 
 - Put `12` before `1` in the hour select for 12-hour format (`hh` and `h`). It will be more natural, especially when paired with `hour-range`.
 - Support `name` parameter as regular form inputs. (Thanks to @dilipgurung)
-- Emit `open` and `close` events to help tracking the dropdown toggle status. (Thanks to @tprashan)
 
 ## v 0.1.4
 
