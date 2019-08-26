@@ -2,13 +2,13 @@
 
 > The Change Log of Vue2 Timepicker `vue2-timepicker`
 
-## v 1.0.0-beta (Prerelease)
+## v 1.0.0-beta _(Prerelease)_
 
 ### Breaking Changes
 
-**⚠️ IMPORTANT:** The default **import** source in `V1.0.0+` is different from the `v0.x` versions.
+**⚠️ IMPORTANT:** The default **import** source in `v1.0.0+` is different from the `v0.x` versions.
 
-From `v1.0.0+`, CSS is excluded from the main source. Please import the CSS files separately.
+From `v1.0.0+`, CSS is excluded from the main source. Please import the CSS file separately.
 
 ```javascript
 // v1.0.0+
@@ -31,7 +31,9 @@ import VueTimepicker from 'vue2-timepicker'
 ### New
 
 - Support using _String_ value in `v-model`.
-- Added `debug-mode` to help developers investigating the input -> output process
+- New `minute-range` and `second-range` support. Companioned with `hide-disabled-minutes` and `hide-disabled-seconds`.
+- New `hide-disabled-items` property for hiding **all** excluded items (hour, minute and seconds) at a time.
+- Added `debug-mode` to help developers investigating the input -> output process.
 
 ### Fixes
 

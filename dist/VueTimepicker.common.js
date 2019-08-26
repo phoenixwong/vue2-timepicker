@@ -591,6 +591,26 @@ module.exports = function (method, arg) {
 
 /***/ }),
 
+/***/ "2fdb":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+// 21.1.3.7 String.prototype.includes(searchString, position = 0)
+
+var $export = __webpack_require__("5ca1");
+var context = __webpack_require__("d2c8");
+var INCLUDES = 'includes';
+
+$export($export.P + $export.F * __webpack_require__("5147")(INCLUDES), 'String', {
+  includes: function includes(searchString /* , position = 0 */) {
+    return !!~context(this, searchString, INCLUDES)
+      .indexOf(searchString, arguments.length > 1 ? arguments[1] : undefined);
+  }
+});
+
+
+/***/ }),
+
 /***/ "32e9":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -820,6 +840,25 @@ __webpack_require__("214f")('match', 1, function (defined, MATCH, $match, maybeC
 var defined = __webpack_require__("be13");
 module.exports = function (it) {
   return Object(defined(it));
+};
+
+
+/***/ }),
+
+/***/ "5147":
+/***/ (function(module, exports, __webpack_require__) {
+
+var MATCH = __webpack_require__("2b4c")('match');
+module.exports = function (KEY) {
+  var re = /./;
+  try {
+    '/./'[KEY](re);
+  } catch (e) {
+    try {
+      re[MATCH] = false;
+      return !'/./'[KEY](re);
+    } catch (f) { /* empty */ }
+  } return true;
 };
 
 
@@ -1082,6 +1121,26 @@ var cof = __webpack_require__("2d95");
 module.exports = Object('z').propertyIsEnumerable(0) ? Object : function (it) {
   return cof(it) == 'String' ? it.split('') : Object(it);
 };
+
+
+/***/ }),
+
+/***/ "6762":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+// https://github.com/tc39/Array.prototype.includes
+var $export = __webpack_require__("5ca1");
+var $includes = __webpack_require__("c366")(true);
+
+$export($export.P, 'Array', {
+  includes: function includes(el /* , fromIndex = 0 */) {
+    return $includes(this, el, arguments.length > 1 ? arguments[1] : undefined);
+  }
+});
+
+__webpack_require__("9c6c")('includes');
 
 
 /***/ }),
@@ -2270,6 +2329,21 @@ module.exports = function (object, names) {
 
 /***/ }),
 
+/***/ "d2c8":
+/***/ (function(module, exports, __webpack_require__) {
+
+// helper for String#{startsWith, endsWith, includes}
+var isRegExp = __webpack_require__("aae3");
+var defined = __webpack_require__("be13");
+
+module.exports = function (that, searchString, NAME) {
+  if (isRegExp(searchString)) throw TypeError('String#' + NAME + " doesn't accept regex!");
+  return String(defined(that));
+};
+
+
+/***/ }),
+
 /***/ "d3f4":
 /***/ (function(module, exports) {
 
@@ -2428,15 +2502,18 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"4e103a11-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/vue-timepicker.vue?vue&type=template&id=39c9274b&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"vue__time-picker time-picker"},[_c('input',{staticClass:"display-time",class:[_vm.inputClass, {'disabled': _vm.disabled}],attrs:{"type":"text","id":_vm.id,"name":_vm.name,"placeholder":_vm.placeholder || _vm.formatString,"disabled":_vm.disabled,"readonly":""},domProps:{"value":_vm.inputIsEmpty ? null : _vm.displayTime},on:{"click":_vm.toggleDropdown}}),(!_vm.showDropdown && _vm.showClearBtn)?_c('span',{staticClass:"clear-btn",on:{"click":_vm.clearTime}},[_vm._v("×")]):_vm._e(),(_vm.showDropdown)?_c('div',{staticClass:"time-picker-overlay",on:{"click":_vm.toggleDropdown}}):_vm._e(),_c('div',{directives:[{name:"show",rawName:"v-show",value:(_vm.showDropdown),expression:"showDropdown"}],staticClass:"dropdown",on:{"click":function($event){$event.stopPropagation();}}},[_c('div',{staticClass:"select-list"},[_c('ul',{staticClass:"hours"},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.hourType)}}),_vm._l((_vm.hours),function(hr,hIndex){return [(!_vm.opts.hideDisabledHours || (_vm.opts.hideDisabledHours && !_vm.isDisabledHour(hr)))?_c('li',{key:hIndex,class:{active: _vm.hour === hr},attrs:{"disabled":_vm.isDisabledHour(hr)},domProps:{"textContent":_vm._s(hr)},on:{"click":function($event){return _vm.select('hour', hr)}}}):_vm._e()]})],2),_c('ul',{staticClass:"minutes"},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.minuteType)}}),_vm._l((_vm.minutes),function(m,mIndex){return _c('li',{key:mIndex,class:{active: _vm.minute === m},domProps:{"textContent":_vm._s(m)},on:{"click":function($event){return _vm.select('minute', m)}}})})],2),(_vm.secondType)?_c('ul',{staticClass:"seconds"},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.secondType)}}),_vm._l((_vm.seconds),function(s,sIndex){return _c('li',{key:sIndex,class:{active: _vm.second === s},domProps:{"textContent":_vm._s(s)},on:{"click":function($event){return _vm.select('second', s)}}})})],2):_vm._e(),(_vm.apmType)?_c('ul',{staticClass:"apms"},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.apmType)}}),_vm._l((_vm.apms),function(a,aIndex){return [(!_vm.opts.hideDisabledHours || (_vm.opts.hideDisabledHours && _vm.has[a.toLowerCase()]))?_c('li',{key:aIndex,class:{active: _vm.apm === a},attrs:{"disabled":!_vm.has[a.toLowerCase()]},domProps:{"textContent":_vm._s(a)},on:{"click":function($event){return _vm.select('apm', a)}}}):_vm._e()]})],2):_vm._e()])])])}
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"753598d8-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/vue-timepicker.vue?vue&type=template&id=0222f7bd&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"vue__time-picker time-picker"},[_c('input',{staticClass:"display-time",class:[_vm.inputClass, {'disabled': _vm.disabled}],attrs:{"type":"text","id":_vm.id,"name":_vm.name,"placeholder":_vm.placeholder || _vm.formatString,"disabled":_vm.disabled,"readonly":""},domProps:{"value":_vm.inputIsEmpty ? null : _vm.displayTime},on:{"click":_vm.toggleDropdown}}),(!_vm.showDropdown && _vm.showClearBtn)?_c('span',{staticClass:"clear-btn",on:{"click":_vm.clearTime}},[_vm._v("×")]):_vm._e(),(_vm.showDropdown)?_c('div',{staticClass:"time-picker-overlay",on:{"click":_vm.toggleDropdown}}):_vm._e(),_c('div',{directives:[{name:"show",rawName:"v-show",value:(_vm.showDropdown),expression:"showDropdown"}],staticClass:"dropdown",on:{"click":function($event){$event.stopPropagation();}}},[_c('div',{staticClass:"select-list"},[_c('ul',{staticClass:"hours"},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.hourType)}}),_vm._l((_vm.hours),function(hr,hIndex){return [(!_vm.opts.hideDisabledHours || (_vm.opts.hideDisabledHours && !_vm.isDisabledHour(hr)))?_c('li',{key:hIndex,class:{active: _vm.hour === hr},attrs:{"disabled":_vm.isDisabledHour(hr)},domProps:{"textContent":_vm._s(hr)},on:{"click":function($event){return _vm.select('hour', hr)}}}):_vm._e()]})],2),_c('ul',{staticClass:"minutes"},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.minuteType)}}),_vm._l((_vm.minutes),function(m,mIndex){return [(!_vm.opts.hideDisabledMinutes || (_vm.opts.hideDisabledMinutes && !_vm.isDisabledMinute(m)))?_c('li',{key:mIndex,class:{active: _vm.minute === m},attrs:{"disabled":_vm.isDisabledMinute(m)},domProps:{"textContent":_vm._s(m)},on:{"click":function($event){return _vm.select('minute', m)}}}):_vm._e()]})],2),(_vm.secondType)?_c('ul',{staticClass:"seconds"},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.secondType)}}),_vm._l((_vm.seconds),function(s,sIndex){return [(!_vm.opts.hideDisabledSeconds || (_vm.opts.hideDisabledSeconds && !_vm.isDisabledSecond(s)))?_c('li',{key:sIndex,class:{active: _vm.second === s},attrs:{"disabled":_vm.isDisabledSecond(s)},domProps:{"textContent":_vm._s(s)},on:{"click":function($event){return _vm.select('second', s)}}}):_vm._e()]})],2):_vm._e(),(_vm.apmType)?_c('ul',{staticClass:"apms"},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.apmType)}}),_vm._l((_vm.apms),function(a,aIndex){return [(!_vm.opts.hideDisabledHours || (_vm.opts.hideDisabledHours && _vm.has[a.toLowerCase()]))?_c('li',{key:aIndex,class:{active: _vm.apm === a},attrs:{"disabled":!_vm.has[a.toLowerCase()]},domProps:{"textContent":_vm._s(a)},on:{"click":function($event){return _vm.select('apm', a)}}}):_vm._e()]})],2):_vm._e()])])])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/vue-timepicker.vue?vue&type=template&id=39c9274b&
+// CONCATENATED MODULE: ./src/vue-timepicker.vue?vue&type=template&id=0222f7bd&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.function.name.js
 var es6_function_name = __webpack_require__("7f7f");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.string.includes.js
+var es6_string_includes = __webpack_require__("2fdb");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es7.symbol.async-iterator.js
 var es7_symbol_async_iterator = __webpack_require__("ac4d");
@@ -2455,6 +2532,9 @@ var es6_object_keys = __webpack_require__("456d");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.array.sort.js
 var es6_array_sort = __webpack_require__("55dd");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es7.array.includes.js
+var es7_array_includes = __webpack_require__("6762");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/web.dom.iterable.js
 var web_dom_iterable = __webpack_require__("ac6a");
@@ -2484,6 +2564,8 @@ var es6_number_constructor = __webpack_require__("c5f6");
 
 
 
+
+
 var CONFIG = {
   HOUR_TOKENS: ['HH', 'H', 'hh', 'h', 'kk', 'k'],
   MINUTE_TOKENS: ['mm', 'm'],
@@ -2492,11 +2574,15 @@ var CONFIG = {
 };
 var DEFAULT_OPTIONS = {
   format: 'HH:mm',
-  hideClearButton: false,
   minuteInterval: 1,
   secondInterval: 1,
   hourRange: null,
-  hideDisabledHours: false
+  minuteRange: null,
+  secondRange: null,
+  hideDisabledHours: false,
+  hideDisabledMinutes: false,
+  hideDisabledSeconds: false,
+  hideDisabledItems: false
 };
 /* harmony default export */ var vue_timepickervue_type_script_lang_js_ = ({
   name: 'VueTimepicker',
@@ -2507,10 +2593,6 @@ var DEFAULT_OPTIONS = {
     format: {
       type: String
     },
-    hideClearButton: {
-      type: Boolean,
-      default: false
-    },
     minuteInterval: {
       type: [Number, String]
     },
@@ -2520,7 +2602,29 @@ var DEFAULT_OPTIONS = {
     hourRange: {
       type: Array
     },
+    minuteRange: {
+      type: Array
+    },
+    secondRange: {
+      type: Array
+    },
     hideDisabledHours: {
+      type: Boolean,
+      default: false
+    },
+    hideDisabledMinutes: {
+      type: Boolean,
+      default: false
+    },
+    hideDisabledSeconds: {
+      type: Boolean,
+      default: false
+    },
+    hideDisabledItems: {
+      type: Boolean,
+      default: false
+    },
+    hideClearButton: {
       type: Boolean,
       default: false
     },
@@ -2572,10 +2676,6 @@ var DEFAULT_OPTIONS = {
         options.format = String(this.format);
       }
 
-      if (this.hideClearButton) {
-        options.hideClearButton = true;
-      }
-
       if (this.isNumber(this.minuteInterval)) {
         options.minuteInterval = +this.minuteInterval;
       } // minuteInterval failsafe
@@ -2620,13 +2720,48 @@ var DEFAULT_OPTIONS = {
 
       if (this.hourRange && Array.isArray(this.hourRange)) {
         options.hourRange = JSON.parse(JSON.stringify(this.hourRange));
+
+        if (!this.hourRange.length && this.debugMode) {
+          this.debugLog('The "hour-range" array is empty (length === 0)');
+        }
       }
 
-      if (this.hideDisabledHours) {
+      if (this.minuteRange && Array.isArray(this.minuteRange)) {
+        options.minuteRange = JSON.parse(JSON.stringify(this.minuteRange));
+
+        if (!this.minuteRange.length && this.debugMode) {
+          this.debugLog('The "minute-range" array is empty (length === 0)');
+        }
+      }
+
+      if (this.secondRange && Array.isArray(this.secondRange)) {
+        options.secondRange = JSON.parse(JSON.stringify(this.secondRange));
+
+        if (!this.secondRange.length && this.debugMode) {
+          this.debugLog('The "second-range" array is empty (length === 0)');
+        }
+      }
+
+      if (this.hideDisabledItems) {
+        options.hideDisabledItems = true;
+      }
+
+      if (this.hideDisabledHours || this.hideDisabledItems) {
         options.hideDisabledHours = true;
       }
 
+      if (this.hideDisabledMinutes || this.hideDisabledItems) {
+        options.hideDisabledMinutes = true;
+      }
+
+      if (this.hideDisabledSeconds || this.hideDisabledItems) {
+        options.hideDisabledSeconds = true;
+      }
+
       return options;
+    },
+    useStringValue: function useStringValue() {
+      return typeof this.value === 'string';
     },
     formatString: function formatString() {
       return this.opts.format || DEFAULT_OPTIONS.format;
@@ -2668,60 +2803,66 @@ var DEFAULT_OPTIONS = {
     hourRangeIn24HrFormat: function hourRangeIn24HrFormat() {
       var _this = this;
 
-      if (this.opts.hourRange && this.opts.hourRange.length) {
-        var range = [];
-        this.opts.hourRange.forEach(function (value) {
-          if (value instanceof Array) {
-            if (value.length > 2 && _this.debugMode) {
-              _this.debugLog("Nested array within \"hour-range\" must contain no more than two items. Only the first two items of ".concat(JSON.stringify(value), " will be taking into account."));
-            }
-
-            var start = value[0];
-            var end = value[1] || value[0];
-
-            if (_this.is12hRange(start)) {
-              start = _this.translate12hRange(start);
-            }
-
-            if (_this.is12hRange(end)) {
-              end = _this.translate12hRange(end);
-            }
-
-            for (var i = +start; i <= +end; i++) {
-              if (range.indexOf(i) === -1) {
-                range.push(i);
-              }
-            }
-          } else {
-            if (_this.is12hRange(value)) {
-              value = _this.translate12hRange(value);
-            }
-
-            if (range.indexOf(value) === -1) {
-              range.push(value);
-            }
-          }
-        });
-        range.sort(function (l, r) {
-          return l - r;
-        });
-        return range;
+      if (!this.opts.hourRange) {
+        return false;
       }
 
-      if (this.opts.hourRange && !this.opts.hourRange.length) {
-        if (this.debugMode) {
-          this.debugLog('The "hour-range" array is empty (length === 0)');
-        }
-
+      if (!this.opts.hourRange.length) {
         return [];
       }
 
-      return false;
+      var range = [];
+      this.opts.hourRange.forEach(function (value) {
+        if (value instanceof Array) {
+          if (value.length > 2 && _this.debugMode) {
+            _this.debugLog("Nested array within \"hour-range\" must contain no more than two items. Only the first two items of ".concat(JSON.stringify(value), " will be taken into account."));
+          }
+
+          var start = value[0];
+          var end = value[1] || value[0];
+
+          if (_this.is12hRange(start)) {
+            start = _this.translate12hRange(start);
+          }
+
+          if (_this.is12hRange(end)) {
+            end = _this.translate12hRange(end);
+          }
+
+          for (var i = +start; i <= +end; i++) {
+            if (i < 0 || i > 24) {
+              continue;
+            }
+
+            if (!range.includes(i)) {
+              range.push(i);
+            }
+          }
+        } else {
+          if (_this.is12hRange(value)) {
+            value = _this.translate12hRange(value);
+          }
+
+          if (value < 0 || value > 24) {
+            return;
+          }
+
+          if (!range.includes(value)) {
+            range.push(value);
+          }
+        }
+      });
+      range.sort(function (l, r) {
+        return l - r;
+      });
+      return range;
     },
     restrictedHourRange: function restrictedHourRange() {
+      // No restriction
       if (!this.hourRangeIn24HrFormat) {
         return false;
-      }
+      } // 12-Hour
+
 
       if (this.baseOn12Hours) {
         var range = this.hourRangeIn24HrFormat.map(function (value) {
@@ -2731,10 +2872,11 @@ var DEFAULT_OPTIONS = {
             return '12a';
           }
 
-          return value > 12 ? value % 12 + 'p' : value + 'a';
+          return value > 12 ? "".concat(value % 12, "p") : "".concat(value, "a");
         });
         return range;
-      }
+      } // 24-Hour
+
 
       return this.hourRangeIn24HrFormat;
     },
@@ -2752,8 +2894,127 @@ var DEFAULT_OPTIONS = {
 
       return result;
     },
-    useStringValue: function useStringValue() {
-      return typeof this.value === 'string';
+    minuteRangeList: function minuteRangeList() {
+      var _this2 = this;
+
+      if (!this.opts.minuteRange) {
+        return false;
+      }
+
+      if (!this.opts.minuteRange.length) {
+        return [];
+      }
+
+      var range = [];
+      var formatedValue;
+      this.opts.minuteRange.forEach(function (value) {
+        if (value instanceof Array) {
+          if (value.length > 2 && _this2.debugMode) {
+            _this2.debugLog("Nested array within \"minute-range\" must contain no more than two items. Only the first two items of ".concat(JSON.stringify(value), " will be taken into account."));
+          }
+
+          var start = value[0];
+          var end = value[1] || value[0];
+
+          for (var i = +start; i <= +end; i++) {
+            if (i < 0 || i > 59) {
+              continue;
+            }
+
+            formatedValue = _this2.formatValue(_this2.minuteType, i);
+
+            if (!range.includes(formatedValue)) {
+              range.push(formatedValue);
+            }
+          }
+        } else {
+          if (value < 0 || value > 59) {
+            return;
+          }
+
+          formatedValue = _this2.formatValue(_this2.minuteType, value);
+
+          if (!range.includes(formatedValue)) {
+            range.push(formatedValue);
+          }
+        }
+      });
+      range.sort(function (l, r) {
+        return l - r;
+      }); // Debug Mode
+
+      if (this.debugMode) {
+        var validItems = (this.minutes || []).filter(function (item) {
+          return range.includes(item);
+        });
+
+        if (!validItems || !validItems.length) {
+          this.debugLog("The minute list is empty due to the \"minute-range\" config\nminute-range: ".concat(JSON.stringify(this.minuteRange), "\nminute-interval: ").concat(this.opts.minuteInterval));
+        }
+      }
+
+      return range;
+    },
+    secondRangeList: function secondRangeList() {
+      var _this3 = this;
+
+      if (!this.opts.secondRange) {
+        return false;
+      }
+
+      if (!this.opts.secondRange.length) {
+        return [];
+      }
+
+      var range = [];
+      var formatedValue;
+      this.opts.secondRange.forEach(function (value) {
+        if (value instanceof Array) {
+          if (value.length > 2 && _this3.debugMode) {
+            _this3.debugLog("Nested array within \"second-range\" must contain no more than two items. Only the first two items of ".concat(JSON.stringify(value), " will be taken into account."));
+          }
+
+          var start = value[0];
+          var end = value[1] || value[0];
+
+          for (var i = +start; i <= +end; i++) {
+            if (i < 0 || i > 59) {
+              continue;
+            }
+
+            formatedValue = _this3.formatValue(_this3.secondType, i);
+
+            if (!range.includes(formatedValue)) {
+              range.push(formatedValue);
+            }
+          }
+        } else {
+          if (value < 0 || value > 59) {
+            return;
+          }
+
+          formatedValue = _this3.formatValue(_this3.secondType, value);
+
+          if (!range.includes(formatedValue)) {
+            range.push(formatedValue);
+          }
+        }
+      });
+      range.sort(function (l, r) {
+        return l - r;
+      }); // Debug Mode
+
+      if (this.debugMode) {
+        var validItems = (this.seconds || []).filter(function (item) {
+          return range.includes(item);
+        });
+
+        if (!validItems || !validItems.length) {
+          this.debugLog("The second list is empty due to the \"second-range\" config\nsecond-range: ".concat(JSON.stringify(this.secondRange), "\nsecond-interval: ").concat(this.opts.secondInterval));
+        }
+      }
+
+      return range;
     }
   },
   watch: {
@@ -2776,7 +3037,7 @@ var DEFAULT_OPTIONS = {
       this.fillValues();
     },
     disabled: function disabled(toDisabled) {
-      // Force close dropdown when disabled
+      // Force close the dropdown when disabled
       if (toDisabled && this.showDropdown) {
         this.showDropdown = false;
       }
@@ -2833,7 +3094,7 @@ var DEFAULT_OPTIONS = {
       return fallbackValue || '';
     },
     renderFormat: function renderFormat(newFormat) {
-      var _this2 = this;
+      var _this4 = this;
 
       newFormat = newFormat || this.opts.format || DEFAULT_OPTIONS.format;
       this.hourType = this.checkAcceptingType(CONFIG.HOUR_TOKENS, newFormat, 'HH');
@@ -2852,7 +3113,7 @@ var DEFAULT_OPTIONS = {
       }
 
       this.$nextTick(function () {
-        _this2.readValues();
+        _this4.readValues();
       });
     },
     renderHoursList: function renderHoursList() {
@@ -2917,7 +3178,7 @@ var DEFAULT_OPTIONS = {
       }
     },
     readObjectValues: function readObjectValues(objValue) {
-      var _this3 = this;
+      var _this5 = this;
 
       var timeValue = JSON.parse(JSON.stringify(objValue || {}));
       var values = Object.keys(timeValue); // Failsafe for empty `v-model` object
@@ -2928,21 +3189,21 @@ var DEFAULT_OPTIONS = {
       }
 
       ['hour', 'minute', 'second', 'apm'].forEach(function (section) {
-        var sectionType = _this3["".concat(section, "Type")];
+        var sectionType = _this5["".concat(section, "Type")];
 
         if (values.indexOf(sectionType) > -1) {
-          var sanitizedValue = _this3.sanitizedValue(sectionType, timeValue[sectionType]);
+          var sanitizedValue = _this5.sanitizedValue(sectionType, timeValue[sectionType]);
 
-          _this3[section] = sanitizedValue;
+          _this5[section] = sanitizedValue;
           timeValue[sectionType] = sanitizedValue;
         } else {
-          _this3[section] = '';
+          _this5[section] = '';
         }
       });
       this.timeValue = timeValue;
     },
     readStringValues: function readStringValues(stringValue) {
-      var _this4 = this;
+      var _this6 = this;
 
       // Failsafe for empty `v-model` string
       if (!stringValue || !stringValue.length) {
@@ -3030,7 +3291,7 @@ var DEFAULT_OPTIONS = {
       var regexCombo = '';
       chunks.forEach(function (chunk) {
         if (chunk.isValueToken) {
-          var tokenRegex = _this4.getTokenRegex(chunk.token) || '';
+          var tokenRegex = _this6.getTokenRegex(chunk.token) || '';
           regexCombo += tokenRegex;
         } else {
           var safeChars = chunk.token.replace(/\\{0}(\*|\?|\.|\+)/g, '\\$1');
@@ -3046,7 +3307,7 @@ var DEFAULT_OPTIONS = {
         valueResults.forEach(function (value, vrIndex) {
           if (tokenChunks[vrIndex]) {
             var tokenType = tokenChunks[vrIndex].token;
-            timeValue[tokenType] = _this4.setValueFromString(value, tokenType);
+            timeValue[tokenType] = _this6.setValueFromString(value, tokenType);
           }
         });
         this.timeValue = timeValue;
@@ -3059,7 +3320,7 @@ var DEFAULT_OPTIONS = {
         }
       } else {
         if (this.debugMode) {
-          this.debugLog("The input string in 'v-model' does NOT match the 'format' pattern\nformat: ".concat(this.formatString, "\nv-model: ").concat(this.value));
+          this.debugLog("The input string in \"v-model\" does NOT match the \"format\" pattern\nformat: ".concat(this.formatString, "\nv-model: ").concat(this.value));
         }
       }
     },
@@ -3110,7 +3371,7 @@ var DEFAULT_OPTIONS = {
       return stdValue;
     },
     fillValues: function fillValues() {
-      var _this5 = this;
+      var _this7 = this;
 
       var fullValues = {};
       var baseHour = this.hour;
@@ -3132,7 +3393,7 @@ var DEFAULT_OPTIONS = {
             if (!String(hourValue).length) {
               fullValues[token] = '';
               return;
-            } else if (_this5.baseOn12Hours) {
+            } else if (_this7.baseOn12Hours) {
               if (apmValue === 'pm') {
                 value = hourValue < 12 ? hourValue + 12 : hourValue;
               } else {
@@ -3150,7 +3411,7 @@ var DEFAULT_OPTIONS = {
             if (!String(hourValue).length) {
               fullValues[token] = '';
               return;
-            } else if (_this5.baseOn12Hours) {
+            } else if (_this7.baseOn12Hours) {
               if (apmValue === 'pm') {
                 value = hourValue < 12 ? hourValue + 12 : hourValue;
               } else {
@@ -3178,7 +3439,7 @@ var DEFAULT_OPTIONS = {
                 apm = 'pm';
                 value = hourValue === 12 ? 12 : hourValue % 12;
               } else {
-                if (_this5.baseOn12Hours) {
+                if (_this7.baseOn12Hours) {
                   apm = '';
                 } else {
                   apm = 'am';
@@ -3255,20 +3516,34 @@ var DEFAULT_OPTIONS = {
       return value >= 12 && value < 24;
     },
     isDisabledHour: function isDisabledHour(value) {
-      if (this.restrictedHourRange) {
-        if (this.baseOn12Hours) {
-          if (!this.apm || !this.apm.length) {
-            return false;
-          } else {
-            var token = this.apm.toLowerCase() === 'am' ? 'a' : 'p';
-            return this.restrictedHourRange.indexOf("".concat(+value).concat(token)) === -1;
-          }
+      if (!this.restrictedHourRange) {
+        return false;
+      }
+
+      if (this.baseOn12Hours) {
+        if (!this.apm || !this.apm.length) {
+          return false;
         } else {
-          return this.restrictedHourRange.indexOf(+value) === -1;
+          var token = this.apm.toLowerCase() === 'am' ? 'a' : 'p';
+          return !this.restrictedHourRange.includes("".concat(+value).concat(token));
         }
       }
 
-      return false;
+      return !this.restrictedHourRange.includes(+value);
+    },
+    isDisabledMinute: function isDisabledMinute(value) {
+      if (!this.minuteRangeList) {
+        return false;
+      }
+
+      return !this.minuteRangeList.includes(value);
+    },
+    isDisabledSecond: function isDisabledSecond(value) {
+      if (!this.secondRangeList) {
+        return false;
+      }
+
+      return !this.secondRangeList.includes(value);
     },
     forceApmSelection: function forceApmSelection() {
       if (!this.apm || !this.apm.length) {
@@ -3308,8 +3583,16 @@ var DEFAULT_OPTIONS = {
 
         this.hour = value;
       } else if (type === 'minute') {
+        if (this.isDisabledMinute(value)) {
+          return;
+        }
+
         this.minute = value;
       } else if (type === 'second') {
+        if (this.isDisabledSecond(value)) {
+          return;
+        }
+
         this.second = value;
       } else if (type === 'apm') {
         if (!this.has[value.toLowerCase()]) {
