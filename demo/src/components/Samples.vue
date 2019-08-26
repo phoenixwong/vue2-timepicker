@@ -44,7 +44,8 @@ export default {
         { title: 'v-model with String Value', anchor: 'vModelWithString' },
         { title: 'Work with v-for', anchor: 'vForSample' },
         { title: 'Hour Range', anchor: 'hourRange' },
-        { title: 'Hide Disabled Hours', anchor: 'hideDisabledHours' },
+        { title: 'Minute and Second Range', anchor: 'minuteAndSecondRange' },
+        { title: 'Hide Disabled Items', anchor: 'hideDisabledItems' },
         { title: 'Hide Clear Button', anchor: 'hideClearButton' },
         { title: 'Disable Picker', anchor: 'disablePicker' },
         { title: 'The @change Event', anchor: 'onChangeSample' },
@@ -276,7 +277,7 @@ section#mostlyUsedSamples
   //- Hour Range
   sample-block#hourRange
     template(v-slot:title) Hour Range
-    p(slot="description") To define hour values you want and disable the rest
+    p(slot="description") Define the hour values you want and disable the rest
     template(v-slot:codes)
       highlight-code(lang="html" data-title="HTML")
         | &lt;!-- Hour Range Sample 1 --&gt;
@@ -294,27 +295,88 @@ section#mostlyUsedSamples
       p
         vue-timepicker(:hour-range="['7a', '9a', '11a', '1p', ['3p', '5p'], '7p']" format="hh:mm a")
 
-  //- Hide Disabled Hours
-  sample-block#hideDisabledHours
-    template(v-slot:title) Hide Disabled Hours
-    p(slot="description")
-      | Paired with
-      code hour-range
-      | , help hiding those disabled values
+  //- Minute Range
+  sample-block#minuteAndSecondRange
+    template(v-slot:title) Minute and Second Range
+    template(v-slot:description)
+      p Similar to Hour Range, you can set available minute/second values base on your needs.
     template(v-slot:codes)
       highlight-code(lang="html" data-title="HTML")
-        | &lt;!-- Hour Range Sample 1 with `hide-disabled-hours` --&gt;
-        | &lt;vue-timepicker hide-disabled-hours :hour-range="[5, [8, 12], [14, 17], 19]"&gt;&lt;/vue-timepicker&gt;
-        | &nbsp;
-        | &lt;!-- Hour Range Sample 2 (12-hour format) with `hide-disabled-hours` --&gt;
-        | &lt;vue-timepicker hide-disabled-hours :hour-range="['7a', '9a', '11a', '1p', ['3p', '5p'], '7p']" format="hh:mm a"&gt;&lt;/vue-timepicker&gt;
+        | &lt;!-- Minute range only --&gt;
+        | &lt;vue-timepicker :minute-range="[0, 6, [10, 30], 42, 50]"&gt;&lt;/vue-timepicker&gt;
+        |
+        | &lt;!-- Minute range + 5-minute interval --&gt;
+        | &lt;vue-timepicker :minute-range="[0, 6, [10, 30], 42, 50]" :minute-interval="5"&gt;&lt;/vue-timepicker&gt;
+        |
+        | &lt;!-- Second range only --&gt;
+        | &lt;vue-timepicker format="H:m:s" :second-range="[0, 6, [10, 30], 42, 50]"&gt;&lt;/vue-timepicker&gt;
+        |
+        | &lt;!-- Second range + 10-second interval --&gt;
+        | &lt;vue-timepicker format="H:m:s" :second-range="[0, 6, [10, 30], 42, 50]" :second-interval="10"&gt;&lt;/vue-timepicker&gt;
+        |
+        | &lt;!-- Minute and Second ranges + 10-minute interval + 5-second interval --&gt;
+        | &lt;vue-timepicker format="HH:mm:ss" :minute-range="[0, 6, [10, 30], 42, 50]" :second-range="[0, 6, [10, 30], 42, 50]" :minute-interval="10" :second-interval="5"&gt;&lt;/vue-timepicker&gt;
     template(v-slot:preview)
-      b Hour Range Sample 1 with `hide-disabled-hours`
+      b Minute range only
       p
-        vue-timepicker(:hour-range="[5, [8, 12], [14, 17], 19]" hide-disabled-hours)
-      b Hour Range Sample 2 (12-hour format) with `hide-disabled-hours`
+        vue-timepicker(:minute-range="[0, 6, [10, 30], 42, 50]")
+      b Minute range + 5-minute interval
       p
-        vue-timepicker(:hour-range="['7a', '9a', '11a', '1p', ['3p', '5p'], '7p']" format="hh:mm a" hide-disabled-hours)
+        vue-timepicker(:minute-range="[0, 6, [10, 30], 42, 50]" :minute-interval="5")
+      b Second range only
+      p
+        vue-timepicker(format="H:m:s" :second-range="[0, 6, [10, 30], 42, 50]")
+      b Second range + 10-second interval
+      p
+        vue-timepicker(format="H:m:s" :second-range="[0, 6, [10, 30], 42, 50]" :second-interval="10")
+      b Minute and Second ranges + 10-minute interval + 5-second interval
+      p
+        vue-timepicker(format="HH:mm:ss" :minute-range="[0, 6, [10, 30], 42, 50]" :second-range="[0, 6, [10, 30], 42, 50]" :minute-interval="10" :second-interval="5")
+
+  //- Hide Disabled Items
+  sample-block#hideDisabledItems
+    template(v-slot:title) Hide Disabled Items
+    template(v-slot:description)
+      p Here're four kinds of helper properties to let you hide the values excluded by the <code>hour-range</code>, <code>minute-range</code>, and <code>second-range</code>.
+      ul
+        li
+          b hide-disabled-items
+          | : Hide <b>all</b> disabled items - hour, minute, and seconds.
+        li
+          b hide-disabled-hours
+          | : Hide disabled <b>hour</b> valus only.
+        li
+          b hide-disabled-minutes
+          | : Hide disabled <b>minute</b> values only.
+        li
+          b hide-disabled-seconds
+          | : Hide disabled <b>second</b> values only.
+    template(v-slot:codes)
+      highlight-code(lang="html" data-title="HTML")
+        | &lt;!-- hide-disabled-items --&gt;
+        | &lt;vue-timepicker hide-disabled-items format="HH:mm:ss" :hour-range="[[9, 17]]" :minute-range="[0, 10, 15, 30, 50]" :second-range="[5, 15, 25, 45]"&gt;&lt;/vue-timepicker&gt;
+        |
+        | &lt;!-- hide-disabled-hours --&gt;
+        | &lt;vue-timepicker hide-disabled-hours format="HH:mm:ss" :hour-range="[[9, 17]]" :minute-range="[0, 10, 15, 30, 50]" :second-range="[5, 15, 25, 45]"&gt;&lt;/vue-timepicker&gt;
+        |
+        | &lt;!-- hide-disabled-minutes --&gt;
+        | &lt;vue-timepicker hide-disabled-minutes format="HH:mm:ss" :hour-range="[[9, 17]]" :minute-range="[0, 10, 15, 30, 50]" :second-range="[5, 15, 25, 45]"&gt;&lt;/vue-timepicker&gt;
+        |
+        | &lt;!-- hide-disabled-seconds --&gt;
+        | &lt;vue-timepicker hide-disabled-seconds format="HH:mm:ss" :hour-range="[[9, 17]]" :minute-range="[0, 10, 15, 30, 50]" :second-range="[5, 15, 25, 45]"&gt;&lt;/vue-timepicker&gt;
+    template(v-slot:preview)
+      b hide-disabled-items
+      p
+        vue-timepicker(hide-disabled-items format="HH:mm:ss" :hour-range="[[9, 17]]" :minute-range="[0, 10, 15, 30, 50]" :second-range="[5, 15, 25, 45]")
+      b hide-disabled-hours
+      p
+        vue-timepicker(hide-disabled-hours format="HH:mm:ss" :hour-range="[[9, 17]]" :minute-range="[0, 10, 15, 30, 50]" :second-range="[5, 15, 25, 45]")
+      b hide-disabled-minutes
+      p
+        vue-timepicker(hide-disabled-minutes format="HH:mm:ss" :hour-range="[[9, 17]]" :minute-range="[0, 10, 15, 30, 50]" :second-range="[5, 15, 25, 45]")
+      b hide-disabled-seconds
+      p
+        vue-timepicker(hide-disabled-seconds format="HH:mm:ss" :hour-range="[[9, 17]]" :minute-range="[0, 10, 15, 30, 50]" :second-range="[5, 15, 25, 45]")
 
   //- Hide Clear Button
   sample-block#hideClearButton
@@ -344,12 +406,12 @@ section#mostlyUsedSamples
   sample-block#onChangeSample
     template(v-slot:title)
       | The&nbsp;
-      code @change
+      code change
       | &nbsp;Event
     template(v-slot:description)
-      p A <code>@change</code> event will be triggered every time the user alters timepicker's value.
-      p Unlike the <code>v-model</code>, which only returns data in your predefined format, <code>@change</code> event will return a full package of all supported time tokens.
-      p Started from <code>v0.2.2</code>, a <code>displayTime</code> string value is also included in the return data of <code>@change</code> event.
+      p A <code>change</code> event will be triggered every time the user alters timepicker's value.
+      p Unlike the <code>v-model</code>, which only returns data in your predefined format, <code>change</code> event will return a full package of all supported time tokens.
+      p Started from <code>v0.2.2</code>, a <code>displayTime</code> string value is also included in the return data of <code>change</code> event.
       p Play around with the two pickers below to see their data changes in live.
     template(v-slot:codes)
       highlight-code(lang="html" data-title="HTML")
@@ -387,9 +449,9 @@ section#mostlyUsedSamples
   //- Open And Close Event
   sample-block#openAndClose
     template(v-slot:title)
-      code @open
+      code open
       | &nbsp;and&nbsp;
-      code @close
+      code close
       | &nbsp;event
     p(slot="description")
       | Help identifying current status of the dropdown picker

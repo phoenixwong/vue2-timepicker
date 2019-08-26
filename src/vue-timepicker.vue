@@ -8,11 +8,15 @@ const CONFIG = {
 
 const DEFAULT_OPTIONS = {
   format: 'HH:mm',
-  hideClearButton: false,
   minuteInterval: 1,
   secondInterval: 1,
   hourRange: null,
-  hideDisabledHours: false
+  minuteRange: null,
+  secondRange: null,
+  hideDisabledHours: false,
+  hideDisabledMinutes: false,
+  hideDisabledSeconds: false,
+  hideDisabledItems: false
 }
 
 export default {
@@ -20,11 +24,19 @@ export default {
   props: {
     value: { type: [ Object, String ] },
     format: { type: String },
-    hideClearButton: { type: Boolean, default: false },
     minuteInterval: { type: [ Number, String ] },
     secondInterval: { type: [ Number, String ] },
+
     hourRange: { type: Array },
+    minuteRange: { type: Array },
+    secondRange: { type: Array },
+
     hideDisabledHours: { type: Boolean, default: false },
+    hideDisabledMinutes: { type: Boolean, default: false },
+    hideDisabledSeconds: { type: Boolean, default: false },
+    hideDisabledItems: { type: Boolean, default: false },
+
+    hideClearButton: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
 
     id: { type: String },
@@ -63,10 +75,6 @@ export default {
 
       if (this.format && this.format.length) {
         options.format = String(this.format)
-      }
-
-      if (this.hideClearButton) {
-        options.hideClearButton = true
       }
 
       if (this.isNumber(this.minuteInterval)) {
@@ -109,13 +117,44 @@ export default {
 
       if (this.hourRange && Array.isArray(this.hourRange)) {
         options.hourRange = JSON.parse(JSON.stringify(this.hourRange))
+        if (!this.hourRange.length && this.debugMode) {
+          this.debugLog('The "hour-range" array is empty (length === 0)')
+        }
       }
 
-      if (this.hideDisabledHours) {
+      if (this.minuteRange && Array.isArray(this.minuteRange)) {
+        options.minuteRange = JSON.parse(JSON.stringify(this.minuteRange))
+        if (!this.minuteRange.length && this.debugMode) {
+          this.debugLog('The "minute-range" array is empty (length === 0)')
+        }
+      }
+
+      if (this.secondRange && Array.isArray(this.secondRange)) {
+        options.secondRange = JSON.parse(JSON.stringify(this.secondRange))
+        if (!this.secondRange.length && this.debugMode) {
+          this.debugLog('The "second-range" array is empty (length === 0)')
+        }
+      }
+
+      if (this.hideDisabledItems) {
+        options.hideDisabledItems = true
+      }
+
+      if (this.hideDisabledHours || this.hideDisabledItems) {
         options.hideDisabledHours = true
+      }
+      if (this.hideDisabledMinutes || this.hideDisabledItems) {
+        options.hideDisabledMinutes = true
+      }
+      if (this.hideDisabledSeconds || this.hideDisabledItems) {
+        options.hideDisabledSeconds = true
       }
 
       return options
+    },
+
+    useStringValue () {
+      return typeof this.value === 'string'
     },
 
     formatString () {
@@ -155,54 +194,50 @@ export default {
     },
 
     hourRangeIn24HrFormat () {
-      if (this.opts.hourRange && this.opts.hourRange.length) {
-        let range = []
-        this.opts.hourRange.forEach((value) => {
-          if (value instanceof Array) {
-            if (value.length > 2 && this.debugMode) {
-              this.debugLog(`Nested array within "hour-range" must contain no more than two items. Only the first two items of ${JSON.stringify(value)} will be taking into account.`)
-            }
+      if (!this.opts.hourRange) { return false }
+      if (!this.opts.hourRange.length) { return [] }
 
-            let start = value[0]
-            let end = value[1] || value[0]
+      const range = []
+      this.opts.hourRange.forEach(value => {
+        if (value instanceof Array) {
+          if (value.length > 2 && this.debugMode) {
+            this.debugLog(`Nested array within "hour-range" must contain no more than two items. Only the first two items of ${JSON.stringify(value)} will be taken into account.`)
+          }
 
-            if (this.is12hRange(start)) {
-              start = this.translate12hRange(start)
-            }
-            if (this.is12hRange(end)) {
-              end = this.translate12hRange(end)
-            }
+          let start = value[0]
+          let end = value[1] || value[0]
 
-            for (let i = +start; i <= +end; i++) {
-              if (range.indexOf(i) === -1) {
-                range.push(i)
-              }
-            }
-          } else {
-            if (this.is12hRange(value)) {
-              value = this.translate12hRange(value)
-            }
-            if (range.indexOf(value) === -1) {
-              range.push(value)
+          if (this.is12hRange(start)) {
+            start = this.translate12hRange(start)
+          }
+          if (this.is12hRange(end)) {
+            end = this.translate12hRange(end)
+          }
+
+          for (let i = +start; i <= +end; i++) {
+            if (i < 0 || i > 24) { continue }
+            if (!range.includes(i)) {
+              range.push(i)
             }
           }
-        })
-        range.sort((l, r) => { return l - r })
-        return range
-      }
-      if (this.opts.hourRange && !this.opts.hourRange.length) {
-        if (this.debugMode) {
-          this.debugLog('The "hour-range" array is empty (length === 0)')
+        } else {
+          if (this.is12hRange(value)) {
+            value = this.translate12hRange(value)
+          }
+          if (value < 0 || value > 24) { return }
+          if (!range.includes(value)) {
+            range.push(value)
+          }
         }
-        return []
-      }
-      return false
+      })
+      range.sort((l, r) => { return l - r })
+      return range
     },
 
     restrictedHourRange () {
-      if (!this.hourRangeIn24HrFormat) {
-        return false
-      }
+      // No restriction
+      if (!this.hourRangeIn24HrFormat) { return false }
+      // 12-Hour
       if (this.baseOn12Hours) {
         const range = this.hourRangeIn24HrFormat.map((value) => {
           if (value === 12) {
@@ -210,10 +245,11 @@ export default {
           } else if (value === 24) {
             return '12a'
           }
-          return value > 12 ? value % 12 + 'p' : value + 'a'
+          return value > 12 ? `${value % 12}p` : `${value}a`
         })
         return range
       }
+      // 24-Hour
       return this.hourRangeIn24HrFormat
     },
 
@@ -222,18 +258,88 @@ export default {
         am: true,
         pm: true
       }
-
       if (this.hourRangeIn24HrFormat && this.hourRangeIn24HrFormat.length) {
         const range = [].concat([], this.hourRangeIn24HrFormat)
         result.am = range.some(this.hasAm)
         result.pm = range.some(this.hasPm)
       }
-
       return result
     },
 
-    useStringValue () {
-      return typeof this.value === 'string'
+    minuteRangeList () {
+      if (!this.opts.minuteRange) { return false }
+      if (!this.opts.minuteRange.length) { return [] }
+      const range = []
+      let formatedValue
+      this.opts.minuteRange.forEach(value => {
+        if (value instanceof Array) {
+          if (value.length > 2 && this.debugMode) {
+            this.debugLog(`Nested array within "minute-range" must contain no more than two items. Only the first two items of ${JSON.stringify(value)} will be taken into account.`)
+          }
+          const start = value[0]
+          const end = value[1] || value[0]
+          for (let i = +start; i <= +end; i++) {
+            if (i < 0 || i > 59) { continue }
+            formatedValue = this.formatValue(this.minuteType, i)
+            if (!range.includes(formatedValue)) {
+              range.push(formatedValue)
+            }
+          }
+        } else {
+          if (value < 0 || value > 59) { return }
+          formatedValue = this.formatValue(this.minuteType, value)
+          if (!range.includes(formatedValue)) {
+            range.push(formatedValue)
+          }
+        }
+      })
+      range.sort((l, r) => { return l - r })
+      // Debug Mode
+      if (this.debugMode) {
+        const validItems = (this.minutes || []).filter(item => range.includes(item))
+        if (!validItems || !validItems.length) {
+          this.debugLog(`The minute list is empty due to the "minute-range" config\nminute-range: ${JSON.stringify(this.minuteRange)}\nminute-interval: ${this.opts.minuteInterval}`)
+        }
+      }
+      return range
+    },
+
+    secondRangeList () {
+      if (!this.opts.secondRange) { return false }
+      if (!this.opts.secondRange.length) { return [] }
+      const range = []
+      let formatedValue
+      this.opts.secondRange.forEach(value => {
+        if (value instanceof Array) {
+          if (value.length > 2 && this.debugMode) {
+            this.debugLog(`Nested array within "second-range" must contain no more than two items. Only the first two items of ${JSON.stringify(value)} will be taken into account.`)
+          }
+          const start = value[0]
+          const end = value[1] || value[0]
+          for (let i = +start; i <= +end; i++) {
+            if (i < 0 || i > 59) { continue }
+            formatedValue = this.formatValue(this.secondType, i)
+            if (!range.includes(formatedValue)) {
+              range.push(formatedValue)
+            }
+          }
+        } else {
+          if (value < 0 || value > 59) { return }
+          formatedValue = this.formatValue(this.secondType, value)
+          if (!range.includes(formatedValue)) {
+            range.push(formatedValue)
+          }
+        }
+      })
+      range.sort((l, r) => { return l - r })
+      // Debug Mode
+      if (this.debugMode) {
+        const validItems = (this.seconds || []).filter(item => range.includes(item))
+        if (!validItems || !validItems.length) {
+          this.debugLog(`The second list is empty due to the "second-range" config\nsecond-range: ${JSON.stringify(this.secondRange)}\nsecond-interval: ${this.opts.secondInterval}`)
+        }
+      }
+      return range
     }
   },
 
@@ -257,7 +363,7 @@ export default {
       this.fillValues()
     },
     disabled (toDisabled) {
-      // Force close dropdown when disabled
+      // Force close the dropdown when disabled
       if (toDisabled && this.showDropdown) {
         this.showDropdown = false
       }
@@ -483,7 +589,7 @@ export default {
         }
       } else {
         if (this.debugMode) {
-          this.debugLog(`The input string in 'v-model' does NOT match the 'format' pattern\nformat: ${this.formatString}\nv-model: ${this.value}`)
+          this.debugLog(`The input string in "v-model" does NOT match the "format" pattern\nformat: ${this.formatString}\nv-model: ${this.value}`)
         }
       }
     },
@@ -668,19 +774,26 @@ export default {
     },
 
     isDisabledHour (value) {
-      if (this.restrictedHourRange) {
-        if (this.baseOn12Hours) {
-          if (!this.apm || !this.apm.length) {
-            return false
-          } else {
-            const token = this.apm.toLowerCase() === 'am' ? 'a' : 'p'
-            return this.restrictedHourRange.indexOf(`${+value}${token}`) === -1
-          }
+      if (!this.restrictedHourRange) { return false }
+      if (this.baseOn12Hours) {
+        if (!this.apm || !this.apm.length) {
+          return false
         } else {
-          return this.restrictedHourRange.indexOf(+value) === -1
+          const token = this.apm.toLowerCase() === 'am' ? 'a' : 'p'
+          return !this.restrictedHourRange.includes(`${+value}${token}`)
         }
       }
-      return false
+      return !this.restrictedHourRange.includes(+value)
+    },
+
+    isDisabledMinute (value) {
+      if (!this.minuteRangeList) { return false }
+      return !this.minuteRangeList.includes(value)
+    },
+
+    isDisabledSecond (value) {
+      if (!this.secondRangeList) { return false }
+      return !this.secondRangeList.includes(value)
     },
 
     forceApmSelection () {
@@ -719,8 +832,10 @@ export default {
         if (this.isDisabledHour(value)) { return }
         this.hour = value
       } else if (type === 'minute') {
+        if (this.isDisabledMinute(value)) { return }
         this.minute = value
       } else if (type === 'second') {
+        if (this.isDisabledSecond(value)) { return }
         this.second = value
       } else if (type === 'apm') {
         if (!this.has[value.toLowerCase()]) { return }
@@ -843,26 +958,32 @@ export default {
           <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabledHour(hr))"
               :key="hIndex"
               :class="{active: hour === hr}"
-              v-text="hr"
               :disabled="isDisabledHour(hr)"
+              v-text="hr"
               @click="select('hour', hr)"></li>
         </template>
       </ul>
       <ul class="minutes">
         <li class="hint" v-text="minuteType"></li>
-        <li v-for="(m, mIndex) in minutes"
-            :key="mIndex"
-            :class="{active: minute === m}"
-            v-text="m"
-            @click="select('minute', m)"></li>
+        <template v-for="(m, mIndex) in minutes">
+          <li v-if="!opts.hideDisabledMinutes || (opts.hideDisabledMinutes && !isDisabledMinute(m))"
+              :key="mIndex"
+              :class="{active: minute === m}"
+              :disabled="isDisabledMinute(m)"
+              v-text="m"
+              @click="select('minute', m)"></li>
+        </template>
       </ul>
       <ul class="seconds" v-if="secondType">
         <li class="hint" v-text="secondType"></li>
-        <li v-for="(s, sIndex) in seconds"
-            :key="sIndex"
-            :class="{active: second === s}"
-            v-text="s"
-            @click="select('second', s)"></li>
+        <template v-for="(s, sIndex) in seconds">
+          <li  v-if="!opts.hideDisabledSeconds || (opts.hideDisabledSeconds && !isDisabledSecond(s))"
+              :key="sIndex"
+              :class="{active: second === s}"
+              :disabled="isDisabledSecond(s)"
+              v-text="s"
+              @click="select('second', s)"></li>
+        </template>
       </ul>
       <ul class="apms" v-if="apmType">
         <li class="hint" v-text="apmType"></li>

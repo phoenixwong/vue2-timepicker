@@ -140,7 +140,7 @@ Section    | Token | Output
 
 > If not set, the `format` string is default to "HH:mm"
 
-### Customized Picker interval
+### Customized Picker Interval
 
 ```html
 <!-- Show minute picker's value in the form of 0, 5, 10, ... 55, 60 -->
@@ -393,13 +393,47 @@ Sometimes you may want to limit hours picker to a specific range. The `hour-rang
 <!-- >> Equals to :hour-range="['7a', '9a', '11a', '1p', '3p', '4p', '5p', '7p']" -->
 ```
 
-### Hide Disabled Hour Ranges
+### Set Minute and Second Range
+
+Similar to `hour-range`, you can determine values in the minutes and seconds dropdown by using `minute-range` and `second-range`.
 
 ```html
+<!-- Minute range -->
+<vue-timepicker :minute-range="[0, 6, [10, 30], 42, 50]"></vue-timepicker>
+<!-- >> Active Items: 00, 06, 10, 11, 12, 13, ..., 27, 28, 29, 30, 42, 50 -->
+
+<!-- Second range -->
+<vue-timepicker format="H:m:s" :second-range="[0, 6, [10, 30], 42, 50]"></vue-timepicker>
+<!-- >> Active Items: 0, 6, 10, 11, 12, 13, ..., 27, 28, 29, 30, 42, 50 -->
+```
+
+When implemented together with `minute-interval` and `second-interval`, the customized intervals take the priority.
+
+```html
+<!-- Minute range + 5-minute interval -->
+<vue-timepicker :minute-range="[0, 6, [10, 30], 42, 50]" :minute-interval="5"></vue-timepicker>
+<!-- >> Active Items: 00, 10, 15, 20, 25, 30, 50 -->
+
+<!-- Second range + 10-second interval-->
+<vue-timepicker format="H:m:s" :second-range="[0, 6, [10, 30], 42, 50]" :second-interval="10"></vue-timepicker>
+<!-- >> Active Items: 0, 10, 20, 30, 50 -->
+```
+
+### Hide Disabled Items
+
+There're four kinds of helper properties to let you hide the values excluded by `hour-range`, `minute-range`, and `second-range`.
+
+- **hide-disabled-items**: Hide **all** disabled items - hour, minute, and seconds.
+- **hide-disabled-hours**: Hide disabled **hour** values only.
+- **hide-disabled-minutes**: Hide disabled **minute** values only.
+- **hide-disabled-seconds**: Hide disabled **second** values only.
+
+```html
+<!-- `hide-disabled-hours` sample -->
 <vue-timepicker :hour-range="[5, [8, 12], [14, 17], 19]" hide-disabled-hours></vue-timepicker>
 ```
 
-It's a pair with the above `hour-range` parameter. In this sample, the hour picker hides the invalid hours (_0, 1, 2, 3, 4, 6, 7, 13, 18, 20, 21, 22, 23_) and display the valid hours (_5, 8, 9, ..._) only.
+Here we take the `hide-disabled-hours` as an example. It's a pair with the `hour-range` parameter. In this case, the hour picker hides the invalid hours (_0, 1, 2, 3, 4, 6, 7, 13, 18, 20, 21, 22, 23_) and display the valid hours (_5, 8, 9, ..._) only.
 
 ### Enable Debug Mode
 
@@ -431,24 +465,29 @@ Let's create a "bug" as an example --
 Then, in the console window, you should see a debug log saying:
 
 ```console
-DEBUG: The input string in 'v-model' does NOT match the 'format' pattern
+DEBUG: The input string in "v-model" does NOT match the "format" pattern
 format: h:mm:ss A
 v-model: e:mm:05 A
 ```
 
-## Main Props API
+## Main Props API Overview
 
-Prop                    | Type               | Required | Default Value
------------------------ | ------------------ | -------- | -------------
-**v-model**             | _Object_, _String_ | no       | _undefined_
-**format**              | _String_           | no       | "HH:mm"
-**minute-interval**     | _Number_           | no       | _undefined_
-**second-interval**     | _Number_           | no       | _undefined_
-**hide-clear-button**   | _Boolean_          | no       | false
-**disabled**            | _Boolean_          | no       | false
-**hour-range**          | _Array_            | no       | _undefined_
-**hide-disabled-hours** | _Boolean_          | no       | false
-**debug-mode**          | _Boolean_          | no       | false
+Prop                      | Type               | Required | Default Value
+------------------------- | ------------------ | -------- | -------------
+**v-model**               | _Object_, _String_ | no       | _undefined_
+**format**                | _String_           | no       | "HH:mm"
+**minute-interval**       | _Number_           | no       | _undefined_
+**second-interval**       | _Number_           | no       | _undefined_
+**hide-clear-button**     | _Boolean_          | no       | false
+**disabled**              | _Boolean_          | no       | false
+**hour-range**            | _Array_            | no       | _undefined_
+**minute-range**          | _Array_            | no       | _undefined_
+**second-range**          | _Array_            | no       | _undefined_
+**hide-disabled-hours**   | _Boolean_          | no       | false
+**hide-disabled-minutes** | _Boolean_          | no       | false
+**hide-disabled-seconds** | _Boolean_          | no       | false
+**hide-disabled-items**   | _Boolean_          | no       | false
+**debug-mode**            | _Boolean_          | no       | false
 
 
 ## Input Props API
