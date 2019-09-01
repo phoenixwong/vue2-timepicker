@@ -38,11 +38,16 @@ export default {
 
     hideClearButton: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
+    closeOnComplete: { type: Boolean, default: false },
 
     id: { type: String },
     name: { type: String },
     inputClass: { type: String },
     placeholder: { type: String },
+    tabindex: { type: [ Number, String ], default: 0 },
+
+    blurDelay: { type: [ Number, String ] },
+    advancedKeyboard: { type: Boolean, default: false },
 
     debugMode: { type: Boolean, default: false }
   },
@@ -55,7 +60,10 @@ export default {
       minutes: [],
       seconds: [],
       apms: [],
+
       showDropdown: false,
+      isFocusing: false,
+      debounceTimer: undefined,
 
       hourType: 'HH',
       minuteType: 'mm',
@@ -180,6 +188,18 @@ export default {
 
     inputIsEmpty () {
       return this.formatString === this.displayTime
+    },
+
+    allValueSelected () {
+      if (
+        (!this.hour || !this.hour.length) ||
+        (!this.minute || !this.minute.length) ||
+        (this.secondType && (!this.second || !this.second.length)) ||
+        (this.apmType && (!this.apm || !this.apm.length))
+      ) {
+        return false
+      }
+      return true
     },
 
     showClearBtn () {
@@ -755,6 +775,10 @@ export default {
         data: fullVals,
         displayTime: this.inputIsEmpty ? '' : String(this.displayTime)
       })
+
+      if (this.closeOnComplete && this.allValueSelected && this.showDropdown) {
+        this.toggleDropdown()
+      }
     },
 
     translate12hRange (value) {
@@ -771,6 +795,17 @@ export default {
 
     hasPm (value) {
       return value >= 12 && value < 24
+    },
+
+    doubleCheckHourValue () {
+      if (!this.hour || !this.apm || !this.restrictedHourRange || !this.hourRangeIn24HrFormat) { return }
+      const hourIn24 = this.translate12hRange(`${this.hour}${this.apm.substr(0, 1)}`)
+      if (!this.hourRangeIn24HrFormat.includes(hourIn24)) {
+        this.hour = ''
+        if (this.debugMode) {
+          this.debugLog(`After switching AM/PM, the hour value is no longer in the "hour-range". Reset it to empty now.`)
+        }
+      }
     },
 
     isDisabledHour (value) {
@@ -796,6 +831,11 @@ export default {
       return !this.secondRangeList.includes(value)
     },
 
+    isDisabledApm (value) {
+      if (!this.restrictedHourRange) { return false }
+      return !this.has[(value || '').toLowerCase()]
+    },
+
     forceApmSelection () {
       if (!this.apm || !this.apm.length) {
         if (this.has.am) {
@@ -816,7 +856,13 @@ export default {
       if (this.disabled) { return }
       this.showDropdown = !this.showDropdown
 
-      this.showDropdown ? this.$emit('open') : this.$emit('close')
+      if (this.showDropdown) {
+        this.$emit('open')
+        this.isFocusing = true
+      } else {
+        this.$emit('close')
+        this.isFocusing = false
+      }
 
       if (this.restrictedHourRange && this.baseOn12Hours) {
         if (this.showDropdown) {
@@ -838,8 +884,11 @@ export default {
         if (this.isDisabledSecond(value)) { return }
         this.second = value
       } else if (type === 'apm') {
-        if (!this.has[value.toLowerCase()]) { return }
+        if (this.isDisabledApm(value)) { return }
         this.apm = value
+        if (this.restrictedHourRange) {
+          this.doubleCheckHourValue()
+        }
       }
     },
 
@@ -851,7 +900,190 @@ export default {
       this.apm = ''
     },
 
+    //
+    // Additional Keyboard Navigation
+    //
+
+    onFocus () {
+      if (this.disabled) { return }
+      if (!this.isFocusing) {
+        this.isFocusing = true
+      }
+      if (!this.showDropdown) {
+        this.toggleDropdown()
+      }
+    },
+
+    escBlur () {
+      if (this.disabled) { return }
+      this.isFocusing = false
+      const inputBox = this.$el.querySelectorAll('input.display-time')[0]
+      if (inputBox) {
+        inputBox.blur()
+      }
+    },
+
+    debounceBlur () {
+      if (this.disabled) { return }
+      this.isFocusing = false
+      const delay = +(this.blurDelay || 0) || 200
+      window.clearTimeout(this.debounceTimer)
+      this.debounceTimer = window.setTimeout(() => {
+        window.clearTimeout(this.debounceTimer)
+        this.onBlur()
+      }, delay)
+    },
+
+    onBlur () {
+      if (this.disabled) { return }
+      if (!this.isFocusing) {
+        if (this.showDropdown) {
+          this.toggleDropdown()
+        }
+      }
+    },
+
+    keepFocusing () {
+      this.isFocusing = true
+    },
+
+    validItemsInCol (columnClass) {
+      return this.$el.querySelectorAll(`ul.${columnClass} > li:not(.hint):not([disabled])`)
+    },
+
+    getSideItems (columnClass, dataKey, getPrevious = false) {
+      const siblingsInCol = this.validItemsInCol(columnClass)
+      const selfIndex = Array.prototype.findIndex.call(siblingsInCol, (sbl) => {
+        return sbl.getAttribute('data-key') === dataKey
+      })
+
+      // Already the first item
+      if (getPrevious && selfIndex === 0) {
+        if (this.debugMode) {
+          this.debugLog(`"${dataKey}" is the first valid item in "${columnClass}" list already`)
+        }
+        return
+      }
+      // Already the last item
+      if (!getPrevious && selfIndex === siblingsInCol.length - 1) {
+        if (this.debugMode) {
+          this.debugLog(`"${dataKey}" is the last valid item in "${columnClass}" list already`)
+        }
+        return
+      }
+
+      if (getPrevious) {
+        return siblingsInCol[selfIndex - 1]
+      } else {
+        return siblingsInCol[selfIndex + 1]
+      }
+    },
+
+    prevItem (columnClass, dataKey) {
+      const targetItem = this.getSideItems(columnClass, dataKey, true)
+      if (targetItem) {
+        targetItem.focus()
+      }
+    },
+
+    nextItem (columnClass, dataKey) {
+      const targetItem = this.getSideItems(columnClass, dataKey, false)
+      if (targetItem) {
+        targetItem.focus()
+      }
+    },
+
+    getSideColumnClass (columnClass, toLeft = false) {
+      let targetColumn
+      // Nav to Left
+      if (toLeft) {
+        switch (columnClass) {
+          case 'hours':
+            targetColumn = -1
+            break
+          case 'minutes':
+            targetColumn = 'hours'
+            break
+          case 'seconds':
+            targetColumn = 'minutes'
+            break
+          case 'apms':
+            if (this.secondType) {
+              targetColumn = 'seconds'
+            } else {
+              targetColumn = 'minutes'
+            }
+            break
+        }
+      // Nav to Right
+      } else {
+        switch (columnClass) {
+          case 'hours':
+            targetColumn = 'minutes'
+            break
+          case 'minutes':
+            if (this.secondType) {
+              targetColumn = 'seconds'
+            } else if (this.apmType) {
+              targetColumn = 'apms'
+            } else {
+              targetColumn = 1
+            }
+            break
+          case 'seconds':
+            if (this.apmType) {
+              targetColumn = 'apms'
+            } else {
+              targetColumn = 1
+            }
+            break
+          case 'apms':
+            targetColumn = 1
+            break
+        }
+      }
+
+      if (targetColumn === -1) {
+        if (this.debugMode) {
+          this.debugLog('You\'re in the leftmost list already')
+        }
+        return
+      } else if (targetColumn === 1) {
+        if (this.debugMode) {
+          this.debugLog('You\'re in the rightmost list already')
+        }
+        return
+      }
+
+      return targetColumn
+    },
+
+    getFirstItemInSideColumn (columnClass, toLeft = false) {
+      const targetColumnClass = this.getSideColumnClass(columnClass, toLeft)
+      if (!targetColumnClass) { return }
+      const listItems = this.validItemsInCol(targetColumnClass)
+      if (listItems && listItems[0]) {
+        return listItems[0]
+      }
+    },
+
+    toLeftColumn (columnClass) {
+      const targetItem = this.getFirstItemInSideColumn(columnClass, true)
+      if (targetItem) {
+        targetItem.focus()
+      }
+    },
+
+    toRightColumn (columnClass) {
+      const targetItem = this.getFirstItemInSideColumn(columnClass, false)
+      if (targetItem) {
+        targetItem.focus()
+      }
+    },
+
+    //
     // Helpers
+    //
 
     is12hRange (value) {
       return /^\d{1,2}(a|p|A|P)$/.test(value)
@@ -932,7 +1164,12 @@ export default {
   },
 
   mounted () {
+    window.clearTimeout(this.debounceTimer)
     this.renderFormat()
+  },
+
+  beforeDestroy () {
+    window.clearTimeout(this.debounceTimer)
   }
 }
 </script>
@@ -945,57 +1182,158 @@ export default {
          :name="name"
          :value="inputIsEmpty ? null : displayTime"
          :placeholder="placeholder || formatString"
+         :tabindex="disabled ? null : tabindex"
          :disabled="disabled"
          readonly
-         @click="toggleDropdown" />
+         @focus="onFocus"
+         @blur="debounceBlur"
+         @keydown.esc.exact="escBlur" />
   <span class="clear-btn" v-if="!showDropdown && showClearBtn" @click="clearTime">&times;</span>
   <div class="time-picker-overlay" v-if="showDropdown" @click="toggleDropdown"></div>
-  <div class="dropdown" v-show="showDropdown" @click.stop="">
+  <div class="dropdown" v-show="showDropdown" @mouseup="keepFocusing" @click.stop="">
     <div class="select-list">
-      <ul class="hours">
-        <li class="hint" v-text="hourType"></li>
-        <template v-for="(hr, hIndex) in hours">
-          <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabledHour(hr))"
-              :key="hIndex"
-              :class="{active: hour === hr}"
-              :disabled="isDisabledHour(hr)"
-              v-text="hr"
-              @click="select('hour', hr)"></li>
-        </template>
-      </ul>
-      <ul class="minutes">
-        <li class="hint" v-text="minuteType"></li>
-        <template v-for="(m, mIndex) in minutes">
-          <li v-if="!opts.hideDisabledMinutes || (opts.hideDisabledMinutes && !isDisabledMinute(m))"
-              :key="mIndex"
-              :class="{active: minute === m}"
-              :disabled="isDisabledMinute(m)"
-              v-text="m"
-              @click="select('minute', m)"></li>
-        </template>
-      </ul>
-      <ul class="seconds" v-if="secondType">
-        <li class="hint" v-text="secondType"></li>
-        <template v-for="(s, sIndex) in seconds">
-          <li  v-if="!opts.hideDisabledSeconds || (opts.hideDisabledSeconds && !isDisabledSecond(s))"
-              :key="sIndex"
-              :class="{active: second === s}"
-              :disabled="isDisabledSecond(s)"
-              v-text="s"
-              @click="select('second', s)"></li>
-        </template>
-      </ul>
-      <ul class="apms" v-if="apmType">
-        <li class="hint" v-text="apmType"></li>
-        <template v-for="(a, aIndex) in apms">
-          <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && has[a.toLowerCase()])"
-              :key="aIndex"
-              :class="{active: apm === a}"
-              v-text="a"
-              :disabled="!has[a.toLowerCase()]"
-              @click="select('apm', a)"></li>
-        </template>
-      </ul>
+      <!-- Common Keyboard Support: less event listeners -->
+      <template v-if="!advancedKeyboard">
+        <ul class="hours">
+          <li class="hint" v-text="hourType"></li>
+          <template v-for="(hr, hIndex) in hours">
+            <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabledHour(hr))"
+                :key="hIndex"
+                :class="{active: hour === hr}"
+                :disabled="isDisabledHour(hr)"
+                v-text="hr"
+                @click="select('hour', hr)"></li>
+          </template>
+        </ul>
+        <ul class="minutes">
+          <li class="hint" v-text="minuteType"></li>
+          <template v-for="(m, mIndex) in minutes">
+            <li v-if="!opts.hideDisabledMinutes || (opts.hideDisabledMinutes && !isDisabledMinute(m))"
+                :key="mIndex"
+                :class="{active: minute === m}"
+                :disabled="isDisabledMinute(m)"
+                v-text="m"
+                @click="select('minute', m)"></li>
+          </template>
+        </ul>
+        <ul class="seconds" v-if="secondType">
+          <li class="hint" v-text="secondType"></li>
+          <template v-for="(s, sIndex) in seconds">
+            <li v-if="!opts.hideDisabledSeconds || (opts.hideDisabledSeconds && !isDisabledSecond(s))"
+                :key="sIndex"
+                :class="{active: second === s}"
+                :disabled="isDisabledSecond(s)"
+                v-text="s"
+                @click="select('second', s)"></li>
+          </template>
+        </ul>
+        <ul class="apms" v-if="apmType">
+          <li class="hint" v-text="apmType"></li>
+          <template v-for="(a, aIndex) in apms">
+            <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabledApm(a))"
+                :key="aIndex"
+                :class="{active: apm === a}"
+                :disabled="isDisabledApm(a)"
+                v-text="a"
+                @click="select('apm', a)"></li>
+          </template>
+        </ul>
+      </template><!-- / Common Keyboard Support -->
+
+      <!--
+        Advanced Keyboard Support
+        Addeds hundreds of additional event lisenters
+      -->
+      <template v-if="advancedKeyboard">
+        <ul class="hours">
+          <li class="hint" v-text="hourType"></li>
+          <template v-for="(hr, hIndex) in hours">
+            <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabledHour(hr))"
+                :key="hIndex"
+                :class="{active: hour === hr}"
+                :tabindex="isDisabledHour(hr) ? null : tabindex"
+                :data-key="hr"
+                :disabled="isDisabledHour(hr)"
+                v-text="hr"
+                @click="select('hour', hr)"
+                @keydown.space.prevent="select('hour', hr)"
+                @keydown.enter.prevent="select('hour', hr)"
+                @keydown.up.prevent="prevItem('hours', hr)"
+                @keydown.down.prevent="nextItem('hours', hr)"
+                @keydown.left.prevent="toLeftColumn('hours')"
+                @keydown.right.prevent="toRightColumn('hours')"
+                @keydown.esc.exact="debounceBlur"
+                @blur="debounceBlur"
+                @focus="keepFocusing"></li>
+          </template>
+        </ul>
+        <ul class="minutes">
+          <li class="hint" v-text="minuteType"></li>
+          <template v-for="(m, mIndex) in minutes">
+            <li v-if="!opts.hideDisabledMinutes || (opts.hideDisabledMinutes && !isDisabledMinute(m))"
+                :key="mIndex"
+                :class="{active: minute === m}"
+                :tabindex="isDisabledMinute(m) ? null : tabindex"
+                :data-key="m"
+                :disabled="isDisabledMinute(m)"
+                v-text="m"
+                @click="select('minute', m)"
+                @keydown.space.prevent="select('minute', m)"
+                @keydown.enter.prevent="select('minute', m)"
+                @keydown.up.prevent="prevItem('minutes', m)"
+                @keydown.down.prevent="nextItem('minutes', m)"
+                @keydown.left.prevent="toLeftColumn('minutes')"
+                @keydown.right.prevent="toRightColumn('minutes')"
+                @keydown.esc.exact="debounceBlur"
+                @blur="debounceBlur"
+                @focus="keepFocusing"></li>
+          </template>
+        </ul>
+        <ul class="seconds" v-if="secondType">
+          <li class="hint" v-text="secondType"></li>
+          <template v-for="(s, sIndex) in seconds">
+            <li v-if="!opts.hideDisabledSeconds || (opts.hideDisabledSeconds && !isDisabledSecond(s))"
+                :key="sIndex"
+                :class="{active: second === s}"
+                :tabindex="isDisabledSecond(s) ? null : tabindex"
+                :data-key="s"
+                :disabled="isDisabledSecond(s)"
+                v-text="s"
+                @click="select('second', s)"
+                @keydown.space.prevent="select('second', s)"
+                @keydown.enter.prevent="select('second', s)"
+                @keydown.up.prevent="prevItem('seconds', s)"
+                @keydown.down.prevent="nextItem('seconds', s)"
+                @keydown.left.prevent="toLeftColumn('seconds')"
+                @keydown.right.prevent="toRightColumn('seconds')"
+                @keydown.esc.exact="debounceBlur"
+                @blur="debounceBlur"
+                @focus="keepFocusing"></li>
+          </template>
+        </ul>
+        <ul class="apms" v-if="apmType">
+          <li class="hint" v-text="apmType"></li>
+          <template v-for="(a, aIndex) in apms">
+            <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabledApm(a))"
+                :key="aIndex"
+                :class="{active: apm === a}"
+                :tabindex="isDisabledApm(a) ? null : tabindex"
+                :data-key="a"
+                :disabled="isDisabledApm(a)"
+                v-text="a"
+                @click="select('apm', a)"
+                @keydown.space.prevent="select('apm', a)"
+                @keydown.enter.prevent="select('apm', a)"
+                @keydown.up.prevent="prevItem('apms', a)"
+                @keydown.down.prevent="nextItem('apms', a)"
+                @keydown.left.prevent="toLeftColumn('apms')"
+                @keydown.right.prevent="toRightColumn('apms')"
+                @keydown.esc.exact="debounceBlur"
+                @blur="debounceBlur"
+                @focus="keepFocusing"></li>
+          </template>
+        </ul>
+      </template><!-- / Advanced Keyboard Support -->
     </div>
   </div>
 </span>
@@ -1111,14 +1449,16 @@ export default {
   color: #161616;
 }
 
-.vue__time-picker .dropdown ul li:not(.hint):not([disabled]):hover {
+.vue__time-picker .dropdown ul li:not(.hint):not([disabled]):hover,
+.vue__time-picker .dropdown ul li:not(.hint):not([disabled]):focus {
   background: rgba(0,0,0,.08);
   color: #161616;
   cursor: pointer;
 }
 
 .vue__time-picker .dropdown ul li:not([disabled]).active,
-.vue__time-picker .dropdown ul li:not([disabled]).active:hover {
+.vue__time-picker .dropdown ul li:not([disabled]).active:hover,
+.vue__time-picker .dropdown ul li:not([disabled]).active:focus {
   background: #41B883;
   color: #fff;
 }

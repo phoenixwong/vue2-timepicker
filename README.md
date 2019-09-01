@@ -45,7 +45,7 @@ npm install vue2-timepicker --save
 
 ### **Step 1:** Import VueTimepicker
 
-**Option A:** Import component JS and CSS
+#### **Option A:** Import component JS and CSS
 
 ```javascript
 // Main JS (in UMD format)
@@ -55,30 +55,47 @@ import VueTimepicker from 'vue2-timepicker'
 import 'vue2-timepicker/dist/VueTimepicker.css'
 ```
 
-**Option B:** Choose any bundle version base on your needs
+#### **Option B:** Choose any bundle version base on your needs
+
+**Javascript**
 
 ```javascript
-// JAVASCRIPT
-// - CommonJS
+// CommonJS
 import VueTimepicker from 'vue2-timepicker/dist/VueTimepicker.common.js'
-// - UMD
+// UMD
 import VueTimepicker from 'vue2-timepicker/dist/VueTimepicker.umd.js'
-// - UMD Minified
+// UMD Minified
 import VueTimepicker from 'vue2-timepicker/dist/VueTimepicker.umd.min.js'
-
-// CSS
-import 'vue2-timepicker/dist/VueTimepicker.css'
-
-// Single File Component (the *.vue file with CSS included)
-import VueTimepicker from 'vue2-timepicker/src/vue-timepicker.vue'
 ```
 
-**SSR Usage:** Import the single file component for SSR Usage
+**CSS**
+
+```css
+@import 'vue2-timepicker/dist/VueTimepicker.css';
+
+/* Or, with node_module alias path like: */
+@import '~vue2-timepicker/dist/VueTimepicker.css';
+
+/*
+  NOTE: the path alias to `node_modules` differs between bundlers.
+  Please change the `~` to any alias that works with your environment.
+ */
+```
+
+**Single File Component**
+
+```javascript
+// The *.vue file with CSS included
+import VueTimepicker from 'vue2-timepicker/src/vue-timepicker.vue'
+// NOTE: It might require additional workarounds in the bundler config in some cases
+```
+
+#### **SSR Usage**
 
 ```javascript
 // Import the *.vue file (CSS included)
-// Note the `/sfc` suffix here
 import VueTimepicker from 'vue2-timepicker/sfc'
+// Note the `/sfc` suffix here
 ```
 
 ### **Step 2**: Include VueTimepicker in your component
@@ -379,6 +396,14 @@ Enable to hide the "&times;" clear button on the right-hand side. Users can stil
 
 Fully disable both dropdown picker and the "&times;" clear button in the UI, to prevent users from changing any values again.
 
+### Close on Complete
+
+Automatically close the dropdown when the user finishes selecting **all** of the required fields.
+
+```html
+<vue-timepicker close-on-complete></vue-timepicker>
+```
+
 ### Define Hour Range
 
 Sometimes you may want to limit hours picker to a specific range. The `hour-range` parameter is here to help.
@@ -435,6 +460,34 @@ There're four kinds of helper properties to let you hide the values excluded by 
 
 Here we take the `hide-disabled-hours` as an example. It's a pair with the `hour-range` parameter. In this case, the hour picker hides the invalid hours (_0, 1, 2, 3, 4, 6, 7, 13, 18, 20, 21, 22, 23_) and display the valid hours (_5, 8, 9, ..._) only.
 
+### Advanced Keyboard Support
+
+Basic keyboard support includes:
+
+- **Tab**: Focus or blur the Timepicker
+- **Esc**: Close the dropdown
+
+Advance Keyboard support (enabled with `advanced-keyboard`):
+
+- **Arrow Keys**: Navigate between valid (non-disabled) values and columns
+- **Space** or **Enter**: Select the focusing item
+
+```html
+<vue-timepicker advanced-keyboard></vue-timepicker>
+```
+
+Please be aware that after putting the `advanced-keyboard` on, hundreds of additional keyboard event listeners are going to be attached to the component. The amount of listeners depends on how many hours, minutes, and seconds value you enabled in the current Timepicker.
+
+### Blur Delay
+
+```html
+<!-- Unit: million second -->
+<vue-timepicker :blur-delay="300"></vue-timepicker>
+```
+
+Sets the blur delay time for keyboard navigation. Defaults to `200` if not set.
+
+
 ### Enable Debug Mode
 
 ```html
@@ -443,7 +496,7 @@ Here we take the `hide-disabled-hours` as an example. It's a pair with the `hour
 
 It's aimed to help developers to investigate the input -> output process. When debug mode is toggled **on**, you can see extra `DEBUG: ...` logs coming through the console window as you interact with the vue-timepicker.
 
-Let's create a "bug" as an example --
+Let's create a "bug" here as an example --
 
 ```html
 <!-- Manual Bug Sample: Define timepicker with format "h:mm:ss A" -->
@@ -480,6 +533,7 @@ Prop                      | Type               | Required | Default Value
 **second-interval**       | _Number_           | no       | _undefined_
 **hide-clear-button**     | _Boolean_          | no       | false
 **disabled**              | _Boolean_          | no       | false
+**close-on-complete**     | _Boolean_          | no       | false
 **hour-range**            | _Array_            | no       | _undefined_
 **minute-range**          | _Array_            | no       | _undefined_
 **second-range**          | _Array_            | no       | _undefined_
@@ -487,6 +541,8 @@ Prop                      | Type               | Required | Default Value
 **hide-disabled-minutes** | _Boolean_          | no       | false
 **hide-disabled-seconds** | _Boolean_          | no       | false
 **hide-disabled-items**   | _Boolean_          | no       | false
+**advanced-keyboard**     | _Boolean_          | no       | false
+**blur-delay**            | _Number_           | no       | 200
 **debug-mode**            | _Boolean_          | no       | false
 
 
@@ -497,12 +553,13 @@ Prop                    | Type      | Required | Default Value
 **id**                  | _String_  | no       | _undefined_
 **name**                | _String_  | no       | _undefined_
 **placeholder**         | _String_  | no       | _undefined_
+**tabindex**            | _Number_  | no       | 0
 **input-class**         | _String_  | no       | _undefined_
 
-Timepicker now supports `id`, `name`, and `placeholder` like common form elements. Values will be assigned to the
+Timepicker now supports `id`, `name`, `placeholder`, and `tabindex` like common form elements. These values are assigned to the
 `<input type="text" class="display-time">` within the component.
 
-### Input `id` And `name`
+### Input `id`, `name` and `tabindex`
 
 ```html
 <!-- id -->
@@ -510,6 +567,9 @@ Timepicker now supports `id`, `name`, and `placeholder` like common form element
 
 <!-- name -->
 <vue-timepicker name="nameInForm"></vue-timepicker>
+
+<!-- tabindex -->
+<vue-timepicker :tabindex="5"></vue-timepicker>
 ```
 
 ### Input `placeholder`

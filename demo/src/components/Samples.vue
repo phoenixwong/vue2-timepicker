@@ -46,10 +46,12 @@ export default {
         { title: 'Hour Range', anchor: 'hourRange' },
         { title: 'Minute and Second Range', anchor: 'minuteAndSecondRange' },
         { title: 'Hide Disabled Items', anchor: 'hideDisabledItems' },
+        { title: 'Close on Complete', anchor: 'closeOnComplete' },
         { title: 'Hide Clear Button', anchor: 'hideClearButton' },
         { title: 'Disable Picker', anchor: 'disablePicker' },
         { title: 'The @change Event', anchor: 'onChangeSample' },
-        { title: '@open and @close event', anchor: 'openAndClose' }
+        { title: '@open and @close event', anchor: 'openAndClose' },
+        { title: 'Keyboard Support', anchor: 'kbSupport' }
       ]
     }
   },
@@ -378,6 +380,26 @@ section#mostlyUsedSamples
       p
         vue-timepicker(hide-disabled-seconds format="HH:mm:ss" :hour-range="[[9, 17]]" :minute-range="[0, 10, 15, 30, 50]" :second-range="[5, 15, 25, 45]")
 
+  //- Close on Complete
+  sample-block#closeOnComplete
+    template(v-slot:title) Close on Complete
+    p(slot="description")
+      | Automatically close the dropdown when user finish selecting <b>all</b> of the required fields.
+    template(v-slot:codes)
+      highlight-code(lang="html" data-title="HTML")
+        | &lt;!-- Auto-close on complete --&gt;
+        | &lt;vue-timepicker format="hh:mm A" close-on-complete&gt;&lt;/vue-timepicker&gt;
+        |
+        | &lt;!-- Default - close by clicking anywhere outside of the dropdown --&gt;
+        | &lt;vue-timepicker format="hh:mm A"&gt;&lt;/vue-timepicker&gt;
+    template(v-slot:preview)
+      b Auto-close on complete
+      p
+        vue-timepicker(format="hh:mm A" close-on-complete)
+      b Default - close by clicking anywhere outside of the dropdown
+      p
+        vue-timepicker(format="hh:mm A")
+
   //- Hide Clear Button
   sample-block#hideClearButton
     template(v-slot:title) Hide Clear Button
@@ -474,6 +496,73 @@ section#mostlyUsedSamples
       p
         vue-timepicker(@open="dropdownStatus = 'opened'" @close="dropdownStatus = 'closed'")
 
+  //- Keyboard Support
+  sample-block#kbSupport
+    template(v-slot:title) Keyboard Support
+    template(v-slot:description)
+      p
+        b Basic Keyboard Support:
+      ul
+        li
+          b Tab
+          | : Focus or blur the Timepicker
+        li
+          b Esc
+          | : Close the dropdown
+      p
+        b Advance Keyboard Support:
+      ul
+        li
+          b Arrow Keys
+          | : Navigate between valid (non-disabled) values and columns
+        li
+          b Space
+          | &nbsp;or&nbsp;
+          b Enter
+          | : Select the focusing item
+      p Try tabbing through the following inputs to see the difference between the <b>Default Timepicker</b> and the <b>Timepicker with Advanced Keyboard support</b>.
+
+    template(v-slot:codes)
+      highlight-code(lang="html" data-title="HTML")
+        | &lt;label for="otherInput"&gt;Text Input&lt;label/&gt;
+        | &lt;input id="otherInput" type="text" placeholder="Text" /&gt;
+        |
+        | &lt;!-- Default, with minimal keyboard support --&gt;
+        | &lt;label for="simplePicker"&gt;Default Vue Timepicker&lt;label/&gt;
+        | &lt;vue-timepicker id="simplePicker"&gt;&lt;/vue-timepicker&gt;
+        |
+        | &lt;label for="moreInput"&gt;Number Input&lt;label/&gt;
+        | &lt;input id="moreInput" type="number" placeholder="Number" /&gt;
+        |
+        | &lt;!-- Advanced Keyboard Support Enabled --&gt;
+        | &lt;label for="pickerKB"&gt;Vue Timepicker with Advanced Keyboard support&lt;label/&gt;
+        | &lt;vue-timepicker advanced-keyboard format="h:mm:ss A" :hour-range="[['7a', '5p']]" id="pickerKB"&gt;&lt;/vue-timepicker&gt;
+        |
+        | &lt;label for="oneMoreInput"&gt;One More Text Input&lt;label/&gt;
+        | &lt;input id="oneMoreInput" type="text" placeholder="More Text" /&gt;
+    template(v-slot:preview)
+      b
+        label(for="otherInput") Text Input
+      p
+        input#otherInput.native-input(type="text" placeholder="Text")
+      b
+        label(for="simplePicker") Default Vue Timepicker
+      p
+        vue-timepicker(id="simplePicker")
+      b
+        label(for="moreInput") Number Input
+      p
+        input#moreInput.native-input(type="number" placeholder="Number")
+      b
+        label(for="pickerKB") Vue Timepicker with Advanced Keyboard support
+      p
+        vue-timepicker(id="pickerKB" format="h:mm:ss A" :hour-range="[['7a', '5p']]" advanced-keyboard)
+      b
+        label(for="oneMoreInput") One More Text Input
+      p
+        input#oneMoreInput.native-input(type="text" placeholder="More Text")
+
+
   //- Footer Links
   .footer-links
     slot(name="footer-links")
@@ -522,4 +611,13 @@ section#mostlyUsedSamples
         padding: 0.15em 0
         font-size: 0.85em
         color: alpha($body-color, 0.4)
+  
+  // Browser Native Input
+  input.native-input
+    box-sizing: border-box
+    border: 1px solid #d2d2d2
+    width: 10em
+    height: 2.2em
+    padding: 0.3em 0.5em
+    font-size: 1em
 </style>
