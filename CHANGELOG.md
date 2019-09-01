@@ -12,7 +12,7 @@ From `v1.0.0+`, CSS is excluded from the main source. Please import the CSS file
 
 ```javascript
 // v1.0.0+
-
+//
 import VueTimepicker from 'vue2-timepicker'
 // -> Imports the JS in UMD form
 
@@ -33,11 +33,18 @@ import VueTimepicker from 'vue2-timepicker'
 - Support using _String_ value in `v-model`.
 - New `minute-range` and `second-range` support. Companioned with `hide-disabled-minutes` and `hide-disabled-seconds`.
 - New `hide-disabled-items` property for hiding **all** excluded items (hour, minute and seconds) at a time.
+- New `close-on-complete` for automatically close the dropdown when the user finishes selecting **all** of the required fields.
+- Added `advanced-keyboard` support for Arrow Keys navigation and Space/Enter key selection.
+- New `tabindex` property support, which will be assigned to the `<input type="text">` within the component.
 - Added `debug-mode` to help developers investigating the input -> output process.
 
 ### Fixes
 
 Added ES "module" and other version fields in _package.json_ to resolving more loader issues. (Thanks to @Trainmaster)
+
+### Improvements
+
+When `hour-range` is set in a 12-hour format Timepicker, recheck the selected hour's validity after user switching "AM/PM" from the dropdown.
 
 ## v 0.2.2
 
