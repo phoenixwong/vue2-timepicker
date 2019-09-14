@@ -87,7 +87,7 @@ import VueTimepicker from 'vue2-timepicker/dist/VueTimepicker.umd.min.js'
 ```javascript
 // The *.vue file with CSS included
 import VueTimepicker from 'vue2-timepicker/src/vue-timepicker.vue'
-// NOTE: It might require additional workarounds in the bundler config in some cases
+// NOTE: In some cases, it requires additional workarounds in the bundler's config
 ```
 
 #### **SSR Usage**

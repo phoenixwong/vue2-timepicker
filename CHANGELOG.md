@@ -2,7 +2,7 @@
 
 > The Change Log of Vue2 Timepicker `vue2-timepicker`
 
-## v 1.0.0-beta _(Prerelease)_
+## v 1.0.0
 
 ### Breaking Changes
 
@@ -14,19 +14,21 @@ From `v1.0.0+`, CSS is excluded from the main source. Please import the CSS file
 // v1.0.0+
 //
 import VueTimepicker from 'vue2-timepicker'
-// -> Imports the JS in UMD form
+// -> Imports JS file in UMD form
 
 // CSS
 import 'vue2-timepicker/dist/VueTimepicker.css'
 ```
 
-Please check the README.md for more available import formats.
+Comparing to:
 
 ```javascript
 // While in the v0.x versions
 import VueTimepicker from 'vue2-timepicker'
 // -> Imports the *.vue Single File Component together with CSS
 ```
+
+Please check the [Documentation](https://github.com/phoenixwong/vue2-timepicker/blob/master/README.md#get-started) for more available import formats.
 
 ### New
 
