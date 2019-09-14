@@ -22,7 +22,7 @@ You can see the **Vue2 Timepicker** in action in the [Demo Page](https://phoenix
 Please check [MIGRATION.md](https://github.com/phoenixwong/vue2-timepicker/blob/master/MIGRATION.md) for basic guidelines if you are about to:
 
 - Migrate from the Vue 1.x version **[vue-time-picker](https://github.com/phoenixwong/vue-timepicker)**
-- Migrate from Bower to Yarn or NPM (Vue2 Timepicker `v0.1.x` -> `v0.2.x+`)
+- Migrate from Bower to Yarn or NPM (Vue2 Timepicker `v0.1.x` -> `v0.2.0+`)
 
 
 ## Dependencies
@@ -43,34 +43,62 @@ npm install vue2-timepicker --save
 
 ## Get Started
 
-**Step 1:** Import VueTimepicker
+### **Step 1:** Import VueTimepicker
 
-**A:** Include the single file component
+#### **Option A:** Import component JS and CSS
 
 ```javascript
-// Import the *.vue file (CSS included)
+// Main JS (in UMD format)
 import VueTimepicker from 'vue2-timepicker'
-```
-
-or, **B:** Include distribution files base on your needs
-
-```javascript
-// JAVASCRIPT
-// - commonJS
-import VueTimepicker from 'vue2-timepicker/dist/VueTimepicker.common.js'
-// - UMD
-import VueTimepicker from 'vue2-timepicker/dist/VueTimepicker.umd.js'
-// - UMD Minified
-import VueTimepicker from 'vue2-timepicker/dist/VueTimepicker.umd.min.js'
 
 // CSS
 import 'vue2-timepicker/dist/VueTimepicker.css'
 ```
 
-> NOTE: Users who meet bundle/loader issue with `v0.2.2` or any previous versions, please try [v0.2.2-rc.0](https://github.com/phoenixwong/vue2-timepicker/releases/tag/v0.2.2-rc.0) and check the [updated documentation here](https://github.com/phoenixwong/vue2-timepicker/blob/alpha/README.md#get-started) for the latest import methods.
+#### **Option B:** Choose any bundle version base on your needs
 
+**Javascript**
 
-**Step 2**: Include VueTimepicker in your component
+```javascript
+// CommonJS
+import VueTimepicker from 'vue2-timepicker/dist/VueTimepicker.common.js'
+// UMD
+import VueTimepicker from 'vue2-timepicker/dist/VueTimepicker.umd.js'
+// UMD Minified
+import VueTimepicker from 'vue2-timepicker/dist/VueTimepicker.umd.min.js'
+```
+
+**CSS**
+
+```css
+@import 'vue2-timepicker/dist/VueTimepicker.css';
+
+/* Or, with node_module alias path like: */
+@import '~vue2-timepicker/dist/VueTimepicker.css';
+
+/*
+  NOTE: the path alias to `node_modules` differs between bundlers.
+  Please change the `~` to any alias that works with your environment.
+ */
+```
+
+**Single File Component**
+
+```javascript
+// The *.vue file with CSS included
+import VueTimepicker from 'vue2-timepicker/src/vue-timepicker.vue'
+// NOTE: In some cases, it requires additional workarounds in the bundler's config
+```
+
+#### **SSR Usage**
+
+```javascript
+// Import the *.vue file (CSS included)
+import VueTimepicker from 'vue2-timepicker/sfc'
+// Note the `/sfc` suffix here
+```
+
+### **Step 2**: Include VueTimepicker in your component
 
 ```javascript
 var yourComponent = new Vue({
@@ -79,11 +107,14 @@ var yourComponent = new Vue({
 })
 ```
 
-**Step 3**: Then, you can introduce the `vue-timepicker` tag anywhere you like in your component's template
+### **Step 3**: Put `vue-timepicker` in your component's template
+
+Then, you can introduce the `vue-timepicker` tag anywhere you like in your component's template
 
 ```html
 <vue-timepicker></vue-timepicker>
 ```
+
 
 ## Basic Usage
 
@@ -107,7 +138,7 @@ var yourComponent = new Vue({
 <vue-timepicker format="hh:mm:ss a"></vue-timepicker>
 ```
 
-VueTimepicker will recognizes the following tokens in the format string
+VueTimepicker recognizes the following tokens in the format string
 
 Section    | Token | Output
 ---------- | ----- | ---------------
@@ -124,9 +155,9 @@ Section    | Token | Output
 **Second** | s     | 0 1 ... 58 59
 &nbsp;     | ss    | 00 01 ... 58 59
 
-> If not set, `format` string will be default to "HH:mm"
+> If not set, the `format` string is default to "HH:mm"
 
-### Customized Picker interval
+### Customized Picker Interval
 
 ```html
 <!-- Show minute picker's value in the form of 0, 5, 10, ... 55, 60 -->
@@ -139,27 +170,30 @@ Section    | Token | Output
 <vue-timepicker :minute-interval="yourMinuteInterval"></vue-timepicker>
 ```
 
-**Note:** Please do remember to add the `:` or `v-bind:` sign before the interval properties
 
-### Hide Clear Button
-
-```html
-<vue-timepicker hide-clear-button></vue-timepicker>
-```
+## Data Binding
 
 ### Bind Value with `v-model`
 
+From `v1.0.0+`, timepicker's `v-model` accepts value in both _Object_ (default) and _String_ format. The `v0.x` versions only support _Object_ form.
+
+#### Set Initial Value
+
+For example, if you want to set "10:05:00" ("HH:mm:ss" format) as the initial value of vue-timepicker:
+
 ```javascript
-// e.g. If you want to assign "10:05:00" as the initial value of vue-timepicker
-var yourComponent = new Vue({
+const yourComponent = new Vue({
   components: { VueTimepicker },
-  data: function () {
+  data () {
     return {
+      // Object form
       yourTimeValue: {
-        HH: "10",
-        mm: "05",
-        ss: "00"
+        HH: '10',
+        mm: '05',
+        ss: '00'
       },
+      // String form
+      yourStringTimeValue: '10:05:00',
       ...
     }
   },
@@ -167,29 +201,118 @@ var yourComponent = new Vue({
 })
 ```
 
+Both forms lead to the same result.
+
 ```html
-<!-- HTML -->
+<!-- Object form -->
 <vue-timepicker v-model="yourTimeValue" format="HH:mm:ss"></vue-timepicker>
+
+<!-- String form -->
+<vue-timepicker v-model="yourStringTimeValue" format="HH:mm:ss"></vue-timepicker>
+```
+
+#### Set Empty Initial Value
+
+When the initial value is completely unknown:
+
+```javascript
+data () {
+  return {
+    // Will be rendered as Object form
+    yourEmptyValue: {},
+    emptyValueToo: undefined,
+    emptyValueAsWell: null,
+
+    // Will be taken into String form
+    yourEmptyStringValue: ''
+  }
+}
+```
+
+#### Set Partially-Known Initial Value
+
+For instance, if you want to set the initial hour value to **8 pm** and leave the rest slots empty:
+
+```javascript
+data () {
+  return {
+    // OBJECT FORM
+    // Default 24-Hour
+    timeValue: {
+      HH: '20',
+      mm: ''
+    },
+    // 12-Hour with seconds
+    timeValueWithSec: {
+      h: '8',
+      mm: '',
+      ss: '',
+      A: 'PM'
+    },
+
+    // STRING FORM
+    // Default 24-Hour + String value
+    stringTimeValue: '20:mm',
+    // 12-Hour with seconds + String value
+    stringTimeValueWithSec: '8:mm:ss PM'
+  }
+}
+```
+
+```html
+<!-- OBJECT FORM -->
+<!-- Default 24-Hour -->
+<vue-timepicker v-model="timeValue"></vue-timepicker>
+<!-- 12-Hour with seconds -->
+<vue-timepicker v-model="timeValueWithSec" format="h:mm:ss A"></vue-timepicker>
+
+<!-- STRING FORM -->
+<!-- Default 24-Hour + String value -->
+<vue-timepicker v-model="stringTimeValue"></vue-timepicker>
+<!-- 12-Hour with seconds + String value -->
+<vue-timepicker v-model="stringTimeValueWithSec" format="h:mm:ss A"></vue-timepicker>
 ```
 
 ### Get Time Picker's Current Value
 
-#### **Method 1:** Read value from `v-model`
+#### Get value from `v-model`
+
+You can either read the binding `v-model` value anytime or add a handler to deal with the `input` event from vue-timepicker.
 
 ```html
-<!-- In the last section, we've set the initial value (yourTimeValue) to "10:05:00" -->
-<vue-timepicker v-model="yourTimeValue" format="HH:mm:ss"></vue-timepicker>
+<vue-timepicker v-model="yourTimeValue" format="HH:mm:ss" @input="inputHandler"></vue-timepicker>
 ```
 
 ```javascript
-// Then, open the dropdown picker and pick a new time.
-// Like setting to "14:30:15" for example
-// Check the value after that
-console.log(this.yourTimeValue)
-// outputs -> {HH: "14", mm: "30", ss: "15"}
+{
+  data () {
+    return {
+      yourTimeValue: {
+        HH: '10',
+        mm: '05',
+        ss: '00'
+      },
+      ...
+    }
+  },
+
+  methods: {
+    inputHandler (eventData) {
+      console.log(eventData)
+    }
+  }
+}
+
 ```
 
-#### **Method 2:** Add `@change` event handler
+In this case, we set the initial value (_yourTimeValue_) to "10:05:00". Then, open the dropdown picker and pick a new time, like setting it to "14:30:15" for example.
+
+```javascript
+// In `inputHandler`:
+// console.log outputs -> {HH: "14", mm: "30", ss: "15"}
+```
+
+### Read Data From `change` Event
 
 ```html
 <!-- A: No argument -->
@@ -203,13 +326,13 @@ console.log(this.yourTimeValue)
 // A: No argument
 changeHandler (eventData) {
   console.log(eventData)
-  // -> {data: {HH:..., mm:... }, displayTime: HH:mm}
+  // -> {data: {HH:..., mm:... }, displayTime: "HH:mm"}
 }
 
 // B: Custom arguments
 otherChangeHandler (eventData, yourArg1, yourArg2) {
   console.log(eventData)
-  // -> {data: {HH:..., mm:... }, displayTime: HH:mm}
+  // -> {data: {HH:..., mm:... }, displayTime: "HH:mm"}
   console.log(yourArg1)
   // -> 'foo'
   console.log(yourArg2)
@@ -217,9 +340,9 @@ otherChangeHandler (eventData, yourArg1, yourArg2) {
 }
 ```
 
-Unlike `v-model`, which only returns the defined time tokens you provided in the binding variable, the `change` event will return **all** supported formats.
+Unlike `v-model` and `input` event, which only return the defined time tokens you provided in the binding variable, the `change` event delivers **all** supported formats.
 
-In the example above, when picker is set to "14:30:15" in HH:mm:ss format, `change` event will return the following data:
+In the example above, after the user set values to "14:30:15" in the picker, `change` event returns the following data:
 
 ```javascript
 // `@change` event data
@@ -239,11 +362,11 @@ In the example above, when picker is set to "14:30:15" in HH:mm:ss format, `chan
     ss: "15"
   },
   // extra `displayTime` added since v0.2.2
-  displayTime: '14:30:15'
+  displayTime: "14:30:15"
 }
 ```
 
-Whereas the `v-model` will only return the data with defined tokens
+Whereas the `v-model` / `input` only return the data with defined tokens
 
 ```javascript
 // Previously defined variable (`yourTimeValue` in this case) as {HH:..., mm:..., ss:...}
@@ -256,6 +379,30 @@ Whereas the `v-model` will only return the data with defined tokens
 ```
 
 ## Advance Usage
+
+### Hide Clear Button
+
+```html
+<vue-timepicker hide-clear-button></vue-timepicker>
+```
+
+Enable to hide the "&times;" clear button on the right-hand side. Users can still pick new values from the dropdown, but they cannot erase any selected data.
+
+### Disable Picker
+
+```html
+<vue-timepicker disabled></vue-timepicker>
+```
+
+Fully disable both dropdown picker and the "&times;" clear button in the UI, to prevent users from changing any values again.
+
+### Close on Complete
+
+Automatically close the dropdown when the user finishes selecting **all** of the required fields.
+
+```html
+<vue-timepicker close-on-complete></vue-timepicker>
+```
 
 ### Define Hour Range
 
@@ -271,35 +418,132 @@ Sometimes you may want to limit hours picker to a specific range. The `hour-rang
 <!-- >> Equals to :hour-range="['7a', '9a', '11a', '1p', '3p', '4p', '5p', '7p']" -->
 ```
 
-### Hide Disabled Hour Ranges
+### Set Minute and Second Range
+
+Similar to `hour-range`, you can determine values in the minutes and seconds dropdown by using `minute-range` and `second-range`.
 
 ```html
+<!-- Minute range -->
+<vue-timepicker :minute-range="[0, 6, [10, 30], 42, 50]"></vue-timepicker>
+<!-- >> Active Items: 00, 06, 10, 11, 12, 13, ..., 27, 28, 29, 30, 42, 50 -->
+
+<!-- Second range -->
+<vue-timepicker format="H:m:s" :second-range="[0, 6, [10, 30], 42, 50]"></vue-timepicker>
+<!-- >> Active Items: 0, 6, 10, 11, 12, 13, ..., 27, 28, 29, 30, 42, 50 -->
+```
+
+When implemented together with `minute-interval` and `second-interval`, the customized intervals take the priority.
+
+```html
+<!-- Minute range + 5-minute interval -->
+<vue-timepicker :minute-range="[0, 6, [10, 30], 42, 50]" :minute-interval="5"></vue-timepicker>
+<!-- >> Active Items: 00, 10, 15, 20, 25, 30, 50 -->
+
+<!-- Second range + 10-second interval-->
+<vue-timepicker format="H:m:s" :second-range="[0, 6, [10, 30], 42, 50]" :second-interval="10"></vue-timepicker>
+<!-- >> Active Items: 0, 10, 20, 30, 50 -->
+```
+
+### Hide Disabled Items
+
+There're four kinds of helper properties to let you hide the values excluded by `hour-range`, `minute-range`, and `second-range`.
+
+- **hide-disabled-items**: Hide **all** disabled items - hour, minute, and seconds.
+- **hide-disabled-hours**: Hide disabled **hour** values only.
+- **hide-disabled-minutes**: Hide disabled **minute** values only.
+- **hide-disabled-seconds**: Hide disabled **second** values only.
+
+```html
+<!-- `hide-disabled-hours` sample -->
 <vue-timepicker :hour-range="[5, [8, 12], [14, 17], 19]" hide-disabled-hours></vue-timepicker>
 ```
 
-Paired with the above `hour-range` parameter. In this sample, the hour picker will hide the invalid hours (_0, 1, 2, 3, 4, 6, 7, 13, 18, 20, 21, 22, 23_) and display the valid hours (_5, 8, 9, ..._) only.
+Here we take the `hide-disabled-hours` as an example. It's a pair with the `hour-range` parameter. In this case, the hour picker hides the invalid hours (_0, 1, 2, 3, 4, 6, 7, 13, 18, 20, 21, 22, 23_) and display the valid hours (_5, 8, 9, ..._) only.
 
-### Disable Picker
+### Advanced Keyboard Support
+
+Basic keyboard support includes:
+
+- **Tab**: Focus or blur the Timepicker
+- **Esc**: Close the dropdown
+
+Advance Keyboard support (enabled with `advanced-keyboard`):
+
+- **Arrow Keys**: Navigate between valid (non-disabled) values and columns
+- **Space** or **Enter**: Select the focusing item
 
 ```html
-<vue-timepicker disabled></vue-timepicker>
+<vue-timepicker advanced-keyboard></vue-timepicker>
 ```
 
-Used to disable dropdown picker and clear button in the UI. To prevent users from changing values again.
+Please be aware that after putting the `advanced-keyboard` on, hundreds of additional keyboard event listeners are going to be attached to the component. The amount of listeners depends on how many hours, minutes, and seconds value you enabled in the current Timepicker.
+
+### Blur Delay
+
+```html
+<!-- Unit: million second -->
+<vue-timepicker :blur-delay="300"></vue-timepicker>
+```
+
+Sets the blur delay time for keyboard navigation. Defaults to `200` if not set.
 
 
-## Main Props API
+### Enable Debug Mode
 
-Prop                    | Type      | Required | Default Value
------------------------ | --------- | -------- | -------------
-**v-model**             | _Object_  | no       | _undefined_
-**format**              | _String_  | no       | "HH:mm"
-**minute-interval**     | _Number_  | no       | _undefined_
-**second-interval**     | _Number_  | no       | _undefined_
-**hide-clear-button**   | _Boolean_ | no       | false
-**hour-range**          | _Array_   | no       | _undefined_
-**hide-disabled-hours** | _Boolean_ | no       | false
-**disabled**            | _Boolean_ | no       | false
+```html
+<vue-timepicker debug-mode></vue-timepicker>
+```
+
+It's aimed to help developers to investigate the input -> output process. When debug mode is toggled **on**, you can see extra `DEBUG: ...` logs coming through the console window as you interact with the vue-timepicker.
+
+Let's create a "bug" here as an example --
+
+```html
+<!-- Manual Bug Sample: Define timepicker with format "h:mm:ss A" -->
+<vue-timepicker v-model="yourStringValue" format="h:mm:ss A" debug-mode></vue-timepicker>
+```
+
+```javascript
+{
+  data () {
+    return {
+      // Manual Bug Sample:
+      // Should be '3:mm:05 A' but oops.. the finger slipped
+      yourStringValue: 'e:mm:05 A'
+    }
+  }
+}
+```
+
+Then, in the console window, you should see a debug log saying:
+
+```console
+DEBUG: The input string in "v-model" does NOT match the "format" pattern
+format: h:mm:ss A
+v-model: e:mm:05 A
+```
+
+## Main Props API Overview
+
+Prop                      | Type               | Required | Default Value
+------------------------- | ------------------ | -------- | -------------
+**v-model**               | _Object_, _String_ | no       | _undefined_
+**format**                | _String_           | no       | "HH:mm"
+**minute-interval**       | _Number_           | no       | _undefined_
+**second-interval**       | _Number_           | no       | _undefined_
+**hide-clear-button**     | _Boolean_          | no       | false
+**disabled**              | _Boolean_          | no       | false
+**close-on-complete**     | _Boolean_          | no       | false
+**hour-range**            | _Array_            | no       | _undefined_
+**minute-range**          | _Array_            | no       | _undefined_
+**second-range**          | _Array_            | no       | _undefined_
+**hide-disabled-hours**   | _Boolean_          | no       | false
+**hide-disabled-minutes** | _Boolean_          | no       | false
+**hide-disabled-seconds** | _Boolean_          | no       | false
+**hide-disabled-items**   | _Boolean_          | no       | false
+**advanced-keyboard**     | _Boolean_          | no       | false
+**blur-delay**            | _Number_           | no       | 200
+**debug-mode**            | _Boolean_          | no       | false
 
 
 ## Input Props API
@@ -309,12 +553,12 @@ Prop                    | Type      | Required | Default Value
 **id**                  | _String_  | no       | _undefined_
 **name**                | _String_  | no       | _undefined_
 **placeholder**         | _String_  | no       | _undefined_
+**tabindex**            | _Number_  | no       | 0
 **input-class**         | _String_  | no       | _undefined_
 
-Timepicker now supports `id`, `name`, and `placeholder` like ordinary form elements. Values will be assigned to the
-`<input type="text" class="display-time">` within the component.
+Timepicker now supports `id`, `name`, `placeholder`, and `tabindex` like common form elements. These values are assigned to the `<input type="text" class="display-time">` within the component.
 
-### Input `id` And `name`
+### Input `id`, `name` and `tabindex`
 
 ```html
 <!-- id -->
@@ -322,11 +566,14 @@ Timepicker now supports `id`, `name`, and `placeholder` like ordinary form eleme
 
 <!-- name -->
 <vue-timepicker name="nameInForm"></vue-timepicker>
+
+<!-- tabindex -->
+<vue-timepicker :tabindex="5"></vue-timepicker>
 ```
 
 ### Input `placeholder`
 
-When `placeholder` is not set, your defined format string will be used.
+When `placeholder` is undefined, timepicker takes the determined format string instead.
 
 ```html
 <!-- placeholder is set -->
@@ -344,12 +591,14 @@ When `placeholder` is not set, your defined format string will be used.
 
 ### The `input-class`
 
-The `input-class` will also be assigned to text input in the component
+The `input-class` is assigned to the text input within the component as well.
 
 ```html
-<!-- Set `input-class` in Vue template -->
+<!-- Set your own `input-class` in the Vue template -->
 <vue-timepicker input-class="my-awesome-picker"></vue-timepicker>
+```
 
+```html
 <!-- HTML result -->
 <span class="vue__time-picker time-picker">
   <input class="display-time my-awesome-picker" type="text" readonly="readonly">
@@ -358,11 +607,18 @@ The `input-class` will also be assigned to text input in the component
 
 ```
 
-## Helper Events
+## Events API
 
-### The `@open` and `@close` Event of the Dropdown Picker
+Event          | Arguments      | Description
+-------------- | -------------- | ----------------------
+**input**      | (_value_)      | Emit after value changes
+**change**     | (_eventData_)  | Emit after value changes
+**open**       | &nbsp;         | Emit when the dropdown opens
+**close**      | &nbsp;         | Emit when the dropdown closes
 
-Help identifying current status of the dropdown picker
+### The `open` and `close` Event of the Dropdown Picker
+
+Help to identify the current status of the dropdown picker
 
 ```javascript
 // Define a variable for logging the status
@@ -385,7 +641,7 @@ Please feel free to fork and help developing. Check [CONTRIBUTING.md](https://gi
 
 ## Change Log
 
-Detail changes of each release are documented in [CHANGELOG.md](https://github.com/phoenixwong/vue2-timepicker/blob/master/CHANGELOG.md)
+Detail changes of each release: [CHANGELOG.md](https://github.com/phoenixwong/vue2-timepicker/blob/master/CHANGELOG.md)
 
 ## License
 

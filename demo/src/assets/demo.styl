@@ -64,6 +64,35 @@ header
       padding: .1em .5em
       border-radius: 3px
 
+button
+  display: inline-block
+  outline: 0
+  background: $vue-green
+  border: 1px solid $vue-green
+  color: #fff
+  border-radius: 4px
+  font-size: 0.9em
+  vertical-align: baseline
+  padding: 0.3em 0.5em
+  transition: opacity 0.3s
+  cursor: pointer
+  &:hover
+    opacity: 0.7
+
+button.common
+  background: #fff
+  border: 1px solid $vue-green
+  color: $vue-green
+
+button.secondary
+  background: #fff
+  border: 1px solid $vue-darker
+  color: $vue-darker
+
+button.size-small
+  font-size 0.8em;
+  padding: 0.2em 0.4em;
+
 nav.top-nav
   background: $vue-darker
   position: relative

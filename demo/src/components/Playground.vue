@@ -1,12 +1,14 @@
 <script>
 import VueTimepicker from '../../../src/vue-timepicker'
 import ConfigRow from './ConfigRow'
+import OverlayPanel from './OverlayPanel'
 
 export default {
   name: 'Playground',
   components: {
     VueTimepicker,
-    ConfigRow
+    ConfigRow,
+    OverlayPanel
   },
 
   data () {
@@ -32,7 +34,7 @@ export default {
         apm: 'am'
       },
 
-      hourRange: {
+      hourBoundary: {
         min: 1,
         max: 12
       },
@@ -47,25 +49,40 @@ export default {
         second: false
       },
 
-      enableClearBtn: true,
+      customRange: {
+        hour: false,
+        minute: false,
+        second: false
+      },
+      showRangePanel: false,
+      rangeList: undefined,
+      editingRange: '',
+      selectedRanges: [],
+      rangeTitle: '',
 
+      hourRange: [],
+      minuteRange: [],
+      secondRange: [],
+
+      hideClearBtn: false,
       disablePicker: false,
+      closeOnComplete: false,
+      advancedKeyboard: false,
 
       playgroundData: {},
       playgroundFullValue: {},
       playgroundDisplayTime: undefined,
 
-      muteWatch: false,
-
       scrollTop: 0,
-      scrollHandler: undefined
+
+      muteChange: false
     }
   },
 
   computed: {
     formatString () {
       let formatString = `${this.type.hour}:${this.type.minute}`
-      if (this.type.second !== 'none') {
+      if (this.showSeconds) {
         formatString += (`:${this.type.second}`)
       }
       if (this.type.apm) {
@@ -76,6 +93,10 @@ export default {
 
     needApm () {
       return this.type.hour === 'h' || this.type.hour === 'hh'
+    },
+
+    showSeconds () {
+      return this.type.second !== 'none'
     },
 
     yourTimeValue () {
@@ -93,6 +114,17 @@ export default {
       }
     },
 
+    filteredOutValues () {
+      if (!this.showRangePanel || !this.rangeList || !this.selectedRanges.length) { return }
+      const result = []
+      this.selectedRanges.forEach(selected => {
+        if (selected && !this.rangeList.includes(selected)) {
+          result.push(selected)
+        }
+      })
+      return result
+    },
+
     htmlCodeWithVar () {
       let start = '<vue-timepicker'
       let end = '\n  v-model="yourTimeValue">\n</vue-timepicker>'
@@ -103,11 +135,34 @@ export default {
         start += (`\n  :minute-interval="${this.interval.minute}"`)
       }
 
-      if (this.customInterval.second) {
+      if (this.showSeconds && this.customInterval.second) {
         start += (`\n  :second-interval="${this.interval.second}"`)
       }
 
-      if (!this.enableClearBtn) {
+      if (this.customRange.hour && this.hourRange) {
+        const hrRange = this.sortAndStringify(this.hourRange, this.needApm)
+        start += (`\n  :hour-range="${hrRange}"`)
+      }
+
+      if (this.customRange.minute && this.minuteRange) {
+        const minRange = this.sortAndStringify(this.minuteRange)
+        start += (`\n  :minute-range="${minRange}"`)
+      }
+
+      if (this.showSeconds && this.customRange.second && this.secondRange) {
+        const secRange = this.sortAndStringify(this.secondRange)
+        start += (`\n  :second-range="${secRange}"`)
+      }
+
+      if (this.closeOnComplete) {
+        start += ('\n  close-on-complete')
+      }
+
+      if (this.advancedKeyboard) {
+        start += ('\n  advanced-keyboard')
+      }
+
+      if (this.hideClearBtn) {
         start += ('\n  hide-clear-button')
       }
 
@@ -121,16 +176,46 @@ export default {
     }
   },
 
-
   watch: {
     selected: {
       deep: true,
-      handler: 'updatePlaygroundData'
+      handler () {
+        this.updatePlaygroundData()
+      }
     },
 
     type: {
       deep: true,
-      handler: 'updatePlaygroundData'
+      handler () {
+        this.updatePlaygroundData()
+      }
+    },
+
+    'type.hour' (newType, oldType) {
+      if (this.customRange.hour && this.hourRange.length) {
+        const newRangeList = this.hourRange.map(item => {
+          return this.transformHourRange(item, oldType, newType)
+        })
+        this.hourRange = newRangeList
+      }
+    },
+
+    'type.minute' (newType) {
+      if (this.customRange.minute && this.minuteRange.length) {
+        const newRangeList = this.minuteRange.map(item => {
+          return this.formatValue(newType, +item)
+        })
+        this.minuteRange = newRangeList
+      }
+    },
+
+    'type.second' (newType) {
+      if (newType !== 'none' && this.customRange.second && this.secondRange.length) {
+        const newRangeList = this.secondRange.map(item => {
+          return this.formatValue(newType, +item)
+        })
+        this.secondRange = newRangeList
+      }
     },
 
     needApm (isNeeded) {
@@ -161,34 +246,38 @@ export default {
   methods: {
     updateHourRange (hourType) {
       hourType = hourType || this.type.hour
-      let hourRange = {}
+      let hourBoundary = {}
       switch (hourType) {
         case 'h':
         case 'hh':
-          hourRange.min = 1
-          hourRange.max = 12
+          hourBoundary.min = 1
+          hourBoundary.max = 12
           break
         case 'H':
         case 'HH':
-          hourRange.min = 0
-          hourRange.max = 23
+          hourBoundary.min = 0
+          hourBoundary.max = 23
           break
         case 'k':
         case 'kk':
-          hourRange.min = 1
-          hourRange.max = 24
+          hourBoundary.min = 1
+          hourBoundary.max = 24
           break
       }
-      this.hourRange = hourRange
+      this.hourBoundary = hourBoundary
       this.handleOutRangeData()
     },
 
     handleOutRangeData () {
-      if (this.selected.hour > this.hourRange.max) {
-        this.$set(this.selected, 'hour', this.hourRange.max)
-      } else if (this.selected.hour < this.hourRange.min) {
-        this.$set(this.selected, 'hour', this.hourRange.min)
+      if (this.selected.hour > this.hourBoundary.max) {
+        this.$set(this.selected, 'hour', this.hourBoundary.max)
+      } else if (this.selected.hour < this.hourBoundary.min) {
+        this.$set(this.selected, 'hour', this.hourBoundary.min)
       }
+    },
+
+    isNumber (value) {
+      return !isNaN(parseFloat(value)) && isFinite(value)
     },
 
     formatValue (type, value) {
@@ -198,31 +287,103 @@ export default {
         case 'k':
         case 'm':
         case 's':
+          if (type === 'h' && value === 0) {
+            return '12'
+          }
           return String(value)
         case 'HH':
         case 'hh':
         case 'kk':
         case 'mm':
         case 'ss':
+          if (type === 'hh' && value === 0) {
+            return '12'
+          }
           return value < 10 ? `0${value}` : String(value)
         default:
           return ''
       }
     },
 
+    translate12hRange (value) {
+      const valueT = value.match(/^(\d{1,2})(a|p|A|P)$/)
+      if (+valueT[1] === 12) {
+        return +valueT[1] + (valueT[2].toLowerCase() === 'p' ? 0 : 12)
+      }
+      return +valueT[1] + (valueT[2].toLowerCase() === 'p' ? 12 : 0)
+    },
+
+    interpretKtoRangeType (kValue, toType) {
+      if (!toType || toType === 'k') { return String(kValue) }
+      let value
+      switch (toType) {
+        case 'H':
+        case 'HH':
+          value = (kValue === 24) ? 0 : kValue
+          if (toType === 'HH') {
+            return value < 10 ? `0${value}` : String(value)
+          }
+          return String(value)
+        case 'h':
+        case 'hh':
+          if (kValue === 24) {
+            return `12a`
+          } else if (kValue === 12) {
+            return `12p`
+          }
+          value = kValue % 12
+          if (toType === 'hh') {
+            const valueStr = value < 10 ? `0${value}` : String(value)
+            return kValue < 12 ? `${valueStr}a` : `${valueStr}p`
+          }
+          return kValue < 12 ? `${value}a` : `${value}p`
+        case 'kk':
+          return kValue < 10 ? `0${kValue}` : String(kValue)
+      }
+    },
+
+    transformHourRange (value, fromType, toType) {
+      if (!fromType || !toType) { return value }
+      let valueInK
+      if (fromType === 'hh' || fromType === 'h') {
+        valueInK = this.translate12hRange(value)
+      } else if (fromType === 'HH' || fromType === 'H') {
+        valueInK = +value === 0 ? 24 : +value
+      } else {
+        valueInK = +value
+      }
+      return this.interpretKtoRangeType(valueInK, toType)
+    },
+
     updatePlaygroundData () {
-      if (this.muteWatch) { return }
-
       let data = {}
-      data[this.type.hour] = this.formatValue(this.type.hour, this.selected.hour)
-      data[this.type.minute] = this.formatValue(this.type.minute, this.selected.minute)
 
-      if (this.type.second !== 'none') {
-        data[this.type.second] = this.formatValue(this.type.second, this.selected.second || 0)
+      if (this.isNumber(this.selected.hour)) {
+        data[this.type.hour] = this.formatValue(this.type.hour, this.selected.hour)
+      } else {
+        data[this.type.hour] = ''
+      }
+
+      if (this.isNumber(this.selected.minute)) {
+        data[this.type.minute] = this.formatValue(this.type.minute, this.selected.minute)
+      } else {
+        data[this.type.minute] = ''
+      }
+
+      if (this.showSeconds) {
+        if (this.isNumber(this.selected.second)) {
+          data[this.type.second] = this.formatValue(this.type.second, this.selected.second)
+        } else {
+          data[this.type.second] = ''
+        }
       }
 
       if (this.type.apm) {
-        data[this.type.apm] = this.type.apm === 'A' ? (this.selected.apm).toUpperCase() : this.selected.apm
+        if (this.selected.apm) {
+          data[this.type.apm] = this.type.apm === 'A' ? (this.selected.apm).toUpperCase() : this.selected.apm
+        } else {
+          data[this.type.apm] = ''
+        }
       }
 
       this.playgroundData = data
@@ -242,25 +403,141 @@ export default {
     },
 
     updateRangeValue (data) {
-      this.muteWatch = true
-      this.$set(this.selected, 'hour', Number(data[this.type.hour]))
-      this.$set(this.selected, 'minute', Number(data[this.type.minute]))
-      this.$set(this.selected, 'second', Number(data[this.type.second]))
-      this.$set(this.selected, 'apm', (data[this.type.apm] || '').toLowerCase())
-      this.muteWatch = false
+      this.muteChange = true
+      this.$set(this.selected, 'hour', this.isNumber(data[this.type.hour]) ? Number(data[this.type.hour]) : '')
+      this.$set(this.selected, 'minute', this.isNumber(data[this.type.minute]) ? Number(data[this.type.minute]) : '')
+      this.$set(this.selected, 'second', this.isNumber(data[this.type.second]) ? Number(data[this.type.second]) : '')
+      this.$set(this.selected, 'apm', data[this.type.apm] ? (data[this.type.apm] || '').toLowerCase() : '')
+      this.muteChange = false
     },
 
     changeHandler (eventData) {
       this.playgroundFullValue = eventData.data
       this.playgroundDisplayTime = eventData.displayTime
       this.updateRangeValue(eventData.data)
+    },
+
+    scrollHandler (evt) {
+      this.scrollTop = (evt.target.scrollingElement || (document.documentElement || document.body.parentNode)).scrollTop || 0
+    },
+
+    sortAndStringify (arrayList, is12Hour) {
+      if (!arrayList || !arrayList.length) { return JSON.stringify([]) }
+      let newList = [].concat([], arrayList)
+      if (is12Hour) {
+        newList.sort((l, r) => {
+          const lPart = l.match(/^(\d{1,2})(a|p)$/)
+          const rPart = r.match(/^(\d{1,2})(a|p)$/)
+          const lApm = lPart[2]
+          const rApm = rPart[2]
+          if (lApm === 'a' && rApm === 'p') { return -1 }
+          if (lApm === 'p' && rApm === 'a') { return 1 }
+          const lNum = +lPart[1]
+          const rNum = +rPart[1]
+          if (lNum === 12) { return -1 }
+          if (rNum === 12) { return 1 }
+          return lNum < rNum ? -1 : 1
+        })
+        const uniStrList = newList.map(item => {
+          const itemP = item.match(/^(\d{1,2})(a|p)$/)
+          return `${+itemP[1]}${itemP[2]}`
+        })
+        return JSON.stringify(uniStrList).replace(/"/g, '\'')
+      } else {
+        newList.sort((l, r) => (+l < +r) ? -1 : 1)
+        const numericList = newList.map(item => +item)
+        return JSON.stringify(numericList).replace(/"/g, '')
+      }
+    },
+
+    genHourRangeList () {
+      const result = []
+      for (let i = 0; i < 24; i++) {
+        // 12-Hour format
+        if (this.type.hour === 'h' || this.type.hour === 'hh') {
+          let value = this.formatValue(this.type.hour, i % 12)
+          value = `${value}${i < 12 ? 'a' : 'p'}`
+          result.push(value)
+        } else {
+          if (this.type.hour === 'k' || this.type.hour === 'kk') {
+            result.push(this.formatValue(this.type.hour, i + 1))
+          } else {
+            result.push(this.formatValue(this.type.hour, i))
+          }
+        }
+      }
+      return result
+    },
+
+    genMinuteRangeList () {
+      const result = []
+      const step = +this.interval.minute
+      for (let i = 0; i <= 59; i += step) {
+        result.push(this.formatValue(this.type.minute, i))
+      }
+      return result
+    },
+
+    genSecondRangeList () {
+      const result = []
+      const step = +this.interval.second
+      for (let i = 0; i <= 59; i += step) {
+        result.push(this.formatValue(this.type.second, i))
+      }
+      return result
+    },
+
+    openRangePanel (section) {
+      if (!section) { return }
+
+      this.rangeTitle = `Choose ${section}-range Values`
+      this.editingRange = section
+
+      if (section === 'minute') {
+        this.rangeList = this.genMinuteRangeList()
+        this.selectedRanges = [].concat([], this.minuteRange)
+      } else if (section === 'second') {
+        this.rangeList = this.genSecondRangeList()
+        this.selectedRanges = [].concat([], this.secondRange)
+      } else if (section === 'hour') {
+        this.rangeList = this.genHourRangeList()
+        this.selectedRanges = [].concat([], this.hourRange)
+      }
+
+      this.showRangePanel = true
+    },
+
+    confirmRange () {
+      if (this.editingRange === 'minute') {
+        this.minuteRange = [].concat([], this.selectedRanges || [])
+      } else if (this.editingRange === 'second') {
+        this.secondRange = [].concat([], this.selectedRanges || [])
+      } else if (this.editingRange === 'hour') {
+        this.hourRange = [].concat([], this.selectedRanges || [])
+      }
+      this.$nextTick(() => {
+        this.closeRangePanel()
+      })
+    },
+
+    closeRangePanel () {
+      this.rangeTitle = ''
+      this.editingRange = ''
+      this.rangeList = undefined
+      this.selectedRanges = []
+      this.showRangePanel = false
+    },
+
+    selectAllRangeItems () {
+      this.selectedRanges = [].concat([], this.rangeList || [])
+    },
+
+    unselectAllRangeItems () {
+      this.selectedRanges = []
     }
   },
 
   mounted () {
-    this.scrollHandler = (evt) => {
-      this.scrollTop = (evt.target.scrollingElement || (document.documentElement || document.body.parentNode)).scrollTop || 0
-    }
     window.addEventListener('scroll', this.scrollHandler)
 
     this.$nextTick(() => {
@@ -304,46 +581,6 @@ section#playground
             input(v-model="type.apm", :value="atype", :id="'apm_type' + index" type="radio" name="apm_type")
             | &nbsp;{{ atype }}
 
-      #intervalSelection.config-block
-        h3.subtitle
-          a.anchor #
-          | Customized Interval
-        config-row(is-group)
-          label.options
-            input(v-model="customInterval.minute" type="checkbox")
-            | &nbsp;Minute Interval
-          label.range-wrapper(v-if="customInterval.minute")
-            input(v-model.number="interval.minute" type="range" min="0" max="60" step="1")
-            span(v-text="interval.minute")
-        config-row(is-group)
-          label.options
-            input(v-model="customInterval.second" type="checkbox")
-            | &nbsp;Second Interval
-          label.range-wrapper(v-if="customInterval.second")
-            input(v-model.number="interval.second" type="range" min="0" max="60" step="1")
-            span(v-text="interval.second")
-
-      #clearButton.config-block
-        h3.subtitle
-          a.anchor #
-          | Clear Button
-        config-row(is-group)
-          label.options(for="enable_btn_true")
-            input(v-model="enableClearBtn" type="radio" id="enable_btn_true" name="enable_btn", :value="true")
-            | &nbsp;Enable
-          label.options(for="enable_btn_false")
-            input(v-model="enableClearBtn" type="radio" id="enable_btn_false" name="enable_btn", :value="false")
-            | &nbsp;Disable
-
-      #disablePicker.config-block
-        h3.subtitle
-          a.anchor #
-          | Disable Picker
-        config-row
-          label.options
-            input(v-model="disablePicker" type="checkbox")
-            | &nbsp;Disable
-
       #valuesSelection.config-block
         h3.subtitle
           a.anchor #
@@ -352,13 +589,13 @@ section#playground
           | &nbsp;data
         config-row(label="Hour:")
           label.range-wrapper
-            input(v-model="selected.hour" type="range", :min="hourRange.min", :max="hourRange.max" step="1")
+            input(v-model="selected.hour" type="range", :min="hourBoundary.min", :max="hourBoundary.max" step="1")
             span(v-text="selected.hour")
         config-row(label="Minute:")
           label.range-wrapper
             input(v-model="selected.minute" type="range" min="0" max="59", :step="interval.minute")
             span(v-text="selected.minute")
-        config-row(v-if="type.second !== 'none'" label="Second:")
+        config-row(v-if="showSeconds" label="Second:")
           label.range-wrapper
             input(v-model="selected.second" type="range" min="0" max="59", :step="interval.second")
             span(v-text="selected.second")
@@ -373,6 +610,99 @@ section#playground
       .codes
         highlight-code(lang="javascript" data-title="v-model value") {{ yourTimeValue }}
 
+      #intervalSelection.config-block
+        h3.subtitle
+          a.anchor #
+          | Customized Intervals
+        config-row(is-group)
+          label.options
+            input(v-model="customInterval.minute" type="checkbox")
+            | &nbsp;Set Minute Interval
+          label.range-wrapper(v-if="customInterval.minute")
+            input(v-model.number="interval.minute" type="range" min="0" max="60" step="1")
+            span(v-text="interval.minute")
+        config-row(is-group v-if="showSeconds")
+          label.options
+            input(v-model="customInterval.second" type="checkbox")
+            | &nbsp;Set Second Interval
+          label.range-wrapper(v-if="customInterval.second")
+            input(v-model.number="interval.second" type="range" min="0" max="60" step="1")
+            span(v-text="interval.second")
+
+      #customRanges.config-block
+        h3.subtitle
+          a.anchor #
+          | Customized Ranges
+        config-row(is-group)
+          label.options
+            input(v-model="customRange.hour" type="checkbox")
+            | &nbsp;Set Hour Range
+          .button-wrapper(v-if="customRange.hour" )
+            button.common.size-small(@click="openRangePanel('hour')") Config
+            span.item-count {{ hourRange.length }} value{{hourRange.length > 1 ? 's' : ''}} selected
+        config-row(is-group)
+          label.options
+            input(v-model="customRange.minute" type="checkbox")
+            | &nbsp;Set Minute Range
+          .button-wrapper(v-if="customRange.minute" )
+            button.common.size-small(@click="openRangePanel('minute')") Config
+            span.item-count {{ minuteRange.length }} value{{minuteRange.length > 1 ? 's' : ''}} selected
+        config-row(is-group v-if="showSeconds")
+          label.options
+            input(v-model="customRange.second" type="checkbox")
+            | &nbsp;Set Second Range
+          .button-wrapper(v-if="customRange.second" )
+            button.common.size-small(@click="openRangePanel('second')") Config
+            span.item-count {{ secondRange.length }} value{{secondRange.length > 1 ? 's' : ''}} selected
+
+      #closeOnComplete.config-block
+        h3.subtitle
+          a.anchor #
+          | Close on Complete
+        config-row(is-group)
+          label.options(for="close_on_complete_true")
+            input(v-model="closeOnComplete" type="radio" id="close_on_complete_true" name="close_on_complete", :value="true")
+            | &nbsp;Enable
+          label.options(for="close_on_complete_false")
+            input(v-model="closeOnComplete" type="radio" id="close_on_complete_false" name="close_on_complete", :value="false")
+            | &nbsp;Disable
+
+      #clearButton.config-block
+        h3.subtitle
+          a.anchor #
+          | Clear Button
+        config-row(is-group)
+          label.options(for="hide_clear_btn_false")
+            input(v-model="hideClearBtn" type="radio" id="hide_clear_btn_false" name="hide_clear_btn", :value="false")
+            | &nbsp;Enable
+          label.options(for="hide_clear_btn_true")
+            input(v-model="hideClearBtn" type="radio" id="hide_clear_btn_true" name="hide_clear_btn", :value="true")
+            | &nbsp;Disable
+
+      #disablePicker.config-block
+        h3.subtitle
+          a.anchor #
+          | Disable Picker
+        config-row(is-group)
+          label.options
+            input(v-model="disablePicker" type="checkbox")
+            | &nbsp;Disable
+
+      #advancedKeyboard.config-block
+        h3.subtitle
+          a.anchor #
+          | Advanced Keyboard Support
+        config-row(is-group)
+          label.options(for="advanced_kb_true")
+            input(v-model="advancedKeyboard" type="radio" id="advanced_kb_true" name="advanced_kb", :value="true")
+            | &nbsp;Enable
+          label.options(for="advanced_kb_false")
+            input(v-model="advancedKeyboard" type="radio" id="advanced_kb_false" name="advanced_kb", :value="false")
+            | &nbsp;Disable
+
+  //-
+  //- Live preview on the left panel
+  //-
   aside.previews(:style="asideStyle")
     #playgroundPreview.preview
       b Format string:&nbsp;
@@ -381,8 +711,13 @@ section#playground
         vue-timepicker(v-model="playgroundData"
                        :format="formatString"
                        :minute-interval="interval.minute"
-                       :second-interval="interval.second"
-                       :hide-clear-button="!enableClearBtn"
+                       :second-interval="showSeconds ? interval.second : null"
+                       :hour-range="customRange.hour ? hourRange : null"
+                       :minute-range="customRange.minute ? minuteRange : null"
+                       :second-range="(showSeconds && customRange.second) ? secondRange : null"
+                       :close-on-complete="closeOnComplete"
+                       :advanced-keyboard="advancedKeyboard"
+                       :hide-clear-button="hideClearBtn"
                        :disabled="disablePicker"
                        @change="changeHandler")
 
@@ -391,10 +726,35 @@ section#playground
 
     #dispatchedValue.codes
       highlight-code(lang="json" data-title="@change event data") {{ playgroundFullValue }}
-      highlight-code(lang="json" data-title="@change event displayTime") {{ playgroundDisplayTime }}
+      highlight-code(lang="html" data-title="@change event displayTime") "{{ playgroundDisplayTime || '' }}"
+
+  //-
+  //- Customized Range Panels
+  //-
+  overlay-panel(v-if="showRangePanel" :title="rangeTitle" @close="closeRangePanel")
+    template(v-slot:footerLeft)
+      button.secondary(@click="selectAllRangeItems") Select All
+      button.secondary(@click="unselectAllRangeItems") Unselect All
+    template(v-slot:footerRight)
+      button(@click="confirmRange") Confirm
+
+    .valid-items
+      label.range-item(v-for="(rangeItem, rIndex) in rangeList")
+        input(type="checkbox" name="selected_ranges" v-model="selectedRanges" :value="rangeItem")
+        | {{ rangeItem }}
+
+    .invalid-items(v-if="filteredOutValues && filteredOutValues.length")
+      b Values selected but filtered out by the&nbsp;
+        template(v-if="editingRange !== 'hour'") {{editingRange}}-interval:
+        template(v-else) current hour type
+      .items-list
+        span.invalid-range(v-for="oItem in filteredOutValues" :key="oItem" v-text="oItem")
+
 </template>
 
 <style lang="stylus">
+@import '../assets/_variables.styl'
+
 section#playground
   main
     padding-left: 420px
@@ -417,6 +777,15 @@ section#playground
       .subtitle
         padding-top: 0
 
+    .button-wrapper
+      display: flex
+      flex-flow: row wrap
+      justify-content: flex-start
+      align-items: center
+      padding: 0.3em 0.5em
+      border-radius: 4px
+      background: -black(0.05)
+
   aside.previews
     position: fixed
     width: 320px
@@ -428,4 +797,30 @@ section#playground
   #playgroundPreview
     box-sizing: border-box
     background: #fff
+
+  .range-item,
+  .invalid-range
+    display: inline-block
+    margin-right: 1em
+    margin-bottom: 0.5em
+  
+  .range-item
+    min-width: 3em
+
+  .invalid-range
+    opacity: 0.7
+
+  .invalid-items
+    margin-top: 1em
+    padding: 0.8em 0.8em 0.3em 0.8em
+    background: -black(0.05)
+    border-radius: 6px
+
+    .items-list
+      padding-top: 0.8em
+
+  .item-count
+    font-size: 0.85em
+    padding-left: 0.5em
+    opacity: 0.7
 </style>
