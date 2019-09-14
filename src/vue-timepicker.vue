@@ -243,6 +243,8 @@ export default {
         } else {
           if (this.is12hRange(value)) {
             value = this.translate12hRange(value)
+          } else {
+            value = +value
           }
           if (value < 0 || value > 24) { return }
           if (!range.includes(value)) {
@@ -262,7 +264,7 @@ export default {
         const range = this.hourRangeIn24HrFormat.map((value) => {
           if (value === 12) {
             return '12p'
-          } else if (value === 24) {
+          } else if (value === 24 || value === 0) {
             return '12a'
           }
           return value > 12 ? `${value % 12}p` : `${value}a`
@@ -817,6 +819,13 @@ export default {
           const token = this.apm.toLowerCase() === 'am' ? 'a' : 'p'
           return !this.restrictedHourRange.includes(`${+value}${token}`)
         }
+      }
+      // Fallback for 'HH' and 'H hour format with a `hour-range` in a 12-hour form
+      if (
+        (this.hourType === 'HH' || this.hourType === 'H') &&
+        +value === 0 && this.restrictedHourRange.includes(24)
+      ) {
+        return false
       }
       return !this.restrictedHourRange.includes(+value)
     },
