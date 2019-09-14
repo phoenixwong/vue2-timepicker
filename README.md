@@ -556,8 +556,7 @@ Prop                    | Type      | Required | Default Value
 **tabindex**            | _Number_  | no       | 0
 **input-class**         | _String_  | no       | _undefined_
 
-Timepicker now supports `id`, `name`, `placeholder`, and `tabindex` like common form elements. These values are assigned to the
-`<input type="text" class="display-time">` within the component.
+Timepicker now supports `id`, `name`, `placeholder`, and `tabindex` like common form elements. These values are assigned to the `<input type="text" class="display-time">` within the component.
 
 ### Input `id`, `name` and `tabindex`
 
