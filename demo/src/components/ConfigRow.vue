@@ -43,7 +43,6 @@ export default {
       position: relative
       top: -0.1em
 
-
   .range-wrapper
     display: inline-flex
     flex-flow: row nowrap
