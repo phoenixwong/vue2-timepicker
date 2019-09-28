@@ -554,8 +554,10 @@ export default {
 
       const tokensRegxStr = `[(${regxStr})]+`
       const othersRegxStr = `[^(${regxStr})]+`
-      const tokensMatchAll = formatString.matchAll(new RegExp(tokensRegxStr, 'g'))
-      const othersMatchAll = formatString.matchAll(new RegExp(othersRegxStr, 'g'))
+
+      const needsPolyfill = Boolean(!formatString.matchAll || typeof formatString.matchAll !== 'function')
+      const tokensMatchAll = needsPolyfill ? this.matchAllPolyfill(formatString, tokensRegxStr) : formatString.matchAll(new RegExp(tokensRegxStr, 'g'))
+      const othersMatchAll = needsPolyfill ? this.matchAllPolyfill(formatString, othersRegxStr) : formatString.matchAll(new RegExp(othersRegxStr, 'g'))
 
       const chunks = []
       const tokenChunks = []
@@ -614,6 +616,35 @@ export default {
           this.debugLog(`The input string in "v-model" does NOT match the "format" pattern\nformat: ${this.formatString}\nv-model: ${this.value}`)
         }
       }
+    },
+
+    matchAllPolyfill (targetString, regxStr) {
+      const matchesList = targetString.match(new RegExp(regxStr, 'g'))
+      const result = []
+      const indicesReg = []
+      if (matchesList && matchesList.length) {
+        matchesList.forEach(matchedItem => {
+          const existIndex = indicesReg.findIndex(idxItem => idxItem.str === matchedItem)
+          let index
+          if (existIndex >= 0) {
+            if (indicesReg[existIndex] && indicesReg[existIndex].regex) {
+              index = indicesReg[existIndex].regex.exec(targetString).index
+            }
+          } else {
+            const itemIndicesRegex = new RegExp(matchedItem, 'g')
+            index = itemIndicesRegex.exec(targetString).index
+            indicesReg.push({
+              str: String(matchedItem),
+              regex: itemIndicesRegex
+            })
+          }
+          result.push({
+            0: String(matchedItem),
+            index: index
+          })
+        })
+      }
+      return result
     },
 
     addFallbackValues () {
