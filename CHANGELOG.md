@@ -2,6 +2,12 @@
 
 > The Change Log of Vue2 Timepicker `vue2-timepicker`
 
+## v 1.0.1
+
+### Fixes
+
+Fixes the _String_ form `v-model` support on Edge and Safari
+
 ## v 1.0.0
 
 ### Breaking Changes
