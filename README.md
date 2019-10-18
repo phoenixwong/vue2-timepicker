@@ -94,8 +94,8 @@ import VueTimepicker from 'vue2-timepicker/src/vue-timepicker.vue'
 
 ```javascript
 // Import the *.vue file (CSS included)
-import VueTimepicker from 'vue2-timepicker/sfc'
-// Note the `/sfc` suffix here
+import VueTimepicker from 'vue2-timepicker/src'
+// Note the `/src` suffix here
 ```
 
 ### **Step 2**: Include VueTimepicker in your component
