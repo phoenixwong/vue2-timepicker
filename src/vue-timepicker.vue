@@ -45,6 +45,10 @@ export default {
     inputClass: { type: String },
     placeholder: { type: String },
     tabindex: { type: [ Number, String ], default: 0 },
+    hoursLabel: { type: String, default: null },
+    minutesLabel: { type: String, default: null },
+    secondsLabel: { type: String, default: null },
+    ampLabel: { type: String, default: null },
 
     blurDelay: { type: [ Number, String ] },
     advancedKeyboard: { type: Boolean, default: false },
@@ -362,6 +366,19 @@ export default {
         }
       }
       return range
+    },
+    
+    hoursLabelText() {
+      return this.hoursLabel || this.hourType;
+    },
+    minutesLabelText() {
+      return this.minutesLabel || this.minuteType;
+    },
+    secondsLabelText() {
+      return this.secondsLabel || this.secondType;
+    },
+    ampLabelText() {
+      return this.ampLabel || this.ampType;
     }
   },
 
@@ -1235,7 +1252,7 @@ export default {
       <!-- Common Keyboard Support: less event listeners -->
       <template v-if="!advancedKeyboard">
         <ul class="hours">
-          <li class="hint" v-text="hourType"></li>
+          <li class="hint" v-text="hoursLabelText"></li>
           <template v-for="(hr, hIndex) in hours">
             <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabledHour(hr))"
                 :key="hIndex"
@@ -1246,7 +1263,7 @@ export default {
           </template>
         </ul>
         <ul class="minutes">
-          <li class="hint" v-text="minuteType"></li>
+          <li class="hint" v-text="minutesLabelText"></li>
           <template v-for="(m, mIndex) in minutes">
             <li v-if="!opts.hideDisabledMinutes || (opts.hideDisabledMinutes && !isDisabledMinute(m))"
                 :key="mIndex"
@@ -1257,7 +1274,7 @@ export default {
           </template>
         </ul>
         <ul class="seconds" v-if="secondType">
-          <li class="hint" v-text="secondType"></li>
+          <li class="hint" v-text="secondsLabelText"></li>
           <template v-for="(s, sIndex) in seconds">
             <li v-if="!opts.hideDisabledSeconds || (opts.hideDisabledSeconds && !isDisabledSecond(s))"
                 :key="sIndex"
@@ -1268,7 +1285,7 @@ export default {
           </template>
         </ul>
         <ul class="apms" v-if="apmType">
-          <li class="hint" v-text="apmType"></li>
+          <li class="hint" v-text="ampLabelText"></li>
           <template v-for="(a, aIndex) in apms">
             <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabledApm(a))"
                 :key="aIndex"
@@ -1286,7 +1303,7 @@ export default {
       -->
       <template v-if="advancedKeyboard">
         <ul class="hours">
-          <li class="hint" v-text="hourType"></li>
+          <li class="hint" v-text="hoursLabelText"></li>
           <template v-for="(hr, hIndex) in hours">
             <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabledHour(hr))"
                 :key="hIndex"
@@ -1308,7 +1325,7 @@ export default {
           </template>
         </ul>
         <ul class="minutes">
-          <li class="hint" v-text="minuteType"></li>
+          <li class="hint" v-text="minumesLabelText"></li>
           <template v-for="(m, mIndex) in minutes">
             <li v-if="!opts.hideDisabledMinutes || (opts.hideDisabledMinutes && !isDisabledMinute(m))"
                 :key="mIndex"
@@ -1330,7 +1347,7 @@ export default {
           </template>
         </ul>
         <ul class="seconds" v-if="secondType">
-          <li class="hint" v-text="secondType"></li>
+          <li class="hint" v-text="secondsLabelText"></li>
           <template v-for="(s, sIndex) in seconds">
             <li v-if="!opts.hideDisabledSeconds || (opts.hideDisabledSeconds && !isDisabledSecond(s))"
                 :key="sIndex"
@@ -1352,7 +1369,7 @@ export default {
           </template>
         </ul>
         <ul class="apms" v-if="apmType">
-          <li class="hint" v-text="apmType"></li>
+          <li class="hint" v-text="ampLabelText"></li>
           <template v-for="(a, aIndex) in apms">
             <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabledApm(a))"
                 :key="aIndex"
