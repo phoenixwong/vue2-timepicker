@@ -555,6 +555,7 @@ Prop                    | Type      | Required | Default Value
 **placeholder**         | _String_  | no       | _undefined_
 **tabindex**            | _Number_  | no       | 0
 **input-class**         | _String_  | no       | _undefined_
+**input-width**         | _String_  | no       | '10em'
 
 Timepicker now supports `id`, `name`, `placeholder`, and `tabindex` like common form elements. These values are assigned to the `<input type="text" class="display-time">` within the component.
 
@@ -604,8 +605,20 @@ The `input-class` is assigned to the text input within the component as well.
   <input class="display-time my-awesome-picker" type="text" readonly="readonly">
   <!-- ... -->
 </span>
-
 ```
+
+### The `input-width`
+
+The `input-width` helps you to adjust both the `<input>` and the dropdown picker's width without overriding the CSS style on your own. It accepts any valid CSS width values like `8em`, `200px`, etc.
+
+```html
+<!-- In `px` -->
+<vue-timepicker input-width="100px"></vue-timepicker>
+
+<!-- In `em` -->
+<vue-timepicker input-width="12em" format="HH:mm:ss"></vue-timepicker>
+```
+
 
 ## Events API
 

@@ -45,6 +45,7 @@ export default {
     inputClass: { type: String },
     placeholder: { type: String },
     tabindex: { type: [ Number, String ], default: 0 },
+    inputWidth: { type: String },
 
     hourLabel: { type: String },
     minuteLabel: { type: String },
@@ -389,6 +390,13 @@ export default {
     },
     apmLabelText () {
       return this.apmLabel || this.apmType
+    },
+
+    inputWidthStyle () {
+      if (!this.inputWidth || !this.inputWidth.length) { return }
+      return {
+        width: this.inputWidth
+      }
     }
   },
 
@@ -1252,9 +1260,10 @@ export default {
 </script>
 
 <template>
-<span class="vue__time-picker time-picker">
+<span class="vue__time-picker time-picker" :style="inputWidthStyle">
   <input type="text" class="display-time"
          :class="[inputClass, {'disabled': disabled}]"
+         :style="inputWidthStyle"
          :id="id"
          :name="name"
          :value="inputIsEmpty ? null : customDisplayTime"
@@ -1267,8 +1276,8 @@ export default {
          @keydown.esc.exact="escBlur" />
   <span class="clear-btn" v-if="!showDropdown && showClearBtn" @click="clearTime">&times;</span>
   <div class="time-picker-overlay" v-if="showDropdown" @click="toggleDropdown"></div>
-  <div class="dropdown" v-show="showDropdown" @mouseup="keepFocusing" @click.stop="">
-    <div class="select-list">
+  <div class="dropdown" v-show="showDropdown" :style="inputWidthStyle" @mouseup="keepFocusing" @click.stop="">
+    <div class="select-list" :style="inputWidthStyle">
       <!-- Common Keyboard Support: less event listeners -->
       <template v-if="!advancedKeyboard">
         <ul class="hours">

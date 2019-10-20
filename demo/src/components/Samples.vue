@@ -52,7 +52,8 @@ export default {
         { title: 'The @change Event', anchor: 'onChangeSample' },
         { title: '@open and @close event', anchor: 'openAndClose' },
         { title: 'Keyboard Support', anchor: 'kbSupport' },
-        { title: 'Customized Picker Labels', anchor: 'customPickerLabels' }
+        { title: 'Customized Picker Labels', anchor: 'customPickerLabels' },
+        { title: 'Adjust Input Width', anchor: 'inputWidth' }
       ]
     }
   },
@@ -582,6 +583,28 @@ section#mostlyUsedSamples
       b 12-hour format with customized am/pm text
       p
         vue-timepicker(hour-label="時" minute-label="分" second-label="秒" apm-label="午" am-text="上午" pm-text="下午" format="h:mm:ss a")
+
+  //- Hide Clear Button
+  sample-block#inputWidth
+    template(v-slot:title) Adjust Input Width
+    p(slot="description")
+      | Helps you to adjust both the
+      code &lt;input&gt;
+      | and the dropdown picker's width
+    template(v-slot:codes)
+      highlight-code(lang="html" data-title="HTML")
+        | &lt;!-- In `px` --&gt;
+        | &lt;vue-timepicker input-width="100px"&gt;&lt;/vue-timepicker&gt;
+        |
+        | &lt;!-- In `em` --&gt;
+        | &lt;vue-timepicker input-width="12em" format="HH:mm:ss"&gt;&lt;/vue-timepicker&gt;
+    template(v-slot:preview)
+      b In `px`
+      p
+        vue-timepicker(input-width="100px")
+      b In `em`
+      p
+        vue-timepicker(input-width="12em" format="HH:mm:ss")
 
   //- Footer Links
   .footer-links
