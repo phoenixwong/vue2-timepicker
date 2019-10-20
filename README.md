@@ -635,6 +635,33 @@ data () {
 <vue-timepicker @open="dropdownStatus = 'opened'" @close="dropdownStatus = 'closed'"></vue-timepicker>
 ```
 
+## Miscellaneous Props API
+
+Prop                    | Type      | Required | Default Value
+----------------------- | --------- | -------- | -------------
+**hour-label**          | _String_  | no       | _undefined_
+**minute-label**        | _String_  | no       | _undefined_
+**second-label**        | _String_  | no       | _undefined_
+**apm-label**           | _String_  | no       | _undefined_
+**am-text**             | _String_  | no       | _undefined_
+**pm-text**             | _String_  | no       | _undefined_
+
+### Customized Picker Labels
+
+You can define customized labels on top of the hour, minute, second, and APM pickers with the following properties: `hour-label`, `minute-label`, `second-label`, and `apm-label`. 
+
+Furthermore, you can replace those _am/pm_ (or _AM/PM_) string by setting the `am-text` and `pm-text` parameters.
+
+> Please note that these two parameters only change the labels expose to the users (the UI level). The `v-model` value and `displayTime` value returned by the `change` event (the programming level) still use the standard _am/pm_ (_AM/PM_) format.
+
+```html
+<!-- 24-hour format with customized hour and minute label -->
+<vue-timepicker hour-label="heure" minute-label="minute"></vue-timepicker>
+
+<!-- 12-hour format with customized am/pm text -->
+<vue-timepicker hour-label="時" minute-label="分" second-label="秒" apm-label="午" am-text="上午" pm-text="下午" format="h:mm:ss a"></vue-timepicker>
+```
+
 ## Contribution
 
 Please feel free to fork and help developing. Check [CONTRIBUTING.md](https://github.com/phoenixwong/vue2-timepicker/blob/master/CONTRIBUTING.md) for more details.
