@@ -674,7 +674,7 @@ You can define customized labels on top of the hour, minute, second, and APM pic
 
 Furthermore, you can replace those _am/pm_ (or _AM/PM_) string by setting the `am-text` and `pm-text` parameters.
 
-> Please note that these two parameters only change the labels expose to the users (the UI level). The `v-model` value and `displayTime` value returned by the `change` event (the programming level) still use the standard _am/pm_ (_AM/PM_) format.
+> Please note that these two parameters only change the labels expose to the users (the UI level). The `v-model` value and `displayTime` value returned by the `change` event (the data level) still use the standard _am_/_pm_ (_AM_/_PM_) format.
 
 ```html
 <!-- 24-hour format with customized hour and minute label -->
