@@ -98,6 +98,15 @@ import VueTimepicker from 'vue2-timepicker/sfc'
 // Note the `/sfc` suffix here
 ```
 
+If your server-side renderer cannot recognize the `/sfc` alias, please try --
+
+```javascript
+// Manually point to the `/src` folder
+import VueTimepicker from 'vue2-timepicker/src'
+// Or, to the specific file name
+import VueTimepicker from 'vue2-timepicker/src/vue-timepicker.vue'
+```
+
 ### **Step 2**: Include VueTimepicker in your component
 
 ```javascript
@@ -555,6 +564,7 @@ Prop                    | Type      | Required | Default Value
 **placeholder**         | _String_  | no       | _undefined_
 **tabindex**            | _Number_  | no       | 0
 **input-class**         | _String_  | no       | _undefined_
+**input-width**         | _String_  | no       | '10em'
 
 Timepicker now supports `id`, `name`, `placeholder`, and `tabindex` like common form elements. These values are assigned to the `<input type="text" class="display-time">` within the component.
 
@@ -604,8 +614,20 @@ The `input-class` is assigned to the text input within the component as well.
   <input class="display-time my-awesome-picker" type="text" readonly="readonly">
   <!-- ... -->
 </span>
-
 ```
+
+### The `input-width`
+
+The `input-width` helps you to adjust both the `<input>` and the dropdown picker's width without overriding the CSS style on your own. It accepts any valid CSS width values like `8em`, `200px`, etc.
+
+```html
+<!-- In `px` -->
+<vue-timepicker input-width="100px"></vue-timepicker>
+
+<!-- In `em` -->
+<vue-timepicker input-width="12em" format="HH:mm:ss"></vue-timepicker>
+```
+
 
 ## Events API
 
@@ -633,6 +655,33 @@ data () {
 <p>Dropdown Status: I'm {{dropdownStatus}}!</p>
 
 <vue-timepicker @open="dropdownStatus = 'opened'" @close="dropdownStatus = 'closed'"></vue-timepicker>
+```
+
+## Miscellaneous Props API
+
+Prop                    | Type      | Required | Default Value
+----------------------- | --------- | -------- | -------------
+**hour-label**          | _String_  | no       | _undefined_
+**minute-label**        | _String_  | no       | _undefined_
+**second-label**        | _String_  | no       | _undefined_
+**apm-label**           | _String_  | no       | _undefined_
+**am-text**             | _String_  | no       | _undefined_
+**pm-text**             | _String_  | no       | _undefined_
+
+### Customized Picker Labels
+
+You can define customized labels on top of the hour, minute, second, and APM pickers with the following properties: `hour-label`, `minute-label`, `second-label`, and `apm-label`. 
+
+Furthermore, you can replace those _am/pm_ (or _AM/PM_) string by setting the `am-text` and `pm-text` parameters.
+
+> Please note that these two parameters only change the labels expose to the users (the UI level). The `v-model` value and `displayTime` value returned by the `change` event (the data level) still use the standard _am_/_pm_ (_AM_/_PM_) format.
+
+```html
+<!-- 24-hour format with customized hour and minute label -->
+<vue-timepicker hour-label="heure" minute-label="minute"></vue-timepicker>
+
+<!-- 12-hour format with customized am/pm text -->
+<vue-timepicker hour-label="時" minute-label="分" second-label="秒" apm-label="午" am-text="上午" pm-text="下午" format="h:mm:ss a"></vue-timepicker>
 ```
 
 ## Contribution

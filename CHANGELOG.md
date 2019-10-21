@@ -2,6 +2,18 @@
 
 > The Change Log of Vue2 Timepicker `vue2-timepicker`
 
+## v 1.0.2
+
+### New
+
+- Support customized label for hour, minute, second, and APM pickers (Thanks to @maritaria).
+- Support setting customized text to replace the `am`/`pm` (`AM`/`PM`) string in the UI.
+- Added `input-width` property to help adjusting Timepicker's width with ease.
+
+### Improvements
+
+Added more guiding notes for SSR usage. (Thanks to @oj-recit)
+
 ## v 1.0.1
 
 ### Fixes
