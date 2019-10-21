@@ -6,9 +6,9 @@
 
 ### New
 
-- Support customized label for hour, minute, second, and APM pickers (Thanks to @maritaria).
+- Support customized labels for the hour, minute, second, and APM pickers (Thanks to @maritaria).
 - Support setting customized text to replace the `am`/`pm` (`AM`/`PM`) string in the UI.
-- Added `input-width` property to help adjusting Timepicker's width with ease.
+- Added `input-width` property to help to adjust Timepicker's width with ease.
 
 ### Improvements
 
