@@ -56,6 +56,7 @@ export default {
 
     blurDelay: { type: [ Number, String ] },
     advancedKeyboard: { type: Boolean, default: false },
+    lazy: { type: Boolean, default: false },
 
     debugMode: { type: Boolean, default: false }
   },
@@ -417,7 +418,10 @@ export default {
       }
     },
     displayTime () {
-      this.fillValues()
+      // In lazy mode emit input/change events only when dropdown is closed or time is cleared
+      if(!this.lazy) {
+        this.fillValues()
+      }
     },
     disabled (toDisabled) {
       // Force close the dropdown when disabled
@@ -947,6 +951,10 @@ export default {
       } else {
         this.$emit('close')
         this.isFocusing = false
+
+        if(this.lazy) {
+          this.fillValues()
+        }
       }
 
       if (this.restrictedHourRange && this.baseOn12Hours) {
@@ -983,6 +991,10 @@ export default {
       this.minute = ''
       this.second = ''
       this.apm = ''
+
+      if(this.lazy) {
+        this.fillValues()
+      }
     },
 
     //

@@ -34,6 +34,12 @@ export default {
       demoData2: {HH: '10', mm: '45'},
       demoArgs: undefined,
       dropdownStatus: 'closed',
+      lazyData :{
+        HH: '06',
+        mm: '50',
+        ss: '00',
+        a: 'am'
+      },
 
       sideNav: [
         { title: 'Default', anchor: 'default' },
@@ -49,6 +55,7 @@ export default {
         { title: 'Close on Complete', anchor: 'closeOnComplete' },
         { title: 'Hide Clear Button', anchor: 'hideClearButton' },
         { title: 'Disable Picker', anchor: 'disablePicker' },
+        { title: 'Lazy', anchor: 'lazy' },
         { title: 'The @change Event', anchor: 'onChangeSample' },
         { title: '@open and @close event', anchor: 'openAndClose' },
         { title: 'Keyboard Support', anchor: 'kbSupport' },
@@ -179,7 +186,7 @@ section#mostlyUsedSamples
         |     yourFormat: 'hh:mm:ss a',
         |     yourData: {
         |       hh: '03',
-        |       mm: '10',
+        |       mm: '05',
         |       ss: '00',
         |       a: 'am'
         |     }
@@ -426,6 +433,27 @@ section#mostlyUsedSamples
     template(v-slot:preview)
       vue-timepicker(disabled)
 
+  //- Lazy
+  sample-block#lazy
+    template(v-slot:title) Lazy
+    p(slot="description")
+      | Enable lazy mode to emit <code>input</code> and <code>change</code> events only when dropdown is closed or time is cleared.
+    template(v-slot:codes)
+      highlight-code(lang="html" data-title="HTML")
+        | &lt;vue-timepicker v-model="lazyData" @change="changeHandler"&gt;&lt;/vue-timepicker&gt;
+      highlight-code(lang="javascript" data-title="JS")
+        | methods: {
+        |   changeHandler (eventData) {
+        |     // eventData -&gt; {data: {HH:..., mm:...}, displayTime: 'HH:mm'}
+        |     // only when dropdown is closed or time is cleared
+        |   }
+        | }
+    template(v-slot:preview)
+      vue-timepicker(v-model="lazyData" :lazy="true" @change="changeHandler")
+    template(v-slot:data)
+      highlight-code(lang="json" data-title="`lazyData` in live (JSON)") {{ lazyData }}
+      highlight-code(v-if="latestDataFlow" lang="json" data-title="The `@change` eventData") {{ latestDataFlow }}
+
   //- @change Sample
   sample-block#onChangeSample
     template(v-slot:title)
@@ -654,7 +682,7 @@ section#mostlyUsedSamples
         padding: 0.15em 0
         font-size: 0.85em
         color: alpha($body-color, 0.4)
-  
+
   // Browser Native Input
   input.native-input
     box-sizing: border-box
