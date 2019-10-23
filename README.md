@@ -496,13 +496,18 @@ Please be aware that after putting the `advanced-keyboard` on, hundreds of addit
 
 Sets the blur delay time for keyboard navigation. Defaults to `200` if not set.
 
-### Enable Lazy Mode
+### Lazy Event Mode
 
 ```html
-<vue-timepicker :lazy="true"></vue-timepicker>
+<vue-timepicker lazy></vue-timepicker>
 ```
 
-Emits `input` and `change` events only when dropdown is closed or time is cleared, in order to avoid to emit them when the component is mounted or when the value is modified by the parent component.
+When `lazy` event mode is toggled on, only an actual user behavior can trigger the `input` and `change` events. Which are:
+
+- The user opened the dropdown and picked a new value
+- The user clicked the ("x") clear button
+
+In other words, on `lazy` mode, Timepicker won't emit `input` and `change` events on mounted, nor after the value got modified programmatically.
 
 ### Enable Debug Mode
 
