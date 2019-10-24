@@ -2,6 +2,12 @@
 
 > The Change Log of Vue2 Timepicker `vue2-timepicker`
 
+## v 1.0.3
+
+### New
+
+Added `lazy` event mode. (Thanks to @VictorCazanave)
+
 ## v 1.0.2
 
 ### New
