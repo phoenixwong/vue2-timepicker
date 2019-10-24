@@ -68,6 +68,8 @@ export default {
       disablePicker: false,
       closeOnComplete: false,
       advancedKeyboard: false,
+      lazyMode: false,
+      debugMode: false,
 
       playgroundData: {},
       playgroundFullValue: {},
@@ -154,6 +156,10 @@ export default {
         start += (`\n  :second-range="${secRange}"`)
       }
 
+      if (this.lazyMode) {
+        start += ('\n  lazy')
+      }
+
       if (this.closeOnComplete) {
         start += ('\n  close-on-complete')
       }
@@ -168,6 +174,10 @@ export default {
 
       if (this.disablePicker) {
         start += ('\n  disabled')
+      }
+
+      if (this.debugMode) {
+        start += ('\n  debug-mode')
       }
 
       const htmlCode = start + end
@@ -688,6 +698,18 @@ section#playground
             input(v-model="disablePicker" type="checkbox")
             | &nbsp;Disable
 
+      #lazyMode.config-block
+        h3.subtitle
+          a.anchor #
+          | Lazy Event Mode
+        config-row(is-group)
+          label.options(for="lazy_mode_true")
+            input(v-model="lazyMode" type="radio" id="lazy_mode_true" name="lazy_mode", :value="true")
+            | &nbsp;Enable
+          label.options(for="lazy_mode_false")
+            input(v-model="lazyMode" type="radio" id="lazy_mode_false" name="lazy_mode", :value="false")
+            | &nbsp;Disable
+
       #advancedKeyboard.config-block
         h3.subtitle
           a.anchor #
@@ -698,6 +720,18 @@ section#playground
             | &nbsp;Enable
           label.options(for="advanced_kb_false")
             input(v-model="advancedKeyboard" type="radio" id="advanced_kb_false" name="advanced_kb", :value="false")
+            | &nbsp;Disable
+
+      #debugMode.config-block
+        h3.subtitle
+          a.anchor #
+          | Debug Mode
+        config-row(is-group)
+          label.options(for="debug_mode_true")
+            input(v-model="debugMode" type="radio" id="debug_mode_true" name="debug_mode", :value="true")
+            | &nbsp;Enable
+          label.options(for="debug_mode_false")
+            input(v-model="debugMode" type="radio" id="debug_mode_false" name="debug_mode", :value="false")
             | &nbsp;Disable
 
   //-
@@ -719,6 +753,8 @@ section#playground
                        :advanced-keyboard="advancedKeyboard"
                        :hide-clear-button="hideClearBtn"
                        :disabled="disablePicker"
+                       :lazy="lazyMode"
+                       :debug-mode="debugMode"
                        @change="changeHandler")
 
     #htmlCodePreview.codes

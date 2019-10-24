@@ -33,7 +33,18 @@ export default {
       demoData1: {HH: '08', mm: '30'},
       demoData2: {HH: '10', mm: '45'},
       demoArgs: undefined,
+
       dropdownStatus: 'closed',
+
+      lazyData: {
+        hh: '06',
+        mm: '50',
+        ss: '00',
+        a: 'am'
+      },
+      lazyChangeData: undefined,
+      lazyInputData: undefined,
+      lazyEventTs: undefined,
 
       sideNav: [
         { title: 'Default', anchor: 'default' },
@@ -50,6 +61,7 @@ export default {
         { title: 'Hide Clear Button', anchor: 'hideClearButton' },
         { title: 'Disable Picker', anchor: 'disablePicker' },
         { title: 'The @change Event', anchor: 'onChangeSample' },
+        { title: 'Lazy Event Mode', anchor: 'lazyEvents' },
         { title: '@open and @close event', anchor: 'openAndClose' },
         { title: 'Keyboard Support', anchor: 'kbSupport' },
         { title: 'Customized Picker Labels', anchor: 'customPickerLabels' },
@@ -72,6 +84,15 @@ export default {
         arg1: arg1,
         arg2: arg2
       }
+    },
+
+    lazyChangeHandler (eventData) {
+      this.lazyChangeData = eventData
+      this.lazyEventTs = new Date().toLocaleString()
+    },
+
+    lazyInputHandler (eventData) {
+      this.lazyInputData = eventData
     }
   },
 
@@ -179,7 +200,7 @@ section#mostlyUsedSamples
         |     yourFormat: 'hh:mm:ss a',
         |     yourData: {
         |       hh: '03',
-        |       mm: '10',
+        |       mm: '05',
         |       ss: '00',
         |       a: 'am'
         |     }
@@ -466,9 +487,31 @@ section#mostlyUsedSamples
       p
         vue-timepicker(v-model="demoData2" @change="otherChangeHandler($event, 'foo', 42)")
     template(v-if="latestDataFlow || demoArgs" slot="data")
-      highlight-code(v-if="latestDataFlow" lang="json" data-title="The `@change` eventData") {{ latestDataFlow }}
+      highlight-code(v-if="latestDataFlow" lang="json" data-title="The `@change` event data") {{ latestDataFlow }}
       highlight-code(v-if="demoArgs" lang="json" data-title="Received Custom Arguments") {{ demoArgs }}
       highlight-code(v-if="latestDataFlow" lang="json" data-title="`v-model` value") {{ demoArgs ? demoData2 : demoData1 }}
+
+  //- Lazy Event Mode
+  sample-block#lazyEvents
+    template(v-slot:title) Lazy Event Mode
+    template(v-slot:description)
+      p When <code>lazy</code> event mode is toggled on, only an actual user behavior can trigger the <code>input</code> and <code>change</code> events. Which are:
+      ul
+        li The user opened the dropdown and picked a new value
+        li The user clicked the ("x") clear button
+    template(v-slot:codes)
+      highlight-code(lang="html" data-title="HTML")
+        | &lt;vue-timepicker lazy format="hh:mm:ss a"&gt;&lt;/vue-timepicker&gt;
+    template(v-slot:preview)
+      p
+        vue-timepicker(v-model="lazyData" lazy format="hh:mm:ss a" @input="lazyInputHandler" @change="lazyChangeHandler")
+        span.inline-data-preview(v-if="lazyEventTs")
+          b Last <code>change</code> event timestamp:
+          | &nbsp;{{ lazyEventTs }}
+
+    template(v-slot:data)
+      highlight-code(v-if="lazyInputData" lang="json" data-title="The lazy `input` event data") {{ lazyInputData }}
+      highlight-code(v-if="lazyChangeData" lang="json" data-title="The lazy `change` event data") {{ lazyChangeData }}
 
   //- Open And Close Event
   sample-block#openAndClose
@@ -654,7 +697,7 @@ section#mostlyUsedSamples
         padding: 0.15em 0
         font-size: 0.85em
         color: alpha($body-color, 0.4)
-  
+
   // Browser Native Input
   input.native-input
     box-sizing: border-box

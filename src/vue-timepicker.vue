@@ -56,6 +56,7 @@ export default {
 
     blurDelay: { type: [ Number, String ] },
     advancedKeyboard: { type: Boolean, default: false },
+    lazy: { type: Boolean, default: false },
 
     debugMode: { type: Boolean, default: false }
   },
@@ -81,7 +82,8 @@ export default {
       minute: '',
       second: '',
       apm: '',
-      fullValues: undefined
+      fullValues: undefined,
+      bakDisplayTime: undefined
     }
   },
 
@@ -719,7 +721,7 @@ export default {
       return stdValue
     },
 
-    fillValues () {
+    fillValues (forceEmit) {
       const fullValues = {}
 
       const baseHour = this.hour
@@ -818,14 +820,30 @@ export default {
       }
 
       this.fullValues = fullValues
-      this.updateTimeValue(fullValues)
+
+      // On lazy mode, emit `input` and `change` events only when:
+      // - The user pick a new value and then close the dropdown
+      // - The user click the ("x") clear button
+      if (!this.lazy || forceEmit) {
+        this.emitTimeValue()
+      }
+
+      if (this.closeOnComplete && this.allValueSelected && this.showDropdown) {
+        this.toggleDropdown()
+      }
     },
 
-    updateTimeValue (fullVals) {
-      if (!fullVals) { return }
+    emitTimeValue () {
+      if (!this.fullValues) { return }
 
-      const fullValues = Object.assign({}, fullVals)
+      if (this.lazy && this.bakDisplayTime === this.displayTime) {
+        if (this.debugMode) {
+          this.debugLog('The value does not change on `lazy` mode. Skip the emitting `input` and `change` event.')
+        }
+        return
+      }
 
+      const fullValues = JSON.parse(JSON.stringify(this.fullValues))
       const baseTimeValue = JSON.parse(JSON.stringify(this.timeValue || {}))
       const timeValue = {}
 
@@ -840,13 +858,9 @@ export default {
       }
 
       this.$emit('change', {
-        data: fullVals,
+        data: fullValues,
         displayTime: this.inputIsEmpty ? '' : String(this.displayTime)
       })
-
-      if (this.closeOnComplete && this.allValueSelected && this.showDropdown) {
-        this.toggleDropdown()
-      }
     },
 
     translate12hRange (value) {
@@ -944,9 +958,17 @@ export default {
       if (this.showDropdown) {
         this.$emit('open')
         this.isFocusing = true
+        // Record to check if value did changed in the later phase
+        if (this.lazy) {
+          this.bakDisplayTime = String(this.displayTime || '')
+        }
       } else {
         this.$emit('close')
         this.isFocusing = false
+        if (this.lazy) {
+          this.fillValues(true)
+          this.bakDisplayTime = undefined
+        }
       }
 
       if (this.restrictedHourRange && this.baseOn12Hours) {
@@ -983,6 +1005,10 @@ export default {
       this.minute = ''
       this.second = ''
       this.apm = ''
+
+      if (this.lazy) {
+        this.fillValues(true)
+      }
     },
 
     //
