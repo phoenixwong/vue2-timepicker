@@ -42,7 +42,7 @@ export default {
 
     id: { type: String },
     name: { type: String },
-    inputClass: { type: String },
+    inputClass: { type: [ String, Object, Array ] },
     placeholder: { type: String },
     tabindex: { type: [ Number, String ], default: 0 },
     inputWidth: { type: String },
@@ -1263,7 +1263,23 @@ export default {
         identifier += `[name=${this.name}]`
       }
       if (this.inputClass) {
-        identifier += `.${this.inputClass}`
+        let inputClasses = []
+        if (typeof this.inputClass === 'string') {
+          inputClasses = this.inputClass.split(/\s/g)
+        } else if (Array.isArray(this.inputClass)) {
+          inputClasses = [].concat([], this.inputClass)
+        } else if (typeof this.inputClass === 'object') {
+          Object.keys(this.inputClass).forEach(clsName => {
+            if (this.inputClass[clsName]) {
+              inputClasses.push(clsName)
+            }
+          })
+        }
+        for (let inputClass of inputClasses) {
+          if (inputClass && inputClass.trim().length) {
+            identifier += `.${inputClass.trim()}`
+          }
+        }
       }
       const finalLogText = `DEBUG: ${logText}${identifier ? `\n\t(${identifier})` : '' }`
       if (window.console.debug && typeof window.console.debug === 'function') {

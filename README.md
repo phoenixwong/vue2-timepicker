@@ -570,14 +570,14 @@ Prop                      | Type               | Required | Default Value
 
 ## Input Props API
 
-Prop                    | Type      | Required | Default Value
------------------------ | --------- | -------- | -------------
-**id**                  | _String_  | no       | _undefined_
-**name**                | _String_  | no       | _undefined_
-**placeholder**         | _String_  | no       | _undefined_
-**tabindex**            | _Number_  | no       | 0
-**input-class**         | _String_  | no       | _undefined_
-**input-width**         | _String_  | no       | '10em'
+Prop              | Type                        | Required | Default Value
+------------------| --------------------------- | -------- | -------------
+**id**            | _String_                    | no       | _undefined_
+**name**          | _String_                    | no       | _undefined_
+**placeholder**   | _String_                    | no       | _undefined_
+**tabindex**      | _Number_                    | no       | 0
+**input-class**   | _String_, _Array_, _Object_ | no       | _undefined_
+**input-width**   | _String_                    | no       | '10em'
 
 Timepicker now supports `id`, `name`, `placeholder`, and `tabindex` like common form elements. These values are assigned to the `<input type="text" class="display-time">` within the component.
 
@@ -625,6 +625,32 @@ The `input-class` is assigned to the text input within the component as well.
 <!-- HTML result -->
 <span class="vue__time-picker time-picker">
   <input class="display-time my-awesome-picker" type="text" readonly="readonly">
+  <!-- ... -->
+</span>
+```
+
+Start from `v1.0.4`, besides _String_ format, `input-class` accepts value in _Array_ and _Object_ type as well.
+
+```html
+<!-- String type -->
+<vue-timepicker input-class="your-awesome-timepicker i-am-vue2-timepicker"></vue-timepicker>
+
+<!-- Array type -->
+<vue-timepicker :input-class="['your-awesome-timepicker', 'i-am-vue2-timepicker']"></vue-timepicker>
+
+<!-- Object type -->
+<vue-timepicker :input-class="{
+  'your-awesome-timepicker': true,
+  'foo': false,
+  'i-am-vue2-timepicker': true,
+  'bar': false
+}"></vue-timepicker>
+```
+
+```html
+<!-- All of the three samples above return the same result in rendered HTML -->
+<span class="vue__time-picker time-picker">
+  <input class="display-time your-awesome-timepicker i-am-vue2-timepicker" type="text" readonly="readonly">
   <!-- ... -->
 </span>
 ```
