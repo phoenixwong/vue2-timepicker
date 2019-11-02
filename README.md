@@ -491,10 +491,10 @@ Please be aware that after putting the `advanced-keyboard` on, hundreds of addit
 
 ```html
 <!-- Unit: million second -->
-<vue-timepicker :blur-delay="300"></vue-timepicker>
+<vue-timepicker :blur-delay="500"></vue-timepicker>
 ```
 
-Sets the blur delay time for keyboard navigation. Defaults to `200` if not set.
+Sets the blur delay time for the dropdown. Defaults to `300` if not set.
 
 ### Lazy Event Mode
 
@@ -563,21 +563,21 @@ Prop                      | Type               | Required | Default Value
 **hide-disabled-seconds** | _Boolean_          | no       | false
 **hide-disabled-items**   | _Boolean_          | no       | false
 **advanced-keyboard**     | _Boolean_          | no       | false
-**blur-delay**            | _Number_           | no       | 200
+**blur-delay**            | _Number_           | no       | 300
 **lazy**                  | _Boolean_          | no       | false
 **debug-mode**            | _Boolean_          | no       | false
 
 
 ## Input Props API
 
-Prop                    | Type      | Required | Default Value
------------------------ | --------- | -------- | -------------
-**id**                  | _String_  | no       | _undefined_
-**name**                | _String_  | no       | _undefined_
-**placeholder**         | _String_  | no       | _undefined_
-**tabindex**            | _Number_  | no       | 0
-**input-class**         | _String_  | no       | _undefined_
-**input-width**         | _String_  | no       | '10em'
+Prop              | Type                        | Required | Default Value
+------------------| --------------------------- | -------- | -------------
+**id**            | _String_                    | no       | _undefined_
+**name**          | _String_                    | no       | _undefined_
+**placeholder**   | _String_                    | no       | _undefined_
+**tabindex**      | _Number_                    | no       | 0
+**input-class**   | _String_, _Array_, _Object_ | no       | _undefined_
+**input-width**   | _String_                    | no       | '10em'
 
 Timepicker now supports `id`, `name`, `placeholder`, and `tabindex` like common form elements. These values are assigned to the `<input type="text" class="display-time">` within the component.
 
@@ -625,6 +625,32 @@ The `input-class` is assigned to the text input within the component as well.
 <!-- HTML result -->
 <span class="vue__time-picker time-picker">
   <input class="display-time my-awesome-picker" type="text" readonly="readonly">
+  <!-- ... -->
+</span>
+```
+
+Start from `v1.0.4`, besides _String_ format, `input-class` accepts value in _Array_ and _Object_ type as well.
+
+```html
+<!-- String type -->
+<vue-timepicker input-class="your-awesome-timepicker i-am-vue2-timepicker"></vue-timepicker>
+
+<!-- Array type -->
+<vue-timepicker :input-class="['your-awesome-timepicker', 'i-am-vue2-timepicker']"></vue-timepicker>
+
+<!-- Object type -->
+<vue-timepicker :input-class="{
+  'your-awesome-timepicker': true,
+  'foo': false,
+  'i-am-vue2-timepicker': true,
+  'bar': false
+}"></vue-timepicker>
+```
+
+```html
+<!-- All of the three samples above return the same result in rendered HTML -->
+<span class="vue__time-picker time-picker">
+  <input class="display-time your-awesome-timepicker i-am-vue2-timepicker" type="text" readonly="readonly">
   <!-- ... -->
 </span>
 ```

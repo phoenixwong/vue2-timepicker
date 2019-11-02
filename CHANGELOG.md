@@ -2,6 +2,13 @@
 
 > The Change Log of Vue2 Timepicker `vue2-timepicker`
 
+## v 1.0.4
+
+### Improvements
+
+- Adjust the default value of `blur-delay` to 300ms. (Thanks to @rjurado01).
+- Added _Array_ and _Object_ types support to `input-class`.
+
 ## v 1.0.3
 
 ### New

@@ -71,6 +71,9 @@ export default {
       lazyMode: false,
       debugMode: false,
 
+      customBlurDelay: false,
+      blurDelay: 300,
+
       playgroundData: {},
       playgroundFullValue: {},
       playgroundDisplayTime: undefined,
@@ -154,6 +157,10 @@ export default {
       if (this.showSeconds && this.customRange.second && this.secondRange) {
         const secRange = this.sortAndStringify(this.secondRange)
         start += (`\n  :second-range="${secRange}"`)
+      }
+
+      if (this.customBlurDelay) {
+        start += (`\n  :blur-delay="${this.blurDelay}"`)
       }
 
       if (this.lazyMode) {
@@ -544,6 +551,10 @@ export default {
 
     unselectAllRangeItems () {
       this.selectedRanges = []
+    },
+
+    toggleBlurDelay () {
+      this.blurDelay = 300
     }
   },
 
@@ -722,6 +733,18 @@ section#playground
             input(v-model="advancedKeyboard" type="radio" id="advanced_kb_false" name="advanced_kb", :value="false")
             | &nbsp;Disable
 
+      #blurDelay.config-block
+        h3.subtitle
+          a.anchor #
+          | Customized Blur Delay
+        config-row(is-group)
+          label.options
+            input(v-model="customBlurDelay" type="checkbox" @input="toggleBlurDelay")
+            | &nbsp;Set Blur Delay
+          label.range-wrapper(v-if="customBlurDelay")
+            input(v-model.number="blurDelay" type="range" min="50" max="1500" step="50")
+            span(v-text="blurDelay")
+
       #debugMode.config-block
         h3.subtitle
           a.anchor #
@@ -751,6 +774,7 @@ section#playground
                        :second-range="(showSeconds && customRange.second) ? secondRange : null"
                        :close-on-complete="closeOnComplete"
                        :advanced-keyboard="advancedKeyboard"
+                       :blur-delay="blurDelay"
                        :hide-clear-button="hideClearBtn"
                        :disabled="disablePicker"
                        :lazy="lazyMode"
