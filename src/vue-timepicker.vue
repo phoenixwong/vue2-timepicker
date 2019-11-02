@@ -1037,7 +1037,7 @@ export default {
     debounceBlur () {
       if (this.disabled) { return }
       this.isFocusing = false
-      const delay = +(this.blurDelay || 0) || 200
+      const delay = +(this.blurDelay || 0) || 300
       window.clearTimeout(this.debounceTimer)
       this.debounceTimer = window.setTimeout(() => {
         window.clearTimeout(this.debounceTimer)

@@ -491,10 +491,10 @@ Please be aware that after putting the `advanced-keyboard` on, hundreds of addit
 
 ```html
 <!-- Unit: million second -->
-<vue-timepicker :blur-delay="300"></vue-timepicker>
+<vue-timepicker :blur-delay="500"></vue-timepicker>
 ```
 
-Sets the blur delay time for keyboard navigation. Defaults to `200` if not set.
+Sets the blur delay time for the dropdown. Defaults to `300` if not set.
 
 ### Lazy Event Mode
 
@@ -563,7 +563,7 @@ Prop                      | Type               | Required | Default Value
 **hide-disabled-seconds** | _Boolean_          | no       | false
 **hide-disabled-items**   | _Boolean_          | no       | false
 **advanced-keyboard**     | _Boolean_          | no       | false
-**blur-delay**            | _Number_           | no       | 200
+**blur-delay**            | _Number_           | no       | 300
 **lazy**                  | _Boolean_          | no       | false
 **debug-mode**            | _Boolean_          | no       | false
 
