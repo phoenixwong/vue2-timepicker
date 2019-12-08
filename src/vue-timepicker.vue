@@ -1310,16 +1310,16 @@ export default {
          :name="name"
          :value="inputIsEmpty ? null : customDisplayTime"
          :placeholder="placeholder || formatString"
-         :tabindex="disabled ? null : tabindex"
+         :tabindex="disabled ? -1 : tabindex"
          :disabled="disabled"
          readonly
          @focus="onFocus"
          @blur="debounceBlur"
          @keydown.esc.exact="escBlur" />
-  <span class="clear-btn" v-if="!showDropdown && showClearBtn" @click="clearTime">&times;</span>
-  <div class="time-picker-overlay" v-if="showDropdown" @click="toggleDropdown"></div>
-  <div class="dropdown" v-show="showDropdown" :style="inputWidthStyle" @mouseup="keepFocusing" @click.stop="">
-    <div class="select-list" :style="inputWidthStyle">
+  <span class="clear-btn" v-if="!showDropdown && showClearBtn" @click="clearTime" tabindex="-1">&times;</span>
+  <div class="time-picker-overlay" v-if="showDropdown" @click="toggleDropdown" tabindex="-1"></div>
+  <div class="dropdown" v-show="showDropdown" :style="inputWidthStyle" tabindex="-1" @mouseup="keepFocusing" @click.stop="">
+    <div class="select-list" :style="inputWidthStyle" tabindex="-1">
       <!-- Common Keyboard Support: less event listeners -->
       <template v-if="!advancedKeyboard">
         <ul class="hours">
@@ -1373,13 +1373,13 @@ export default {
         Addeds hundreds of additional event lisenters
       -->
       <template v-if="advancedKeyboard">
-        <ul class="hours">
-          <li class="hint" v-text="hourLabelText"></li>
+        <ul class="hours" tabindex="-1">
+          <li class="hint" v-text="hourLabelText" tabindex="-1"></li>
           <template v-for="(hr, hIndex) in hours">
             <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabledHour(hr))"
                 :key="hIndex"
                 :class="{active: hour === hr}"
-                :tabindex="isDisabledHour(hr) ? null : tabindex"
+                :tabindex="isDisabledHour(hr) ? -1 : tabindex"
                 :data-key="hr"
                 :disabled="isDisabledHour(hr)"
                 v-text="hr"
@@ -1395,13 +1395,13 @@ export default {
                 @focus="keepFocusing"></li>
           </template>
         </ul>
-        <ul class="minutes">
-          <li class="hint" v-text="minuteLabelText"></li>
+        <ul class="minutes" tabindex="-1">
+          <li class="hint" v-text="minuteLabelText" tabindex="-1"></li>
           <template v-for="(m, mIndex) in minutes">
             <li v-if="!opts.hideDisabledMinutes || (opts.hideDisabledMinutes && !isDisabledMinute(m))"
                 :key="mIndex"
                 :class="{active: minute === m}"
-                :tabindex="isDisabledMinute(m) ? null : tabindex"
+                :tabindex="isDisabledMinute(m) ? -1 : tabindex"
                 :data-key="m"
                 :disabled="isDisabledMinute(m)"
                 v-text="m"
@@ -1417,13 +1417,13 @@ export default {
                 @focus="keepFocusing"></li>
           </template>
         </ul>
-        <ul class="seconds" v-if="secondType">
-          <li class="hint" v-text="secondLabelText"></li>
+        <ul class="seconds" v-if="secondType" tabindex="-1">
+          <li class="hint" v-text="secondLabelText" tabindex="-1"></li>
           <template v-for="(s, sIndex) in seconds">
             <li v-if="!opts.hideDisabledSeconds || (opts.hideDisabledSeconds && !isDisabledSecond(s))"
                 :key="sIndex"
                 :class="{active: second === s}"
-                :tabindex="isDisabledSecond(s) ? null : tabindex"
+                :tabindex="isDisabledSecond(s) ? -1 : tabindex"
                 :data-key="s"
                 :disabled="isDisabledSecond(s)"
                 v-text="s"
@@ -1439,13 +1439,13 @@ export default {
                 @focus="keepFocusing"></li>
           </template>
         </ul>
-        <ul class="apms" v-if="apmType">
-          <li class="hint" v-text="apmLabelText"></li>
+        <ul class="apms" v-if="apmType" tabindex="-1">
+          <li class="hint" v-text="apmLabelText" tabindex="-1"></li>
           <template v-for="(a, aIndex) in apms">
             <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabledApm(a))"
                 :key="aIndex"
                 :class="{active: apm === a}"
-                :tabindex="isDisabledApm(a) ? null : tabindex"
+                :tabindex="isDisabledApm(a) ? -1 : tabindex"
                 :data-key="a"
                 :disabled="isDisabledApm(a)"
                 v-text="apmDisplayText(a)"
