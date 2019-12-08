@@ -2,6 +2,12 @@
 
 > The Change Log of Vue2 Timepicker `vue2-timepicker`
 
+## v 1.0.5
+
+### Fixes
+
+Fixes the Advanced Keyboard tab navigating feature on Firefox
+
 ## v 1.0.4
 
 ### Improvements
