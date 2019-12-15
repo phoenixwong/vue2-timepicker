@@ -509,6 +509,18 @@ When `lazy` event mode is toggled on, only an actual user behavior can trigger t
 
 In other words, on `lazy` mode, Timepicker won't emit `input` and `change` events on mounted, nor after the value got modified programmatically.
 
+### Auto-Scroll
+
+```html
+<vue-timepicker auto-scroll></vue-timepicker>
+```
+
+Auto-scroll to selected values on dropdown open. It works with both:
+
+- Programmatically defined value. E.g., the initial value from `v-model`
+- Values manually picked by the user.
+
+
 ### Enable Debug Mode
 
 ```html
@@ -565,6 +577,7 @@ Prop                      | Type               | Required | Default Value
 **advanced-keyboard**     | _Boolean_          | no       | false
 **blur-delay**            | _Number_           | no       | 300
 **lazy**                  | _Boolean_          | no       | false
+**auto-scroll**           | _Boolean_          | no       | false
 **debug-mode**            | _Boolean_          | no       | false
 
 

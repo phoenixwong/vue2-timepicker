@@ -46,6 +46,9 @@ export default {
       lazyInputData: undefined,
       lazyEventTs: undefined,
 
+      autoScrollData1: '08:40',
+      autoScrollData2: '5:30:20 pm',
+
       sideNav: [
         { title: 'Default', anchor: 'default' },
         { title: '12 Hours', anchor: 'format12hours' },
@@ -65,7 +68,8 @@ export default {
         { title: '@open and @close event', anchor: 'openAndClose' },
         { title: 'Keyboard Support', anchor: 'kbSupport' },
         { title: 'Customized Picker Labels', anchor: 'customPickerLabels' },
-        { title: 'Adjust Input Width', anchor: 'inputWidth' }
+        { title: 'Adjust Input Width', anchor: 'inputWidth' },
+        { title: 'Auto-Scroll', anchor: 'autoScroll' }
       ]
     }
   },
@@ -627,7 +631,7 @@ section#mostlyUsedSamples
       p
         vue-timepicker(hour-label="時" minute-label="分" second-label="秒" apm-label="午" am-text="上午" pm-text="下午" format="h:mm:ss a")
 
-  //- Hide Clear Button
+  //- Adjust Input Width
   sample-block#inputWidth
     template(v-slot:title) Adjust Input Width
     p(slot="description")
@@ -648,6 +652,33 @@ section#mostlyUsedSamples
       b In `em`
       p
         vue-timepicker(input-width="12em" format="HH:mm:ss")
+
+  //- Auto Scroll
+  sample-block#autoScroll
+    template(v-slot:title) Auto-Scroll
+    p(slot="description") Auto-scroll to selected value on dropdown open.
+    template(v-slot:codes)
+      highlight-code(lang="html" data-title="HTML")
+        | &lt;!-- Default format --&gt;
+        | &lt;vue-timepicker auto-scroll v-model="autoScrollData1"&gt;&lt;/vue-timepicker&gt;
+        | &nbsp;
+        | &lt;!-- 12-hour format --&gt;
+        | &lt;vue-timepicker auto-scroll format="h:mm:ss a" v-model="autoScrollData2"&gt;&lt;/vue-timepicker&gt;
+      highlight-code(lang="javascript" data-title="JS")
+        | // Initial values
+        | data () {
+        |   return {
+        |     autoScrollData1: '08:40',
+        |     autoScrollData2: '5:30:20 pm'
+        |   }
+        | }
+    template(v-slot:preview)
+      b Default format
+      p
+        vue-timepicker(auto-scroll v-model="autoScrollData1")
+      b 12-hour format
+      p
+        vue-timepicker(auto-scroll format="h:mm:ss a" v-model="autoScrollData2")
 
   //- Footer Links
   .footer-links
@@ -695,7 +726,7 @@ section#mostlyUsedSamples
 
       li
         padding: 0.15em 0
-        font-size: 0.85em
+        font-size: 0.8em
         color: alpha($body-color, 0.4)
 
   // Browser Native Input
