@@ -58,6 +58,8 @@ export default {
     advancedKeyboard: { type: Boolean, default: false },
     lazy: { type: Boolean, default: false },
 
+    autoScroll: { type: Boolean, default: false },
+
     debugMode: { type: Boolean, default: false }
   },
 
@@ -974,9 +976,12 @@ export default {
       if (this.restrictedHourRange && this.baseOn12Hours) {
         if (this.showDropdown) {
           this.forceApmSelection()
+          this.checkForAutoScroll()
         } else {
           this.emptyApmSelection()
         }
+      } else if (this.showDropdown) {
+        this.checkForAutoScroll()
       }
     },
 
@@ -1008,6 +1013,44 @@ export default {
 
       if (this.lazy) {
         this.fillValues(true)
+      }
+    },
+
+    //
+    // Auto-Scroll
+    //
+
+    checkForAutoScroll () {
+      if (this.autoScroll && !this.inputIsEmpty) {
+        this.$nextTick(() => {
+          this.scrollToSelectedValues()
+        })
+      } else if (!this.inputIsEmpty && this.advancedKeyboard) {
+        // Auto-focus on selected hour value for advanced-keyboard
+        this.$nextTick(() => {
+          this.scrollToSelected('hours')
+        })
+      }
+    },
+
+    scrollToSelected (columnClass) {
+      if (!this.timeValue || this.inputIsEmpty) { return }
+      const targetList = this.$el.querySelectorAll(`ul.${columnClass}`)[0]
+      const targetValue = this.$el.querySelectorAll(`ul.${columnClass} li.active:not(.hint)`)[0]
+      if (targetList && targetValue) {
+        targetList.scrollTop = targetValue.offsetTop || 0
+        if (this.advancedKeyboard && columnClass === 'hours') {
+          targetValue.focus()
+        }
+      }
+    },
+
+    scrollToSelectedValues () {
+      if (!this.timeValue || this.inputIsEmpty) { return }
+      this.scrollToSelected('hours')
+      this.scrollToSelected('minutes')
+      if (this.secondType) {
+        this.scrollToSelected('seconds')
       }
     },
 
@@ -1060,6 +1103,10 @@ export default {
 
     validItemsInCol (columnClass) {
       return this.$el.querySelectorAll(`ul.${columnClass} > li:not(.hint):not([disabled])`)
+    },
+
+    activeItemInCol (columnClass) {
+      return this.$el.querySelectorAll(`ul.${columnClass} > li.active:not(.hint)`)
     },
 
     getSideItems (columnClass, dataKey, getPrevious = false) {
@@ -1178,15 +1225,24 @@ export default {
       }
     },
 
+    getActiveItemInSideColumn (columnClass, toLeft = false) {
+      const targetColumnClass = this.getSideColumnClass(columnClass, toLeft)
+      if (!targetColumnClass) { return }
+      const activeItems = this.activeItemInCol(targetColumnClass)
+      if (activeItems && activeItems[0]) {
+        return activeItems[0]
+      }
+    },
+
     toLeftColumn (columnClass) {
-      const targetItem = this.getFirstItemInSideColumn(columnClass, true)
+      const targetItem = this.getActiveItemInSideColumn(columnClass, true) || this.getFirstItemInSideColumn(columnClass, true)
       if (targetItem) {
         targetItem.focus()
       }
     },
 
     toRightColumn (columnClass) {
-      const targetItem = this.getFirstItemInSideColumn(columnClass, false)
+      const targetItem = this.getActiveItemInSideColumn(columnClass, false) || this.getFirstItemInSideColumn(columnClass, false)
       if (targetItem) {
         targetItem.focus()
       }
@@ -1552,6 +1608,11 @@ export default {
   flex-flow: row nowrap;
   align-items: stretch;
   justify-content: space-between;
+}
+
+.vue__time-picker .dropdown .select-list:focus,
+.vue__time-picker .dropdown .select-list:active {
+  outline: none;
 }
 
 .vue__time-picker .dropdown ul {
