@@ -2,6 +2,16 @@
 
 > The Change Log of Vue2 Timepicker `vue2-timepicker`
 
+## v 1.0.6
+
+### New
+
+Added `auto-scroll` feature.
+
+### Improvements
+
+On Advanced Keyboard mode, auto-focus on the selected value (if any) in priority.
+
 ## v 1.0.5
 
 ### Fixes
