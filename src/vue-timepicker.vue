@@ -1559,16 +1559,18 @@ export default {
   top: 0;
   right: 0;
   bottom: 0;
-  margin-top: -0.15em;
+  width: 1.3em;
   z-index: 3;
   font-size: 1.1em;
   line-height: 1em;
   vertical-align: middle;
-  width: 1.3em;
   color: #d2d2d2;
   background: rgba(255,255,255,0);
   text-align: center;
   font-style: normal;
+
+  /* Vertical align fixes for webkit browsers only */
+  -webkit-margin-before: -0.15em;
 
   -webkit-transition: color .2s;
   transition: color .2s;
@@ -1577,6 +1579,10 @@ export default {
 .vue__time-picker .clear-btn:hover {
   color: #797979;
   cursor: pointer;
+}
+
+.vue__time-picker .clear-btn:active {
+  outline: 0;
 }
 
 .vue__time-picker .time-picker-overlay {
@@ -1612,7 +1618,7 @@ export default {
 
 .vue__time-picker .dropdown .select-list:focus,
 .vue__time-picker .dropdown .select-list:active {
-  outline: none;
+  outline: 0;
 }
 
 .vue__time-picker .dropdown ul {
