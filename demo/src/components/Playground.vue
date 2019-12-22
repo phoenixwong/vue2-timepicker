@@ -69,6 +69,7 @@ export default {
       closeOnComplete: false,
       advancedKeyboard: false,
       lazyMode: false,
+      autoScroll: false,
       debugMode: false,
 
       customBlurDelay: false,
@@ -177,6 +178,10 @@ export default {
 
       if (this.hideClearBtn) {
         start += ('\n  hide-clear-button')
+      }
+
+      if (this.autoScroll) {
+        start += ('\n  auto-scroll')
       }
 
       if (this.disablePicker) {
@@ -721,6 +726,18 @@ section#playground
             input(v-model="lazyMode" type="radio" id="lazy_mode_false" name="lazy_mode", :value="false")
             | &nbsp;Disable
 
+      #autoScroll.config-block
+        h3.subtitle
+          a.anchor #
+          | Auto Scroll
+        config-row(is-group)
+          label.options(for="auto_scroll_true")
+            input(v-model="autoScroll" type="radio" id="auto_scroll_true" name="auto_scroll", :value="true")
+            | &nbsp;Enable
+          label.options(for="auto_scroll_false")
+            input(v-model="autoScroll" type="radio" id="auto_scroll_false" name="auto_scroll", :value="false")
+            | &nbsp;Disable
+
       #advancedKeyboard.config-block
         h3.subtitle
           a.anchor #
@@ -778,6 +795,7 @@ section#playground
                        :hide-clear-button="hideClearBtn"
                        :disabled="disablePicker"
                        :lazy="lazyMode"
+                       :auto-scroll="autoScroll"
                        :debug-mode="debugMode"
                        @change="changeHandler")
 

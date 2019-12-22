@@ -2,6 +2,16 @@
 
 > The Change Log of Vue2 Timepicker `vue2-timepicker`
 
+## v 1.0.7
+
+### Fixes
+
+Fixes `placeholder` not dynamically updated issue in some cases (Thanks to @ObsidianTech).
+
+### Improvements
+
+Vertical alignment refined for the clear button across different browsers.
+
 ## v 1.0.6
 
 ### New
