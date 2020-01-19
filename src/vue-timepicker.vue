@@ -1098,7 +1098,9 @@ export default {
     },
 
     keepFocusing () {
-      this.isFocusing = true
+      if (!this.isFocusing) {
+        this.isFocusing = true
+      }
     },
 
     validItemsInCol (columnClass) {
@@ -1378,7 +1380,7 @@ export default {
     <div class="select-list" :style="inputWidthStyle" tabindex="-1">
       <!-- Common Keyboard Support: less event listeners -->
       <template v-if="!advancedKeyboard">
-        <ul class="hours">
+        <ul class="hours" @scroll="keepFocusing">
           <li class="hint" v-text="hourLabelText"></li>
           <template v-for="(hr, hIndex) in hours">
             <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabledHour(hr))"
@@ -1389,7 +1391,7 @@ export default {
                 @click="select('hour', hr)"></li>
           </template>
         </ul>
-        <ul class="minutes">
+        <ul class="minutes" @scroll="keepFocusing">
           <li class="hint" v-text="minuteLabelText"></li>
           <template v-for="(m, mIndex) in minutes">
             <li v-if="!opts.hideDisabledMinutes || (opts.hideDisabledMinutes && !isDisabledMinute(m))"
@@ -1400,7 +1402,7 @@ export default {
                 @click="select('minute', m)"></li>
           </template>
         </ul>
-        <ul class="seconds" v-if="secondType">
+        <ul class="seconds" v-if="secondType" @scroll="keepFocusing">
           <li class="hint" v-text="secondLabelText"></li>
           <template v-for="(s, sIndex) in seconds">
             <li v-if="!opts.hideDisabledSeconds || (opts.hideDisabledSeconds && !isDisabledSecond(s))"
@@ -1411,7 +1413,7 @@ export default {
                 @click="select('second', s)"></li>
           </template>
         </ul>
-        <ul class="apms" v-if="apmType">
+        <ul class="apms" v-if="apmType" @scroll="keepFocusing">
           <li class="hint" v-text="apmLabelText"></li>
           <template v-for="(a, aIndex) in apms">
             <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabledApm(a))"
@@ -1429,7 +1431,7 @@ export default {
         Addeds hundreds of additional event lisenters
       -->
       <template v-if="advancedKeyboard">
-        <ul class="hours" tabindex="-1">
+        <ul class="hours" tabindex="-1" @scroll="keepFocusing">
           <li class="hint" v-text="hourLabelText" tabindex="-1"></li>
           <template v-for="(hr, hIndex) in hours">
             <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabledHour(hr))"
@@ -1451,7 +1453,7 @@ export default {
                 @focus="keepFocusing"></li>
           </template>
         </ul>
-        <ul class="minutes" tabindex="-1">
+        <ul class="minutes" tabindex="-1" @scroll="keepFocusing">
           <li class="hint" v-text="minuteLabelText" tabindex="-1"></li>
           <template v-for="(m, mIndex) in minutes">
             <li v-if="!opts.hideDisabledMinutes || (opts.hideDisabledMinutes && !isDisabledMinute(m))"
@@ -1473,7 +1475,7 @@ export default {
                 @focus="keepFocusing"></li>
           </template>
         </ul>
-        <ul class="seconds" v-if="secondType" tabindex="-1">
+        <ul class="seconds" v-if="secondType" tabindex="-1" @scroll="keepFocusing">
           <li class="hint" v-text="secondLabelText" tabindex="-1"></li>
           <template v-for="(s, sIndex) in seconds">
             <li v-if="!opts.hideDisabledSeconds || (opts.hideDisabledSeconds && !isDisabledSecond(s))"
@@ -1495,7 +1497,7 @@ export default {
                 @focus="keepFocusing"></li>
           </template>
         </ul>
-        <ul class="apms" v-if="apmType" tabindex="-1">
+        <ul class="apms" v-if="apmType" tabindex="-1" @scroll="keepFocusing">
           <li class="hint" v-text="apmLabelText" tabindex="-1"></li>
           <template v-for="(a, aIndex) in apms">
             <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabledApm(a))"
@@ -1625,6 +1627,7 @@ export default {
   padding: 0;
   margin: 0;
   list-style: none;
+  outline: 0;
 
   flex: 1 1 0.00001px;
   overflow-x: hidden;

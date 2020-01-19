@@ -2,6 +2,12 @@
 
 > The Change Log of Vue2 Timepicker `vue2-timepicker`
 
+## v 1.0.8
+
+### Improvements
+
+Keep the dropdown menu open when mouse drag on the hour/minute/second list's scrollbar handler.
+
 ## v 1.0.7
 
 ### Fixes
