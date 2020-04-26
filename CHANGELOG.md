@@ -2,6 +2,18 @@
 
 > The Change Log of Vue2 Timepicker `vue2-timepicker`
 
+## v 1.1.0 _(Pre-release)_
+
+### New
+
+- Support manually input values with the `manual-input` toggle.
+- Added conditional helper classes `is-empty`, `invalid` and `all-selected` to the `<input>` element.
+- Change the `<input>` border to red color when user input is invalid. E.g., when it contains a disabled hour value.
+
+### Improvements
+
+Enable seamless loop from the start or end of a column in `advanced-keyboard` mode.
+
 ## v 1.0.8
 
 ### Improvements
