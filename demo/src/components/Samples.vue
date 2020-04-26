@@ -46,6 +46,8 @@ export default {
       lazyInputData: undefined,
       lazyEventTs: undefined,
 
+      manualStringValue: '8:15 pm',
+
       autoScrollData1: '08:40',
       autoScrollData2: '5:30:20 pm',
 
@@ -67,6 +69,7 @@ export default {
         { title: 'Lazy Event Mode', anchor: 'lazyEvents' },
         { title: '@open and @close event', anchor: 'openAndClose' },
         { title: 'Keyboard Support', anchor: 'kbSupport' },
+        { title: 'Manual Input', anchor: 'manualInput'},
         { title: 'Customized Picker Labels', anchor: 'customPickerLabels' },
         { title: 'Adjust Input Width', anchor: 'inputWidth' },
         { title: 'Auto-Scroll', anchor: 'autoScroll' }
@@ -610,6 +613,32 @@ section#mostlyUsedSamples
         label(for="oneMoreInput") One More Text Input
       p
         input#oneMoreInput.native-input(type="text" placeholder="More Text")
+
+  //- Manual Input
+  sample-block#manualInput
+    template(v-slot:title) Manual Input
+    p(slot="description")
+      | Allow users to input values manually
+    template(v-slot:codes)
+      highlight-code(lang="html" data-title="HTML")
+        | &lt;!-- 24-hour format with empty init value --&gt;
+        | &lt;vue-timepicker manual-input&gt;&lt;/vue-timepicker&gt;
+        |
+        | &lt;!-- 12-hour format with a predefined value --&gt;
+        | &lt;vue-timepicker format="h:mm a" v-model="manualStringValue" manual-input&gt;&lt;/vue-timepicker&gt;
+      highlight-code(lang="javascript" data-title="JS")
+        | data () {
+        |   return {
+        |     manualStringValue: '8:15 pm'
+        |   }
+        | }
+    template(v-slot:preview)
+      b 24-hour format with empty init value
+      p
+        vue-timepicker(manual-input)
+      b 12-hour format with a predefined value
+      p
+        vue-timepicker(format="h:mm a" v-model="manualStringValue" manual-input)
 
   //- Custom Labels
   sample-block#customPickerLabels

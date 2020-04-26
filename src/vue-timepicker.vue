@@ -16,7 +16,8 @@ const DEFAULT_OPTIONS = {
   hideDisabledHours: false,
   hideDisabledMinutes: false,
   hideDisabledSeconds: false,
-  hideDisabledItems: false
+  hideDisabledItems: false,
+  blurDelay: 300
 }
 
 export default {
@@ -59,6 +60,7 @@ export default {
     lazy: { type: Boolean, default: false },
 
     autoScroll: { type: Boolean, default: false },
+    manualInput: { type: Boolean, default: false },
 
     debugMode: { type: Boolean, default: false }
   },
@@ -85,7 +87,12 @@ export default {
       second: '',
       apm: '',
       fullValues: undefined,
-      bakDisplayTime: undefined
+      bakDisplayTime: undefined,
+
+      selectionTimer: undefined,
+      kbInputTimer: undefined,
+      kbInputLog: '',
+      bakCurrentPos: null
     }
   },
 
@@ -168,6 +175,10 @@ export default {
       }
       if (this.hideDisabledSeconds || this.hideDisabledItems) {
         options.hideDisabledSeconds = true
+      }
+
+      if (this.blurDelay && +this.blurDelay > 0) {
+        options.blurDelay = +this.blurDelay
       }
 
       return options
@@ -294,15 +305,44 @@ export default {
       return this.hourRangeIn24HrFormat
     },
 
+    validHoursList () {
+      if (!this.manualInput) { return false }
+      if (this.restrictedHourRange) {
+        if (this.baseOn12Hours) {
+          return this.restrictedHourRange.map(hr => {
+            const l = hr.substr(0, hr.length - 1)
+            const r = hr.substr(-1)
+            return `${this.formatValue(this.hourType, +l)}${r}`
+          })
+        }
+        const list = this.restrictedHourRange.map(hr => {
+          return this.formatValue(this.hourType, +hr)
+        })
+        if (list.length > 1 && list[0] && list[0] === '24') {
+          // Make '24' the last item in k/kk
+          list.push(list.shift())
+        }
+        return list
+      }
+      if (this.baseOn12Hours) {
+        return [].concat([], this.hours.map(hr => `${hr}a`), this.hours.map(hr => `${hr}p`))
+      }
+      return this.hours
+    },
+
     has () {
       const result = {
         am: true,
-        pm: true
+        pm: true,
+        customApmText: false
       }
       if (this.hourRangeIn24HrFormat && this.hourRangeIn24HrFormat.length) {
         const range = [].concat([], this.hourRangeIn24HrFormat)
         result.am = range.some(this.hasAm)
         result.pm = range.some(this.hasPm)
+      }
+      if ((this.amText && this.amText.length) || (this.pmText && this.pmText.length)) {
+        result.customApmText = true
       }
       return result
     },
@@ -401,6 +441,106 @@ export default {
       return {
         width: this.inputWidth
       }
+    },
+
+    tokenRegexBase () {
+      if (!this.manualInput && !this.useStringValue) { return false }
+      let regexStr = `${this.hourType}|${this.minuteType}`
+      if (this.secondType) {
+        regexStr += `|${this.secondType}`
+      }
+      if (this.apmType) {
+        regexStr += `|${this.apmType}`
+      }
+      return regexStr
+    },
+
+    tokenChunks () {
+      if (!this.manualInput && !this.useStringValue) { return false }
+
+      const formatString = String(this.formatString)
+      const tokensRegxStr = `[(${this.tokenRegexBase})]+`
+      const tokensMatchAll = this.getMatchAllByRegex(formatString, tokensRegxStr)
+
+      const tokenChunks = []
+      for (let tkMatch of tokensMatchAll) {
+        const rawToken = tkMatch[0]
+        const tokenMatchItem = {
+          index: tkMatch.index,
+          token: rawToken,
+          type: this.getTokenType(rawToken),
+          needsCalibrate: rawToken.length < 2,
+          len: (rawToken || '').length
+        }
+        tokenChunks.push(tokenMatchItem)
+      }
+      return tokenChunks
+    },
+
+    needsPosCalibrate () {
+      if (!this.manualInput) { return false }
+      return this.tokenChunks.some(chk => chk.needsCalibrate)
+    },
+
+    tokenChunksPos () {
+      if (!this.manualInput) { return false }
+      if (!this.needsPosCalibrate) {
+        return this.tokenChunks.map(chk => {
+          return {
+            token: chk.token,
+            type: chk.type,
+            start: chk.index,
+            end: chk.index + chk.len
+          }
+        })
+      }
+      const list = []
+      let calibrateLen = 0
+      this.tokenChunks.forEach(chk => {
+        let chunkCurrentLen
+        // Fixes for customized AM/PM text
+        if (chk.type === 'apm' && this.has.customApmText) {
+          if (this.apm && this.apm.length) {
+            const customApmText = this.apm.toLowerCase() === 'am' ? this.amText : this.pmText
+            chunkCurrentLen = (customApmText && customApmText.length) ? customApmText.length : chk.len
+          } else {
+            chunkCurrentLen = chk.len
+          }
+        // Others
+        } else {
+          chunkCurrentLen = this[chk.type] && this[chk.type].length ? this[chk.type].length : chk.len
+        }
+        list.push({
+          token: chk.token,
+          type: chk.type,
+          start: chk.index + calibrateLen,
+          end: chk.index + calibrateLen + chunkCurrentLen
+        })
+        if (chk.needsCalibrate && chunkCurrentLen > chk.len) {
+          calibrateLen += (chunkCurrentLen - chk.len)
+        }
+      })
+      return list
+    },
+
+    hasInvalidInput () {
+      if (this.inputIsEmpty) { return false }
+      if (!this.restrictedHourRange && !this.minuteRangeList && !this.secondRangeList) { return false }
+
+      if (!this.isEmptyValue(this.hourType, this.hour) && (!this.isValidValue(this.hourType, this.hour) || this.isDisabledHour(this.hour))) {
+        return true
+      }
+      if (!this.isEmptyValue(this.minuteType, this.minute) && (!this.isValidValue(this.minuteType, this.minute) || this.isDisabledMinute(this.minute))) {
+        return true
+      }
+      if (!this.isEmptyValue(this.secondType, this.second) && (!this.isValidValue(this.secondType, this.second) || this.isDisabledSecond(this.second))) {
+        return true
+      }
+      if (!this.isEmptyValue(this.apmType, this.apm) && (!this.isValidValue(this.apmType, this.apm) || this.isDisabledApm(this.apm))) {
+        return true
+      }
+
+      return false
     }
   },
 
@@ -448,14 +588,20 @@ export default {
           }
           return String(i)
         case 'k':
-          return String(i + 1)
+          if (i === 0) {
+            return '24'
+          }
+          return String(i)
         case 'hh':
           if (i === 0) {
             return '12'
           }
           return i < 10 ? `0${i}` : String(i)
         case 'kk':
-          return (i + 1) < 10 ? `0${i + 1}` : String(i + 1)
+          if (i === 0) {
+            return '24'
+          }
+          return i < 10 ? `0${i}` : String(i)
         default:
           return ''
       }
@@ -499,7 +645,11 @@ export default {
       const hoursCount = (this.baseOn12Hours) ? 12 : 24
       const hours = []
       for (let i = 0; i < hoursCount; i++) {
-        hours.push(this.formatValue(this.hourType, i))
+        if (this.hourType === 'k' || this.hourType === 'kk') {
+          hours.push(this.formatValue(this.hourType, i + 1))
+        } else {
+          hours.push(this.formatValue(this.hourType, i))
+        }
       }
       this.hours = hours
     },
@@ -574,6 +724,12 @@ export default {
       this.timeValue = timeValue
     },
 
+    getMatchAllByRegex (testString, regexString) {
+      const str = 'polyfillTest'
+      const needsPolyfill = Boolean(!str.matchAll || typeof str.matchAll !== 'function')
+      return needsPolyfill ? this.polyfillMatchAll(testString, regexString) : testString.matchAll(new RegExp(regexString, 'g'))
+    },
+
     readStringValues (stringValue) {
       // Failsafe for empty `v-model` string
       if (!stringValue || !stringValue.length) {
@@ -582,21 +738,11 @@ export default {
       }
 
       const formatString = String(this.formatString)
+      const tokensRegxStr = `[(${this.tokenRegexBase})]+`
+      const othersRegxStr = `[^(${this.tokenRegexBase})]+`
 
-      let regxStr = `${this.hourType}|${this.minuteType}`
-      if (this.secondType) {
-        regxStr += `|${this.secondType}`
-      }
-      if (this.apmType) {
-        regxStr += `|${this.apmType}`
-      }
-
-      const tokensRegxStr = `[(${regxStr})]+`
-      const othersRegxStr = `[^(${regxStr})]+`
-
-      const needsPolyfill = Boolean(!formatString.matchAll || typeof formatString.matchAll !== 'function')
-      const tokensMatchAll = needsPolyfill ? this.matchAllPolyfill(formatString, tokensRegxStr) : formatString.matchAll(new RegExp(tokensRegxStr, 'g'))
-      const othersMatchAll = needsPolyfill ? this.matchAllPolyfill(formatString, othersRegxStr) : formatString.matchAll(new RegExp(othersRegxStr, 'g'))
+      const tokensMatchAll = this.getMatchAllByRegex(formatString, tokensRegxStr)
+      const othersMatchAll = this.getMatchAllByRegex(formatString, othersRegxStr)
 
       const chunks = []
       const tokenChunks = []
@@ -657,7 +803,7 @@ export default {
       }
     },
 
-    matchAllPolyfill (targetString, regxStr) {
+    polyfillMatchAll (targetString, regxStr) {
       const matchesList = targetString.match(new RegExp(regxStr, 'g'))
       const result = []
       const indicesReg = []
@@ -881,17 +1027,6 @@ export default {
       return value >= 12 && value < 24
     },
 
-    doubleCheckHourValue () {
-      if (!this.hour || !this.apm || !this.restrictedHourRange || !this.hourRangeIn24HrFormat) { return }
-      const hourIn24 = this.translate12hRange(`${this.hour}${this.apm.substr(0, 1)}`)
-      if (!this.hourRangeIn24HrFormat.includes(hourIn24)) {
-        this.hour = ''
-        if (this.debugMode) {
-          this.debugLog(`After switching AM/PM, the hour value is no longer in the "hour-range". Reset it to empty now.`)
-        }
-      }
-    },
-
     isDisabledHour (value) {
       if (!this.restrictedHourRange) { return false }
       if (this.baseOn12Hours) {
@@ -929,6 +1064,10 @@ export default {
 
     forceApmSelection () {
       if (!this.apm || !this.apm.length) {
+        if (this.manualInput) {
+          // Skip this to allow users to paste a string value from clipboard
+          return
+        }
         if (this.has.am) {
           this.apm = this.apmType === 'A' ? 'AM' : 'am'
         } else if (this.has.pm) {
@@ -973,15 +1112,14 @@ export default {
         }
       }
 
-      if (this.restrictedHourRange && this.baseOn12Hours) {
-        if (this.showDropdown) {
+      if (this.showDropdown) {
+        if (this.manualInput) { return }
+        if (this.restrictedHourRange && this.baseOn12Hours) {
           this.forceApmSelection()
-          this.checkForAutoScroll()
-        } else {
-          this.emptyApmSelection()
         }
-      } else if (this.showDropdown) {
         this.checkForAutoScroll()
+      } else if (this.restrictedHourRange && this.baseOn12Hours) {
+        this.emptyApmSelection()
       }
     },
 
@@ -998,9 +1136,6 @@ export default {
       } else if (type === 'apm') {
         if (this.isDisabledApm(value)) { return }
         this.apm = value
-        if (this.restrictedHourRange) {
-          this.doubleCheckHourValue()
-        }
       }
     },
 
@@ -1021,11 +1156,12 @@ export default {
     //
 
     checkForAutoScroll () {
-      if (this.autoScroll && !this.inputIsEmpty) {
+      if (this.inputIsEmpty) { return }
+      if (this.autoScroll) {
         this.$nextTick(() => {
           this.scrollToSelectedValues()
         })
-      } else if (!this.inputIsEmpty && this.advancedKeyboard) {
+      } else if (this.advancedKeyboard) {
         // Auto-focus on selected hour value for advanced-keyboard
         this.$nextTick(() => {
           this.scrollToSelected('hours')
@@ -1080,12 +1216,11 @@ export default {
     debounceBlur () {
       if (this.disabled) { return }
       this.isFocusing = false
-      const delay = +(this.blurDelay || 0) || 300
       window.clearTimeout(this.debounceTimer)
       this.debounceTimer = window.setTimeout(() => {
         window.clearTimeout(this.debounceTimer)
         this.onBlur()
-      }, delay)
+      }, this.opts.blurDelay)
     },
 
     onBlur () {
@@ -1111,7 +1246,7 @@ export default {
       return this.$el.querySelectorAll(`ul.${columnClass} > li.active:not(.hint)`)
     },
 
-    getSideItems (columnClass, dataKey, getPrevious = false) {
+    getClosestSibling (columnClass, dataKey, getPrevious = false) {
       const siblingsInCol = this.validItemsInCol(columnClass)
       const selfIndex = Array.prototype.findIndex.call(siblingsInCol, (sbl) => {
         return sbl.getAttribute('data-key') === dataKey
@@ -1119,37 +1254,42 @@ export default {
 
       // Already the first item
       if (getPrevious && selfIndex === 0) {
-        if (this.debugMode) {
-          this.debugLog(`"${dataKey}" is the first valid item in "${columnClass}" list already`)
-        }
-        return
+        return siblingsInCol[siblingsInCol.length - 1]
       }
       // Already the last item
       if (!getPrevious && selfIndex === siblingsInCol.length - 1) {
-        if (this.debugMode) {
-          this.debugLog(`"${dataKey}" is the last valid item in "${columnClass}" list already`)
-        }
-        return
+        return siblingsInCol[0]
+      }
+      // Selected value not in the valid values list
+      if (selfIndex < 0) {
+        return siblingsInCol[0]
       }
 
       if (getPrevious) {
         return siblingsInCol[selfIndex - 1]
-      } else {
-        return siblingsInCol[selfIndex + 1]
+      }
+      return siblingsInCol[selfIndex + 1]
+    },
+
+    prevItem (columnClass, dataKey, isManualInput) {
+      const targetItem = this.getClosestSibling(columnClass, dataKey, true)
+      if (targetItem) {
+        if (isManualInput) {
+          return targetItem
+        } else {
+          targetItem.focus()
+        }
       }
     },
 
-    prevItem (columnClass, dataKey) {
-      const targetItem = this.getSideItems(columnClass, dataKey, true)
+    nextItem (columnClass, dataKey, isManualInput) {
+      const targetItem = this.getClosestSibling(columnClass, dataKey, false)
       if (targetItem) {
-        targetItem.focus()
-      }
-    },
-
-    nextItem (columnClass, dataKey) {
-      const targetItem = this.getSideItems(columnClass, dataKey, false)
-      if (targetItem) {
-        targetItem.focus()
+        if (isManualInput) {
+          return targetItem
+        } else {
+          targetItem.focus()
+        }
       }
     },
 
@@ -1251,6 +1391,376 @@ export default {
     },
 
     //
+    // Manual Input
+    //
+
+    onMouseDown () {
+      if (!this.manualInput) { return }
+      window.clearTimeout(this.selectionTimer)
+      this.selectionTimer = window.setTimeout(() => {
+        window.clearTimeout(this.selectionTimer)
+        if (this.$refs && this.$refs.input) {
+          const nearestSlot = this.getNearesChunkByPos(this.$refs.input.selectionStart || 0)
+          this.debounceSetInputSelection(nearestSlot)
+        }
+      }, 50)
+    },
+
+    keyDownHandler (evt) {
+      if (evt.isComposing || evt.keyCode === 229) {
+        // Skip IME inputs
+        evt.preventDefault()
+        evt.stopPropagation()
+        return false
+      }
+      // Numbers
+      if ((evt.keyCode >= 48 && evt.keyCode <= 57) || (evt.keyCode >= 96 && evt.keyCode <= 105)) {
+        evt.preventDefault()
+        this.keyboardInput(evt.key)
+      // A|P|M
+      } else if ([65, 80, 77].includes(evt.keyCode)) {
+        evt.preventDefault()
+        this.keyboardInput(evt.key, true)
+      // Arrow keys
+      } else if (evt.keyCode >= 37 && evt.keyCode <= 40) {
+        evt.preventDefault()
+        this.arrowHandler(evt)
+      // Delete|Backspace
+      } else if (evt.keyCode === 8 || evt.keyCode === 46) {
+        evt.preventDefault()
+        this.clearTime()
+      // Tab
+      } else if (evt.keyCode === 9) {
+        this.tabHandler(evt)
+      // Prevent any Non-ESC and non-pasting inputs
+      } else if (evt.keyCode !== 27 && !(evt.metaKey || evt.ctrlKey)) {
+        evt.preventDefault()
+      }
+    },
+
+    onCompostionStart (evt) {
+      evt.preventDefault()
+      evt.stopPropagation()
+      this.bakCurrentPos = this.getCurrentTokenChunk()
+      return false
+    },
+
+    onCompostionEnd (evt) {
+      evt.preventDefault()
+      evt.stopPropagation()
+
+      const cpsData = evt.data
+      let inputIsCustomApmText = false
+      if (this.has.customApmText) {
+        inputIsCustomApmText = this.isCustomApmText(cpsData)
+      }
+      if (inputIsCustomApmText) {
+        this.select('apm', inputIsCustomApmText)
+      }
+
+      if (this.has.customApmText) {
+        this.$refs.input.value = this.customDisplayTime
+      } else {
+        this.$refs.input.value = this.displayTime
+      }
+
+      this.$nextTick(() => {
+        if (this.bakCurrentPos) {
+          const bakPos = JSON.parse(JSON.stringify(this.bakCurrentPos))
+          if (inputIsCustomApmText) {
+            bakPos.end = (bakPos.start + cpsData.length)
+          }
+          this.debounceSetInputSelection(bakPos)
+          this.bakCurrentPos = null
+        }
+      })
+      return false
+    },
+
+    pasteHandler (evt) {
+      evt.preventDefault()
+      let pastingText = (evt.clipboardData || window.clipboardData).getData('text')
+      if (this.debugMode) {
+        this.debugLog(`Pasting value "${pastingText}" from clipboard`)
+      }
+      if (!pastingText || !pastingText.length) { return }
+
+      // Replace custom AM/PM text (if any)
+      if (this.has.customApmText) {
+        pastingText = this.replaceCustomApmText(pastingText)
+      }
+
+      if (this.inputIsEmpty) {
+        this.readStringValues(pastingText)
+      } else {
+        this.kbInputLog = pastingText.substr(-2, 2)
+        this.debounceSetKbInput()
+      }
+    },
+
+    arrowHandler (evt) {
+      const direction = { 37: 'L', 38: 'U', 39: 'R', 40: 'D' }[evt.keyCode]
+      if (direction === 'U' || direction === 'D') {
+        if (this.inputIsEmpty) {
+          this.selectFirstValidValue()
+        } else {
+          const currentChunk = this.getCurrentTokenChunk()
+          if (!currentChunk) {
+            this.selectFirstValidValue()
+            return
+          }
+          const tokenType = currentChunk.type
+          this.getClosestValidItemInCol(tokenType, this[tokenType], direction)
+          const newChunkPos = this.getCurrentTokenChunk()
+          this.debounceSetInputSelection(newChunkPos)
+        }
+      } else if (direction === 'R') {
+        this.toLateralToken(false)
+      } else if (direction === 'L') {
+        this.toLateralToken(true)
+      }
+    },
+
+    tabHandler (evt) {      
+      if (!this.inputIsEmpty && this.tokenChunksPos && this.tokenChunksPos.length) {
+        const currentChunk = this.getCurrentTokenChunk()
+        if (!currentChunk) { return }
+        const lastChunk = this.tokenChunksPos[this.tokenChunksPos.length - 1]
+        if (currentChunk.token !== lastChunk.token) {
+          evt.preventDefault()
+          this.toLateralToken(false)
+        }
+      }
+    },
+
+    keyboardInput (newChar, isApm = false) {
+      const currentChunk = this.getCurrentTokenChunk()
+      if (!currentChunk || (currentChunk.type !== 'apm' && isApm) || (currentChunk.type === 'apm' && !isApm)) { return }
+      this.kbInputLog = `${this.kbInputLog.substr(-1)}${newChar}`
+      this.debounceSetKbInput()
+    },
+
+    debounceSetKbInput () {
+      window.clearTimeout(this.kbInputTimer)
+      this.kbInputTimer = window.setTimeout(() => {
+        window.clearTimeout(this.kbInputTimer)
+        this.setKbInput(this.kbInputLog)
+        this.kbInputLog = ''
+      }, 500)
+    },
+
+    setKbInput (value) {
+      const currentChunk = this.getCurrentTokenChunk()
+      if (!currentChunk) { return }
+      const chunkType = currentChunk.type
+      const chunkToken = currentChunk.token
+
+      let validValue
+      if (chunkType === 'apm') {
+        if (value.includes('a') || value.includes('A')) {
+          validValue = 'am'
+        } else if (value.includes('p') || value.includes('P')) {
+          validValue = 'pm'
+        }
+        if (validValue) {
+          validValue = chunkToken === 'A' ? validValue.toUpperCase() : validValue
+        }
+      } else {
+        if (this.isValidValue(chunkToken, value)) {
+          validValue = value
+        } else {
+          let lastInputValue = value.substr(-1)
+          if (chunkToken.length === 2 && +lastInputValue < 10) {
+            lastInputValue = `0${lastInputValue}`
+          }
+          if (this.isValidValue(chunkToken, lastInputValue)) {
+            validValue = lastInputValue
+          }
+        }
+      }
+
+      if (validValue) {
+        this.select(chunkType, validValue)
+        const newChunkPos = this.getCurrentTokenChunk()
+        this.debounceSetInputSelection(newChunkPos)      
+      }
+      if (this.debugMode) {
+        if (validValue) {
+          this.debugLog(`Successfully set value "${validValue}" from latest input "${value}" for column "${chunkType}"`)
+        } else {
+          this.debugLog(`Value "${value}" is invalid/disabled in the "${chunkType}" column`)
+        }
+      }
+    },
+
+    getNearesChunkByPos (startPos) {
+      if (!this.tokenChunksPos || !this.tokenChunksPos.length) { return }
+      let nearest
+      let nearestDelta = -1
+      for (let i = 0; i < this.tokenChunksPos.length; i++) {
+        const chunk = JSON.parse(JSON.stringify(this.tokenChunksPos[i]))
+        if (chunk.start === startPos) {
+          return chunk
+        }
+        const delta = Math.abs(chunk.start - startPos)
+        if (nearestDelta < 0) {
+          nearest = chunk
+          nearestDelta = delta
+        } else {
+          if (nearestDelta <= delta) {
+            return nearest
+          }
+          nearestDelta = delta
+          nearest = chunk
+        }
+      }
+      return nearest
+    },
+
+    selectFirstValidValue () {
+      if (!this.tokenChunksPos || !this.tokenChunksPos.length) { return }
+      const firstTokenType = this.tokenChunksPos[0].type
+      if (firstTokenType) {
+        this.selectFirstValidValueInCol(firstTokenType)   
+      }
+    },
+
+    selectFirstValidValueInCol (tokenType) {
+      if (tokenType === 'hour') {
+        this.selectFirstValidHour()
+      } else {
+        this.getClosestValidItemInCol(tokenType, this[tokenType])
+      }
+    },
+
+    selectFirstValidHour () {
+      if (!this.validHoursList || !this.validHoursList.length) { return }
+
+      const hourToken = this.tokenChunksPos.find(chk => chk.token === this.hourType)
+      if (!hourToken) {return }
+
+      this.setManualHour(this.validHoursList[0])
+      const newChunkPos = this.getSlotPosByToken(hourToken)
+      this.debounceSetInputSelection(newChunkPos)
+    },
+
+    getClosestValidItemInCol (column, currentValue, direction = 'U') {
+      if (column === 'hour') {
+        if (!this.validHoursList || !this.validHoursList.length) {
+          if (this.debugMode) {
+            this.debugLog(`No valid hour values found, please check your "hour-range" config\nhour-range: ${JSON.stringify(this.hourRange)}`)
+          }
+          return
+        }
+        const currentIndex = this.validHoursList.findIndex(item => {
+          if (!this.baseOn12Hours) {
+            return item === currentValue
+          } else {
+            const valueKey = `${currentValue}${(this.apm || '').toLowerCase() === 'pm' ? 'p' : 'a'}` 
+            return item === valueKey
+          }
+        })
+        let nextIndex
+        if (currentIndex === -1) {
+          nextIndex = 0
+        } else if (direction === 'D') {
+          nextIndex = currentIndex === 0 ? this.validHoursList.length - 1 : currentIndex - 1
+        } else {
+          nextIndex = (currentIndex + 1) % this.validHoursList.length
+        }
+        const nextItem = this.validHoursList[nextIndex]
+        this.setManualHour(nextItem)
+      } else {
+        const nextItem = direction === 'D' ? this.prevItem(`${column}s`, this[column], true) : this.nextItem(`${column}s`, this[column], true)
+        if (nextItem) {
+          this.select(column, nextItem.getAttribute('data-key'))
+        }
+      }
+    },
+
+    setManualHour (nextItem) {
+      if (this.is12hRange(nextItem)) {
+        const hourT = nextItem.match(/^(\d{1,2})(a|p|A|P)$/)
+        const apmValue = hourT[2] === 'a' ? 'AM' : 'PM'
+        this.select('apm', this.apmType === 'a' ? apmValue.toLowerCase() : apmValue)
+        this.select('hour', hourT[1])
+      } else {
+        this.select('hour', nextItem)
+      }
+    },
+
+    debounceSetInputSelection ({start = 0, end = 0 }) {
+      this.$nextTick(() => {
+        this.setInputSelectionRange(start, end)
+      })
+      window.clearTimeout(this.selectionTimer)
+      this.selectionTimer = window.setTimeout(() => {
+        window.clearTimeout(this.selectionTimer)
+        // Double-check selection for 12hr format
+        if (this.$refs.input && (this.$refs.input.selectionStart !== start || this.$refs.input.selectionEnd !== end)) {
+          this.setInputSelectionRange(start, end)
+        }
+      }, 30)
+    },
+
+    setInputSelectionRange (start, end) {
+      if (this.$refs && this.$refs.input) {
+        this.$refs.input.setSelectionRange(start, end)
+      }
+    },
+
+    getCurrentTokenChunk () {
+      return this.getNearesChunkByPos((this.$refs.input && this.$refs.input.selectionStart) || 0)
+    },
+
+    getSlotPosByToken (slot) {
+      if (!this.tokenChunksPos) { return { start: 0, end: 0 } }
+      const targetChunk = this.tokenChunksPos.find(chk => chk.token === slot.token)
+      return targetChunk ? targetChunk : { start: 0, end: 0 }
+    },
+
+    toLateralToken (toLeft) {
+      const currentChunk = this.getCurrentTokenChunk()
+      if (!currentChunk) {
+        this.selectFirstValidValue()
+        return
+      }
+      const currentChunkIndex = this.tokenChunksPos.findIndex(chk => chk.start === currentChunk.start)
+      if ((!toLeft && currentChunkIndex >= this.tokenChunksPos.length - 1) || (toLeft && currentChunkIndex === 0)) {
+        if (this.debugMode) {
+          if (toLeft) {
+            this.debugLog('You\'re in the leftmost slot already')
+          } else {
+            this.debugLog('You\'re in the rightmost slot already')
+          }
+        }
+        return
+      }
+      const targetSlotPos = toLeft ? this.tokenChunksPos[currentChunkIndex - 1] : this.tokenChunksPos[currentChunkIndex + 1]
+      this.debounceSetInputSelection(targetSlotPos)
+    },
+
+    isCustomApmText (inputData) {
+      if (!inputData || !inputData.length) { return false }
+      if (this.amText && this.amText === inputData) {
+        return this.apmType === 'A' ? 'AM' : 'am'
+      }
+      if (this.pmText && this.pmText === inputData) {
+        return this.apmType === 'A' ? 'PM' : 'pm'
+      }
+      return false
+    },
+
+    replaceCustomApmText (inputString) {
+      if (this.amText && this.amText.length && inputString.includes(this.amText)) {
+        return inputString.replace(new RegExp(this.amText, 'g'), this.apmType === 'A' ? 'AM' : 'am')
+      } else if (this.pmText && this.pmText.length && inputString.includes(this.pmText)) {
+        return inputString.replace(new RegExp(this.pmText, 'g'), this.apmType === 'A' ? 'PM' : 'pm')
+      }
+      return inputString
+    },
+
+    //
     // Helpers
     //
 
@@ -1311,6 +1821,21 @@ export default {
       return ''
     },
 
+    getTokenType (token) {
+      switch (token) {
+        case `${this.hourType}`:
+          return 'hour'
+        case `${this.minuteType}`:
+          return 'minute'
+        case `${this.secondType}`:
+          return 'second'
+        case `${this.apmType}`:
+          return 'apm'
+        default:
+          return ''
+      }
+    },
+
     debugLog (logText) {
       if (!logText || !logText.length) { return }
       let identifier = ''
@@ -1350,19 +1875,23 @@ export default {
 
   mounted () {
     window.clearTimeout(this.debounceTimer)
+    window.clearTimeout(this.selectionTimer)
+    window.clearTimeout(this.kbInputTimer)
     this.renderFormat()
   },
 
   beforeDestroy () {
     window.clearTimeout(this.debounceTimer)
+    window.clearTimeout(this.selectionTimer)
+    window.clearTimeout(this.kbInputTimer)
   }
 }
 </script>
 
 <template>
 <span class="vue__time-picker time-picker" :style="inputWidthStyle">
-  <input type="text" class="display-time"
-         :class="[inputClass, {'disabled': disabled}]"
+  <input type="text" class="display-time" ref="input"
+         :class="[inputClass, {'is-empty': inputIsEmpty, 'invalid': hasInvalidInput, 'all-selected': allValueSelected, 'disabled': disabled}]"
          :style="inputWidthStyle"
          :id="id"
          :name="name"
@@ -1370,9 +1899,14 @@ export default {
          :placeholder="placeholder ? placeholder : formatString"
          :tabindex="disabled ? -1 : tabindex"
          :disabled="disabled"
-         readonly
+         :readonly="!manualInput"
          @focus="onFocus"
          @blur="debounceBlur"
+         @mousedown="onMouseDown"
+         @keydown="keyDownHandler"
+         @compositionstart="onCompostionStart"
+         @compositionend="onCompostionEnd"
+         @paste="pasteHandler"
          @keydown.esc.exact="escBlur" />
   <span class="clear-btn" v-if="!showDropdown && showClearBtn" @click="clearTime" tabindex="-1">&times;</span>
   <div class="time-picker-overlay" v-if="showDropdown" @click="toggleDropdown" tabindex="-1"></div>
@@ -1387,6 +1921,7 @@ export default {
                 :key="hIndex"
                 :class="{active: hour === hr}"
                 :disabled="isDisabledHour(hr)"
+                :data-key="hr"
                 v-text="hr"
                 @click="select('hour', hr)"></li>
           </template>
@@ -1398,6 +1933,7 @@ export default {
                 :key="mIndex"
                 :class="{active: minute === m}"
                 :disabled="isDisabledMinute(m)"
+                :data-key="m"
                 v-text="m"
                 @click="select('minute', m)"></li>
           </template>
@@ -1409,6 +1945,7 @@ export default {
                 :key="sIndex"
                 :class="{active: second === s}"
                 :disabled="isDisabledSecond(s)"
+                :data-key="s"
                 v-text="s"
                 @click="select('second', s)"></li>
           </template>
@@ -1420,6 +1957,7 @@ export default {
                 :key="aIndex"
                 :class="{active: apm === a}"
                 :disabled="isDisabledApm(a)"
+                :data-key="a"
                 v-text="apmDisplayText(a)"
                 @click="select('apm', a)"></li>
           </template>
@@ -1545,6 +2083,11 @@ export default {
   height: 2.2em;
   padding: 0.3em 0.5em;
   font-size: 1em;
+}
+
+.vue__time-picker input.display-time.invalid {
+  border-color: #cc0033;
+  outline-color: #cc0033;
 }
 
 .vue__time-picker input.display-time:disabled,

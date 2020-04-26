@@ -487,6 +487,13 @@ Advance Keyboard support (enabled with `advanced-keyboard`):
 
 Please be aware that after putting the `advanced-keyboard` on, hundreds of additional keyboard event listeners are going to be attached to the component. The amount of listeners depends on how many hours, minutes, and seconds value you enabled in the current Timepicker.
 
+### Manual Input Support
+
+```html
+<vue-timepicker manual-input></vue-timepicker>
+```
+Let users to add or change values through the `<input>` box besides the dropdown picker.
+
 ### Blur Delay
 
 ```html
@@ -575,6 +582,7 @@ Prop                      | Type               | Required | Default Value
 **hide-disabled-seconds** | _Boolean_          | no       | false
 **hide-disabled-items**   | _Boolean_          | no       | false
 **advanced-keyboard**     | _Boolean_          | no       | false
+**manual-input**          | _Boolean_          | no       | false
 **blur-delay**            | _Number_           | no       | 300
 **lazy**                  | _Boolean_          | no       | false
 **auto-scroll**           | _Boolean_          | no       | false
