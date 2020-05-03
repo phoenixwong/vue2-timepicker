@@ -7,7 +7,7 @@
 
 ---
 
-💡 Dead repo recharged in 2019 🔋
+💡 Dead repo recharged 🔋
 
 ---
 
@@ -492,7 +492,7 @@ Please be aware that after putting the `advanced-keyboard` on, hundreds of addit
 ```html
 <vue-timepicker manual-input></vue-timepicker>
 ```
-Let users to add or change values through the `<input>` box besides the dropdown picker.
+Let users add or change values through the `<input>` box besides the dropdown picker.
 
 ### Blur Delay
 
@@ -597,6 +597,7 @@ Prop              | Type                        | Required | Default Value
 **name**          | _String_                    | no       | _undefined_
 **placeholder**   | _String_                    | no       | _undefined_
 **tabindex**      | _Number_                    | no       | 0
+**autocomplete**  | _String_                    | no       | 'off'
 **input-class**   | _String_, _Array_, _Object_ | no       | _undefined_
 **input-width**   | _String_                    | no       | '10em'
 
@@ -632,6 +633,28 @@ When `placeholder` is undefined, timepicker takes the determined format string i
 <vue-timepicker></vue-timepicker>
 <!-- -> "HH:mm" -->
 ```
+
+### Input `autocomplete` Attribute
+
+> **NOTE:** To use this property, you MUST ENABLE the `manual-input` mode _(v.1.1.0+)_ in the first place.
+
+```html
+<!-- In Vue Template -->
+<vue-timepicker name="starttime" autocomplete="on" manual-input></vue-timepicker>
+```
+
+```html
+<!-- HTML result -->
+<span class="vue__time-picker time-picker">
+  <input class="display-time" name="starttime" type="text" autocomplete="on">
+  <!-- ... -->
+</span>
+```
+
+When enabled, it accepts any string value supported by the HTML input `autocomplete` attribute. The value is assigned to the embedding text input, which means it follows form autofill rules and configs set in the browser level. For example, most of the browsers require the input to have a `name` and/or `id` attribute. Some browsers, like Firefox, demand the input to be a descendant of a `<form>` element.
+
+Please refer to the [HTML documentation](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofill) and the developer guideline of each browser for more information (i.e., [MDN docs here](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete)).
+
 
 ### The `input-class`
 
@@ -716,6 +739,16 @@ data () {
 
 <vue-timepicker @open="dropdownStatus = 'opened'" @close="dropdownStatus = 'closed'"></vue-timepicker>
 ```
+
+## Helper CSS Class Names
+
+Started from `v.1.1.0+`, Vue Timepicker will add additional CSS classes to the `<input>` element base on the state of the current input value.
+
+- **invalid**: One or more fields containing an invalid or disabled value.
+  - Additional CSS Style: The `<input>` border turns red.
+- **is-empty**: The input value (_v-model_) is empty. No additional style.
+- **all-selected**: All fields (hour/minute/second/apm) required by the `format` string are not empty. No additional style.
+
 
 ## Miscellaneous Props API
 

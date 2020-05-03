@@ -47,6 +47,7 @@ export default {
     placeholder: { type: String },
     tabindex: { type: [ Number, String ], default: 0 },
     inputWidth: { type: String },
+    autocomplete: { type: String, default: 'off' },
 
     hourLabel: { type: String },
     minuteLabel: { type: String },
@@ -798,7 +799,7 @@ export default {
         }
       } else {
         if (this.debugMode) {
-          this.debugLog(`The input string in "v-model" does NOT match the "format" pattern\nformat: ${this.formatString}\nv-model: ${this.value}`)
+          this.debugLog(`The input string in "v-model" does NOT match the "format" pattern\nformat: ${this.formatString}\nv-model: ${stringValue}`)
         }
       }
     },
@@ -1145,6 +1146,10 @@ export default {
       this.minute = ''
       this.second = ''
       this.apm = ''
+
+      if (this.manualInput && this.$refs && this.$refs.input && this.$refs.input.value.length) {
+        this.$refs.input.value = ''
+      }
 
       if (this.lazy) {
         this.fillValues(true)
@@ -1593,6 +1598,15 @@ export default {
       }
     },
 
+    // Form Autofill
+    onChange () {
+      if (!this.$refs || !this.$refs.input || !this.manualInput) { return }
+      const autoFillValue = this.$refs.input.value || ''
+      if (autoFillValue && autoFillValue.length) {
+        this.readStringValues(autoFillValue)
+      }
+    },
+
     getNearesChunkByPos (startPos) {
       if (!this.tokenChunksPos || !this.tokenChunksPos.length) { return }
       let nearest
@@ -1900,7 +1914,9 @@ export default {
          :tabindex="disabled ? -1 : tabindex"
          :disabled="disabled"
          :readonly="!manualInput"
+         :autocomplete="autocomplete"
          @focus="onFocus"
+         @change="onChange"
          @blur="debounceBlur"
          @mousedown="onMouseDown"
          @keydown="keyDownHandler"
