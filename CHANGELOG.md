@@ -9,6 +9,7 @@
 - Support manually input values with the `manual-input` toggle.
 - Added conditional helper classes `is-empty`, `invalid` and `all-selected` to the `<input>` element.
 - Change the `<input>` border to red color when user input is invalid. E.g., when it contains a disabled hour value.
+- Support `autocomplete` attribute.
 
 ### Improvements
 
