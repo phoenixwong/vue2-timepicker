@@ -68,6 +68,7 @@ export default {
       disablePicker: false,
       closeOnComplete: false,
       advancedKeyboard: false,
+      manualInput: false,
       lazyMode: false,
       autoScroll: false,
       debugMode: false,
@@ -174,6 +175,10 @@ export default {
 
       if (this.advancedKeyboard) {
         start += ('\n  advanced-keyboard')
+      }
+
+      if (this.manualInput) {
+        start += ('\n  manual-input')
       }
 
       if (this.hideClearBtn) {
@@ -750,6 +755,18 @@ section#playground
             input(v-model="advancedKeyboard" type="radio" id="advanced_kb_false" name="advanced_kb", :value="false")
             | &nbsp;Disable
 
+      #manualInput.config-block
+        h3.subtitle
+          a.anchor #
+          | Manually Input Support
+        config-row(is-group)
+          label.options(for="manual_input_true")
+            input(v-model="manualInput" type="radio" id="manual_input_true" name="manual_input", :value="true")
+            | &nbsp;Enable
+          label.options(for="manual_input_false")
+            input(v-model="manualInput" type="radio" id="manual_input_false" name="manual_input", :value="false")
+            | &nbsp;Disable
+
       #blurDelay.config-block
         h3.subtitle
           a.anchor #
@@ -791,6 +808,7 @@ section#playground
                        :second-range="(showSeconds && customRange.second) ? secondRange : null"
                        :close-on-complete="closeOnComplete"
                        :advanced-keyboard="advancedKeyboard"
+                       :manual-input="manualInput"
                        :blur-delay="blurDelay"
                        :hide-clear-button="hideClearBtn"
                        :disabled="disablePicker"
