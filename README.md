@@ -601,7 +601,7 @@ Prop              | Type                        | Required | Default Value
 **input-class**   | _String_, _Array_, _Object_ | no       | _undefined_
 **input-width**   | _String_                    | no       | '10em'
 
-Timepicker now supports `id`, `name`, `placeholder`, and `tabindex` like common form elements. These values are assigned to the `<input type="text" class="display-time">` within the component.
+Timepicker supports `id`, `name`, `placeholder`, and `tabindex` like common form elements. These values are assigned to the `<input type="text" class="display-time">` within the component.
 
 ### Input `id`, `name` and `tabindex`
 
@@ -651,7 +651,7 @@ When `placeholder` is undefined, timepicker takes the determined format string i
 </span>
 ```
 
-When enabled, it accepts any string value supported by the HTML input `autocomplete` attribute. The value is assigned to the embedding text input, which means it follows form autofill rules and configs set in the browser level. For example, most of the browsers require the input to have a `name` and/or `id` attribute. Some browsers, like Firefox, demand the input to be a descendant of a `<form>` element.
+When enabled, it accepts any string value supported by the HTML input `autocomplete` attribute. The value is assigned to the embedding text `<input>`, which means it follows form autofill rules and configs set in the browser level. For example, most of the browsers require the input to have a `name` and/or `id` attribute. Some browsers, like Firefox, demand the input to be a descendant of a `<form>` element.
 
 Please refer to the [HTML documentation](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofill) and the developer guideline of each browser for more information (i.e., [MDN docs here](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete)).
 
@@ -720,13 +720,15 @@ Event          | Arguments      | Description
 **change**     | (_eventData_)  | Emit after value changes
 **open**       | &nbsp;         | Emit when the dropdown opens
 **close**      | &nbsp;         | Emit when the dropdown closes
+**focus**      | &nbsp;         | Emit when the user start focusing on the Timepicker
+**blur**       | &nbsp;         | Emit when the user blurs the Timepicker
+**error**      | (_eventData_)  | Emit when the input value becomes invalid
 
 ### The `open` and `close` Event of the Dropdown Picker
 
 Help to identify the current status of the dropdown picker
 
 ```javascript
-// Define a variable for logging the status
 data () {
   return {
     dropdownStatus: 'closed'
@@ -739,6 +741,58 @@ data () {
 
 <vue-timepicker @open="dropdownStatus = 'opened'" @close="dropdownStatus = 'closed'"></vue-timepicker>
 ```
+
+### The `focus` and `blur` Event
+
+Help to identify focus/blur state of the Vue Timepicker. Especially useful in cases where the dropdown is force hidden by `hide-dropdown` under the Manual Input mode. 
+
+```javascript
+data () {
+  return {
+    focusState: 'blurred'
+  }
+}
+```
+
+```html
+<p>Focus State: I'm {{focusState}}!</p>
+
+<vue-timepicker manual-input hide-dropdown @focus="focusState = 'focused'" @blur="focusState = 'blurred'"></vue-timepicker>
+```
+
+### The `error` event
+
+Starts from `v.1.1.0+`, Timepicker will emit an `error` event when the current input value becomes invalid. E.g., when it contains an hour value that is not in the `hour-range` list or a minute value that doesn't fit in the `minute-interval`.
+
+```html
+<!-- Got the `hour-range` and `minute-interval` set -->
+<!-- And add a hanlder to pick up the "error" event -->
+<vue-timepicker format="H:mm:ss" v-model="erroredInputSample" :hour-range="[8, 9, 10, 11]" :minute-interval="5" @error="errorHanlder"></vue-timepicker>
+```
+
+```javascript
+data () {
+  return {
+    erroredInputSample: { H: '5', mm: '03', ss: '00' }
+    // NOTE:
+    // H: '5' -> invalid. Value is not in the `hour-range` list
+    // mm: '03' -> invalid. Value does not fit in the `minute-interval`
+    // ss: '00' -> valid.
+  }
+},
+
+methods: {
+  errorHanlder (eventData) {
+    console.log(eventData)
+    // console.log outputs -> ["hour", "minute"]
+  }
+}
+```
+
+The `error` event returns an _Array_ of invalid fields' names.
+
+> NOTE: Empty value will **not** be marked as invalid.
+
 
 ## Helper CSS Class Names
 

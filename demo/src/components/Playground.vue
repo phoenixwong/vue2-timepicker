@@ -69,6 +69,7 @@ export default {
       closeOnComplete: false,
       advancedKeyboard: false,
       manualInput: false,
+      hideDropdown: false,
       lazyMode: false,
       autoScroll: false,
       debugMode: false,
@@ -78,7 +79,7 @@ export default {
 
       playgroundData: {},
       playgroundFullValue: {},
-      playgroundDisplayTime: undefined,
+      playgroundErroredData: undefined,
 
       scrollTop: 0,
 
@@ -132,6 +133,20 @@ export default {
       return result
     },
 
+    toHideDropdown () {
+      if (!this.manualInput) { return false }
+      return this.hideDropdown
+    },
+
+    useAdvancedKeyboard () {
+      if (this.toHideDropdown) { return false }
+      return this.advancedKeyboard
+    },
+
+    showErroredData () {
+      return Boolean(this.playgroundErroredData && this.playgroundErroredData.length)
+    },
+
     htmlCodeWithVar () {
       let start = '<vue-timepicker'
       let end = '\n  v-model="yourTimeValue">\n</vue-timepicker>'
@@ -173,12 +188,16 @@ export default {
         start += ('\n  close-on-complete')
       }
 
-      if (this.advancedKeyboard) {
-        start += ('\n  advanced-keyboard')
-      }
-
       if (this.manualInput) {
         start += ('\n  manual-input')
+      }
+
+      if (this.toHideDropdown) {
+        start += ('\n  hide-dropdown')
+      }
+
+      if (this.useAdvancedKeyboard) {
+        start += ('\n  advanced-keyboard')
       }
 
       if (this.hideClearBtn) {
@@ -439,9 +458,12 @@ export default {
     },
 
     changeHandler (eventData) {
-      this.playgroundFullValue = eventData.data
-      this.playgroundDisplayTime = eventData.displayTime
+      this.playgroundFullValue = eventData
       this.updateRangeValue(eventData.data)
+    },
+
+    errorHandler (eventData) {
+      this.playgroundErroredData = eventData
     },
 
     scrollHandler (evt) {
@@ -743,18 +765,6 @@ section#playground
             input(v-model="autoScroll" type="radio" id="auto_scroll_false" name="auto_scroll", :value="false")
             | &nbsp;Disable
 
-      #advancedKeyboard.config-block
-        h3.subtitle
-          a.anchor #
-          | Advanced Keyboard Support
-        config-row(is-group)
-          label.options(for="advanced_kb_true")
-            input(v-model="advancedKeyboard" type="radio" id="advanced_kb_true" name="advanced_kb", :value="true")
-            | &nbsp;Enable
-          label.options(for="advanced_kb_false")
-            input(v-model="advancedKeyboard" type="radio" id="advanced_kb_false" name="advanced_kb", :value="false")
-            | &nbsp;Disable
-
       #manualInput.config-block
         h3.subtitle
           a.anchor #
@@ -765,6 +775,30 @@ section#playground
             | &nbsp;Enable
           label.options(for="manual_input_false")
             input(v-model="manualInput" type="radio" id="manual_input_false" name="manual_input", :value="false")
+            | &nbsp;Disable
+
+      #hideDropdown.config-block(v-if="manualInput")
+        h3.subtitle
+          a.anchor #
+          | Hide Dropdown
+        config-row(is-group)
+          label.options(for="hide_dropdown_true")
+            input(v-model="hideDropdown" type="radio" id="hide_dropdown_true" name="hide_dropdown", :value="true")
+            | &nbsp;Enable
+          label.options(for="hide_dropdown_false")
+            input(v-model="hideDropdown" type="radio" id="hide_dropdown_false" name="hide_dropdown", :value="false")
+            | &nbsp;Disable
+
+      #advancedKeyboard.config-block(v-if="!toHideDropdown")
+        h3.subtitle
+          a.anchor #
+          | Advanced Keyboard Support
+        config-row(is-group)
+          label.options(for="advanced_kb_true")
+            input(v-model="advancedKeyboard" type="radio" id="advanced_kb_true" name="advanced_kb", :value="true")
+            | &nbsp;Enable
+          label.options(for="advanced_kb_false")
+            input(v-model="advancedKeyboard" type="radio" id="advanced_kb_false" name="advanced_kb", :value="false")
             | &nbsp;Disable
 
       #blurDelay.config-block
@@ -796,10 +830,12 @@ section#playground
   //-
   aside.previews(:style="asideStyle")
     #playgroundPreview.preview
-      b Format string:&nbsp;
-      span(v-text="formatString")
+      label(for="vueTimepickerInPlayground")
+        b Format string:&nbsp;
+        span(v-text="formatString")
       p
         vue-timepicker(v-model="playgroundData"
+                       id="vueTimepickerInPlayground"
                        :format="formatString"
                        :minute-interval="interval.minute"
                        :second-interval="showSeconds ? interval.second : null"
@@ -807,22 +843,24 @@ section#playground
                        :minute-range="customRange.minute ? minuteRange : null"
                        :second-range="(showSeconds && customRange.second) ? secondRange : null"
                        :close-on-complete="closeOnComplete"
-                       :advanced-keyboard="advancedKeyboard"
+                       :advanced-keyboard="useAdvancedKeyboard"
                        :manual-input="manualInput"
+                       :hide-dropdown="toHideDropdown"
                        :blur-delay="blurDelay"
                        :hide-clear-button="hideClearBtn"
                        :disabled="disablePicker"
                        :lazy="lazyMode"
                        :auto-scroll="autoScroll"
                        :debug-mode="debugMode"
-                       @change="changeHandler")
+                       @change="changeHandler"
+                       @error="errorHandler")
 
     #htmlCodePreview.codes
       highlight-code(lang="html" data-title="HTML") {{ htmlCodeWithVar }}
 
     #dispatchedValue.codes
       highlight-code(lang="json" data-title="@change event data") {{ playgroundFullValue }}
-      highlight-code(lang="html" data-title="@change event displayTime") "{{ playgroundDisplayTime || '' }}"
+      highlight-code(v-if="showErroredData" lang="json" data-title="@error event data") {{ playgroundErroredData }}
 
   //-
   //- Customized Range Panels

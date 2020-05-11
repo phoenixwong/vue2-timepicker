@@ -17,6 +17,8 @@ const DEFAULT_OPTIONS = {
   hideDisabledMinutes: false,
   hideDisabledSeconds: false,
   hideDisabledItems: false,
+  advancedKeyboard: false,
+  hideDropdown: false,
   blurDelay: 300
 }
 
@@ -62,6 +64,7 @@ export default {
 
     autoScroll: { type: Boolean, default: false },
     manualInput: { type: Boolean, default: false },
+    hideDropdown: { type: Boolean, default: false },
 
     debugMode: { type: Boolean, default: false }
   },
@@ -176,6 +179,22 @@ export default {
       }
       if (this.hideDisabledSeconds || this.hideDisabledItems) {
         options.hideDisabledSeconds = true
+      }
+
+      if (this.hideDropdown) {
+        if (this.manualInput) {
+          options.hideDropdown = true
+        } else if (this.debugMode) {
+          this.debugLog('"hide-dropdown" only works with "manual-input" mode')
+        }
+      }
+
+      if (this.advancedKeyboard) {
+        if (!(this.hideDropdown && this.manualInput)) {
+          options.advancedKeyboard = true
+        } else if (this.debugMode) {
+          this.debugLog('"advanced-keyboard" has no effect when dropdown is force hidden by "hide-dropdown"')
+        }
       }
 
       if (this.blurDelay && +this.blurDelay > 0) {
@@ -524,24 +543,31 @@ export default {
       return list
     },
 
-    hasInvalidInput () {
-      if (this.inputIsEmpty) { return false }
-      if (!this.restrictedHourRange && !this.minuteRangeList && !this.secondRangeList) { return false }
+    invalidValues () {
+      if (this.inputIsEmpty) { return [] }
+      if (!this.restrictedHourRange && !this.minuteRangeList && !this.secondRangeList && this.opts.minuteInterval === 1 && this.opts.secondInterval === 1) { return [] }
 
+      const result = []
       if (!this.isEmptyValue(this.hourType, this.hour) && (!this.isValidValue(this.hourType, this.hour) || this.isDisabledHour(this.hour))) {
-        return true
+        result.push('hour')
       }
-      if (!this.isEmptyValue(this.minuteType, this.minute) && (!this.isValidValue(this.minuteType, this.minute) || this.isDisabledMinute(this.minute))) {
-        return true
+      if (!this.isEmptyValue(this.minuteType, this.minute) && (!this.isValidValue(this.minuteType, this.minute) || this.isDisabledMinute(this.minute) || this.notInMinuteInterval(this.minute))) {
+        result.push('minute')
       }
-      if (!this.isEmptyValue(this.secondType, this.second) && (!this.isValidValue(this.secondType, this.second) || this.isDisabledSecond(this.second))) {
-        return true
+      if (!this.isEmptyValue(this.secondType, this.second) && (!this.isValidValue(this.secondType, this.second) || this.isDisabledSecond(this.second) || this.notInSecondInterval(this.second))) {
+        result.push('second')
       }
       if (!this.isEmptyValue(this.apmType, this.apm) && (!this.isValidValue(this.apmType, this.apm) || this.isDisabledApm(this.apm))) {
-        return true
+        result.push('apm')
       }
+      if (result.length) {
+        return result
+      }
+      return []
+    },
 
-      return false
+    hasInvalidInput () {
+      return Boolean(this.invalidValues && this.invalidValues.length)
     }
   },
 
@@ -568,6 +594,11 @@ export default {
       // Force close the dropdown when disabled
       if (toDisabled && this.showDropdown) {
         this.showDropdown = false
+      }
+    },
+    'invalidValues.length' (length) {
+      if (length && length >= 1) {
+        this.$emit('error', this.invalidValues)
       }
     }
   },
@@ -1063,6 +1094,16 @@ export default {
       return !this.has[(value || '').toLowerCase()]
     },
 
+    notInMinuteInterval (value) {
+      if (this.opts.minuteInterval === 1) { return false }
+      return +value % this.opts.minuteInterval !== 0
+    },
+
+    notInSecondInterval (value) {
+      if (this.opts.secondInterval === 1) { return false }
+      return +value % this.opts.secondInterval !== 0
+    },
+
     forceApmSelection () {
       if (!this.apm || !this.apm.length) {
         if (this.manualInput) {
@@ -1098,19 +1139,25 @@ export default {
       this.showDropdown = !this.showDropdown
 
       if (this.showDropdown) {
-        this.$emit('open')
+        if (!this.opts.hideDropdown) {
+          this.$emit('open')
+        }
         this.isFocusing = true
+        this.$emit('focus')
         // Record to check if value did changed in the later phase
         if (this.lazy) {
           this.bakDisplayTime = String(this.displayTime || '')
         }
       } else {
-        this.$emit('close')
+        if (!this.opts.hideDropdown) {
+          this.$emit('close')
+        }
         this.isFocusing = false
         if (this.lazy) {
           this.fillValues(true)
           this.bakDisplayTime = undefined
         }
+        this.$emit('blur')
       }
 
       if (this.showDropdown) {
@@ -1166,7 +1213,7 @@ export default {
         this.$nextTick(() => {
           this.scrollToSelectedValues()
         })
-      } else if (this.advancedKeyboard) {
+      } else if (this.opts.advancedKeyboard) {
         // Auto-focus on selected hour value for advanced-keyboard
         this.$nextTick(() => {
           this.scrollToSelected('hours')
@@ -1180,7 +1227,7 @@ export default {
       const targetValue = this.$el.querySelectorAll(`ul.${columnClass} li.active:not(.hint)`)[0]
       if (targetList && targetValue) {
         targetList.scrollTop = targetValue.offsetTop || 0
-        if (this.advancedKeyboard && columnClass === 'hours') {
+        if (this.opts.advancedKeyboard && columnClass === 'hours') {
           targetValue.focus()
         }
       }
@@ -1926,10 +1973,10 @@ export default {
          @keydown.esc.exact="escBlur" />
   <span class="clear-btn" v-if="!showDropdown && showClearBtn" @click="clearTime" tabindex="-1">&times;</span>
   <div class="time-picker-overlay" v-if="showDropdown" @click="toggleDropdown" tabindex="-1"></div>
-  <div class="dropdown" v-show="showDropdown" :style="inputWidthStyle" tabindex="-1" @mouseup="keepFocusing" @click.stop="">
+  <div class="dropdown" v-show="showDropdown && !opts.hideDropdown" :style="inputWidthStyle" tabindex="-1" @mouseup="keepFocusing" @click.stop="">
     <div class="select-list" :style="inputWidthStyle" tabindex="-1">
       <!-- Common Keyboard Support: less event listeners -->
-      <template v-if="!advancedKeyboard">
+      <template v-if="!opts.advancedKeyboard">
         <ul class="hours" @scroll="keepFocusing">
           <li class="hint" v-text="hourLabelText"></li>
           <template v-for="(hr, hIndex) in hours">
@@ -1984,7 +2031,7 @@ export default {
         Advanced Keyboard Support
         Addeds hundreds of additional event lisenters
       -->
-      <template v-if="advancedKeyboard">
+      <template v-if="opts.advancedKeyboard">
         <ul class="hours" tabindex="-1" @scroll="keepFocusing">
           <li class="hint" v-text="hourLabelText" tabindex="-1"></li>
           <template v-for="(hr, hIndex) in hours">
