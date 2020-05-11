@@ -7,9 +7,12 @@
 ### New
 
 - Support manually input values with the `manual-input` toggle.
+- Enable to hide the dropdown menu with `hide-dropdown` in Manual Input (`manual-input`) mode.
 - Added conditional helper classes `is-empty`, `invalid` and `all-selected` to the `<input>` element.
 - Change the `<input>` border to red color when user input is invalid. E.g., when it contains a disabled hour value.
-- Support `autocomplete` attribute.
+- Add support to the `autocomplete` attribute.
+- Emit `error` event when the input value becomes invalid.
+- Emit `focus` and `blur` events to help to identify the focus/blur state. Useful when the dropdown is force hidden by `hide-dropdown`.
 
 ### Improvements
 
