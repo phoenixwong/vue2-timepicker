@@ -387,7 +387,7 @@ export default {
             }
           }
         } else {
-          if (value < 0 || value > 59) { return }
+          if (+value < 0 || +value > 59) { return }
           formatedValue = this.formatValue(this.minuteType, value)
           if (!range.includes(formatedValue)) {
             range.push(formatedValue)
@@ -425,7 +425,7 @@ export default {
             }
           }
         } else {
-          if (value < 0 || value > 59) { return }
+          if (+value < 0 || +value > 59) { return }
           formatedValue = this.formatValue(this.secondType, value)
           if (!range.includes(formatedValue)) {
             range.push(formatedValue)
@@ -554,10 +554,10 @@ export default {
       if (!this.isEmptyValue(this.minuteType, this.minute) && (!this.isValidValue(this.minuteType, this.minute) || this.isDisabledMinute(this.minute) || this.notInMinuteInterval(this.minute))) {
         result.push('minute')
       }
-      if (!this.isEmptyValue(this.secondType, this.second) && (!this.isValidValue(this.secondType, this.second) || this.isDisabledSecond(this.second) || this.notInSecondInterval(this.second))) {
+      if (this.secondType && !this.isEmptyValue(this.secondType, this.second) && (!this.isValidValue(this.secondType, this.second) || this.isDisabledSecond(this.second) || this.notInSecondInterval(this.second))) {
         result.push('second')
       }
-      if (!this.isEmptyValue(this.apmType, this.apm) && (!this.isValidValue(this.apmType, this.apm) || this.isDisabledApm(this.apm))) {
+      if (this.apmType && !this.isEmptyValue(this.apmType, this.apm) && (!this.isValidValue(this.apmType, this.apm) || this.isDisabledApm(this.apm))) {
         result.push('apm')
       }
       if (result.length) {
@@ -596,16 +596,19 @@ export default {
         this.showDropdown = false
       }
     },
-    'invalidValues.length' (length) {
-      if (length && length >= 1) {
+    'invalidValues.length' (newLength, oldLength) {
+      if (newLength && newLength >= 1) {
         this.$emit('error', this.invalidValues)
+      } else if (oldLength && oldLength >= 1) {
+        this.$emit('error', [])
       }
     }
   },
 
   methods: {
-    formatValue (type, i) {
-      switch (type) {
+    formatValue (token, i) {
+      i = +i
+      switch (token) {
         case 'H':
         case 'm':
         case 's':
@@ -1107,6 +1110,7 @@ export default {
     forceApmSelection () {
       if (!this.apm || !this.apm.length) {
         if (this.manualInput) {
+          // In Manual Input Mode
           // Skip this to allow users to paste a string value from clipboard
           return
         }
@@ -1153,11 +1157,11 @@ export default {
           this.$emit('close')
         }
         this.isFocusing = false
+        this.$emit('blur')
         if (this.lazy) {
           this.fillValues(true)
           this.bakDisplayTime = undefined
         }
-        this.$emit('blur')
       }
 
       if (this.showDropdown) {
@@ -2148,7 +2152,7 @@ export default {
   font-size: 1em;
 }
 
-.vue__time-picker input.display-time.invalid {
+.vue__time-picker input.display-time.invalid:not(.skip-error-style) {
   border-color: #cc0033;
   outline-color: #cc0033;
 }

@@ -789,7 +789,7 @@ methods: {
 }
 ```
 
-The `error` event returns an _Array_ of invalid fields' names.
+The `error` event returns an _Array_ of invalid fields' names. When it returns an empty array `[]`, it means the current input is valid, and all previous errors are gone
 
 > NOTE: Empty value will **not** be marked as invalid.
 
@@ -800,8 +800,15 @@ Started from `v.1.1.0+`, Vue Timepicker will add additional CSS classes to the `
 
 - **invalid**: One or more fields containing an invalid or disabled value.
   - Additional CSS Style: The `<input>` border turns red.
+  - If you want to mute this red border style, add `"skip-error-style"` to `input-class`
 - **is-empty**: The input value (_v-model_) is empty. No additional style.
 - **all-selected**: All fields (hour/minute/second/apm) required by the `format` string are not empty. No additional style.
+
+```html
+<!-- To mute the red border style of "invalid" state -->
+<timepicker input-class="skip-error-style"></timepicker>
+<timepicker :input-class="['skip-error-style', 'your-other-class-names']"></timepicker>
+```
 
 
 ## Miscellaneous Props API

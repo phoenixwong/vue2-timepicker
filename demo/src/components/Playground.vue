@@ -72,6 +72,7 @@ export default {
       hideDropdown: false,
       lazyMode: false,
       autoScroll: false,
+      skipErrorStyle: false,
       debugMode: false,
 
       customBlurDelay: false,
@@ -152,6 +153,10 @@ export default {
       let end = '\n  v-model="yourTimeValue">\n</vue-timepicker>'
 
       start += (`\n  format="${this.formatString}"`)
+
+      if (this.skipErrorStyle) {
+        start += ('\n  input-class="skip-error-style"')
+      }
 
       if (this.customInterval.minute) {
         start += (`\n  :minute-interval="${this.interval.minute}"`)
@@ -813,6 +818,18 @@ section#playground
             input(v-model.number="blurDelay" type="range" min="50" max="1500" step="50")
             span(v-text="blurDelay")
 
+      #skipErrorStyle.config-block
+        h3.subtitle
+          a.anchor #
+          | Skip Error Style
+        config-row(is-group)
+          label.options(for="skip_error_true")
+            input(v-model="skipErrorStyle" type="radio" id="skip_error_true" name="skip_error", :value="true")
+            | &nbsp;Enable
+          label.options(for="skip_error_false")
+            input(v-model="skipErrorStyle" type="radio" id="skip_error_false" name="skip_error", :value="false")
+            | &nbsp;Disable
+
       #debugMode.config-block
         h3.subtitle
           a.anchor #
@@ -852,6 +869,7 @@ section#playground
                        :lazy="lazyMode"
                        :auto-scroll="autoScroll"
                        :debug-mode="debugMode"
+                       :input-class="skipErrorStyle ? 'skip-error-style' : null"
                        @change="changeHandler"
                        @error="errorHandler")
 
@@ -931,6 +949,7 @@ section#playground
   #playgroundPreview
     box-sizing: border-box
     background: #fff
+    padding: 1em 1.5em
 
   .range-item,
   .invalid-range
