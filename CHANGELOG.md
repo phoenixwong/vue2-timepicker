@@ -2,7 +2,7 @@
 
 > The Change Log of Vue2 Timepicker `vue2-timepicker`
 
-## v 1.1.0 _(Pre-release)_
+## v 1.1.0
 
 ### New
 
