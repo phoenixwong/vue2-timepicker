@@ -113,16 +113,16 @@ export default {
       }
       // minuteInterval failsafe
       if (!options.minuteInterval || options.minuteInterval < 1 || options.minuteInterval > 60) {
+        if (this.debugMode) {
+          if (options.minuteInterval > 60) {
+            this.debugLog(`"minute-interval" should be less than 60. Current value is ${this.minuteInterval}`)
+          } else if (options.minuteInterval === 0 || options.minuteInterval < 1) {
+            this.debugLog(`"minute-interval" should be NO less than 1. Current value is ${this.minuteInterval}`)
+          }
+        }
         if (options.minuteInterval === 0) {
           options.minuteInterval = 60
         } else {
-          if (this.debugMode) {
-            if (options.minuteInterval > 60) {
-              this.debugLog(`"minute-interval" should be less than 60. Current value is ${this.minuteInterval}`)
-            } else if (options.minuteInterval < 1) {
-              this.debugLog(`"minute-interval" should be NO less than 1. Current value is ${this.minuteInterval}`)
-            }
-          }
           options.minuteInterval = 1
         }
       }
@@ -132,16 +132,16 @@ export default {
       }
       // secondInterval failsafe
       if (!options.secondInterval || options.secondInterval < 1 || options.secondInterval > 60) {
+        if (this.debugMode) {
+          if (options.secondInterval > 60) {
+            this.debugLog(`"second-interval" should be less than 60. Current value is ${this.secondInterval}`)
+          } else if (options.secondInterval === 0 || options.secondInterval < 1) {
+            this.debugLog(`"second-interval" should be NO less than 1. Current value is ${this.secondInterval}`)
+          }
+        }
         if (options.secondInterval === 0) {
           options.secondInterval = 60
         } else {
-          if (this.debugMode) {
-            if (options.secondInterval > 60) {
-              this.debugLog(`"second-interval" should be less than 60. Current value is ${this.secondInterval}`)
-            } else if (options.secondInterval < 1) {
-              this.debugLog(`"second-interval" should be NO less than 1. Current value is ${this.secondInterval}`)
-            }
-          }
           options.secondInterval = 1
         }
       }
@@ -328,15 +328,22 @@ export default {
     validHoursList () {
       if (!this.manualInput) { return false }
       if (this.restrictedHourRange) {
+        let list = []
         if (this.baseOn12Hours) {
-          return this.restrictedHourRange.map(hr => {
+          list = this.restrictedHourRange.map(hr => {
             const l = hr.substr(0, hr.length - 1)
             const r = hr.substr(-1)
-            return `${this.formatValue(this.hourType, +l)}${r}`
+            return `${this.formatValue(this.hourType, l)}${r}`
           })
+          const am12Index = list.findIndex(hr => hr === '12a')
+          if (am12Index > 0) {
+            // Make '12a' the first item in h/hh
+            list.unshift(list.splice(am12Index, 1)[0])
+          }
+          return list
         }
-        const list = this.restrictedHourRange.map(hr => {
-          return this.formatValue(this.hourType, +hr)
+        list = this.restrictedHourRange.map(hr => {
+          return this.formatValue(this.hourType, hr)
         })
         if (list.length > 1 && list[0] && list[0] === '24') {
           // Make '24' the last item in k/kk
@@ -518,7 +525,7 @@ export default {
       let calibrateLen = 0
       this.tokenChunks.forEach(chk => {
         let chunkCurrentLen
-        // Fixes for customized AM/PM text
+        // Adjust for customized AM/PM text
         if (chk.type === 'apm' && this.has.customApmText) {
           if (this.apm && this.apm.length) {
             const customApmText = this.apm.toLowerCase() === 'am' ? this.amText : this.pmText
@@ -665,10 +672,14 @@ export default {
 
       if (this.secondType) {
         this.renderList('second')
+      } else {
+        this.seconds = []
       }
 
       if (this.apmType) {
         this.renderApmList()
+      } else {
+        this.apms = []
       }
 
       this.$nextTick(() => {
@@ -821,8 +832,8 @@ export default {
         const timeValue = {}
         valueResults.forEach((value, vrIndex) => {
           if (tokenChunks[vrIndex]) {
-            const tokenType = tokenChunks[vrIndex].token
-            timeValue[tokenType] = this.setValueFromString(value, tokenType)
+            const targetToken = tokenChunks[vrIndex].token
+            timeValue[targetToken] = this.setValueFromString(value, targetToken)
           }
         })
         this.timeValue = timeValue
@@ -910,7 +921,7 @@ export default {
       const baseHour = this.hour
       const baseHourType = this.hourType
 
-      const hourValue = baseHour || baseHour === 0 ? Number(baseHour) : ''
+      const hourValue = this.isNumber(baseHour) ? +baseHour : ''
       const apmValue = (this.baseOn12Hours && this.apm) ? String(this.apm).toLowerCase() : false
 
       CONFIG.HOUR_TOKENS.forEach((token) => {
@@ -965,7 +976,7 @@ export default {
                 fullValues.a = ''
                 fullValues.A = ''
                 return
-              } else if (hourValue > 11) {
+              } else if (hourValue > 11 && hourValue < 24) {
                 apm = 'pm'
                 value = hourValue === 12 ? 12 : hourValue % 12
               } else {
@@ -984,8 +995,8 @@ export default {
         }
       })
 
-      if (this.minute || this.minute === 0) {
-        const minuteValue = Number(this.minute)
+      if (this.isNumber(this.minute)) {
+        const minuteValue = +this.minute
         fullValues.m = String(minuteValue)
         fullValues.mm = minuteValue < 10 ? `0${minuteValue}` : String(minuteValue)
       } else {
@@ -993,8 +1004,8 @@ export default {
         fullValues.mm = ''
       }
 
-      if (this.second || this.second === 0) {
-        const secondValue = Number(this.second)
+      if (this.isNumber(this.second)) {
+        const secondValue = +this.second
         fullValues.s = String(secondValue)
         fullValues.ss = secondValue < 10 ? `0${secondValue}` : String(secondValue)
       } else {
@@ -1511,7 +1522,7 @@ export default {
         inputIsCustomApmText = this.isCustomApmText(cpsData)
       }
       if (inputIsCustomApmText) {
-        this.select('apm', inputIsCustomApmText)
+        this.setSanitizedValueToSection('apm', inputIsCustomApmText)
       }
 
       if (this.has.customApmText) {
@@ -1613,9 +1624,9 @@ export default {
 
       let validValue
       if (chunkType === 'apm') {
-        if (value.includes('a') || value.includes('A')) {
+        if ((value || '').toLowerCase().includes('a')) {
           validValue = 'am'
-        } else if (value.includes('p') || value.includes('P')) {
+        } else if ((value || '').toLowerCase().includes('p')) {
           validValue = 'pm'
         }
         if (validValue) {
@@ -1625,10 +1636,7 @@ export default {
         if (this.isValidValue(chunkToken, value)) {
           validValue = value
         } else {
-          let lastInputValue = value.substr(-1)
-          if (chunkToken.length === 2 && +lastInputValue < 10) {
-            lastInputValue = `0${lastInputValue}`
-          }
+          const lastInputValue = this.formatValue(chunkToken, value.substr(-1))
           if (this.isValidValue(chunkToken, lastInputValue)) {
             validValue = lastInputValue
           }
@@ -1636,7 +1644,7 @@ export default {
       }
 
       if (validValue) {
-        this.select(chunkType, validValue)
+        this.setSanitizedValueToSection(chunkType, validValue)
         const newChunkPos = this.getCurrentTokenChunk()
         this.debounceSetInputSelection(newChunkPos)      
       }
@@ -1644,7 +1652,7 @@ export default {
         if (validValue) {
           this.debugLog(`Successfully set value "${validValue}" from latest input "${value}" for column "${chunkType}"`)
         } else {
-          this.debugLog(`Value "${value}" is invalid/disabled in the "${chunkType}" column`)
+          this.debugLog(`Value "${value}" is invalid in the "${chunkType}" column`)
         }
       }
     },
@@ -1701,11 +1709,12 @@ export default {
     selectFirstValidHour () {
       if (!this.validHoursList || !this.validHoursList.length) { return }
 
-      const hourToken = this.tokenChunksPos.find(chk => chk.token === this.hourType)
-      if (!hourToken) {return }
+      const hourChunk = this.tokenChunksPos.find(chk => chk.token === this.hourType)
+      if (!hourChunk) { return }
+      const hourToken = hourChunk.token
 
       this.setManualHour(this.validHoursList[0])
-      const newChunkPos = this.getSlotPosByToken(hourToken)
+      const newChunkPos = this.getChunkPosByToken(hourToken)
       this.debounceSetInputSelection(newChunkPos)
     },
 
@@ -1743,14 +1752,21 @@ export default {
       }
     },
 
+    setSanitizedValueToSection (section, inputValue) {
+      if (!section || !this[`${section}Type`]) { return }
+      // NOTE: Disabled values are allowed here, followed by an 'error' event, though
+      const sanitizedValue = this.sanitizedValue(this[`${section}Type`], inputValue)
+      this[section] = sanitizedValue
+    },
+
     setManualHour (nextItem) {
       if (this.is12hRange(nextItem)) {
         const hourT = nextItem.match(/^(\d{1,2})(a|p|A|P)$/)
         const apmValue = hourT[2] === 'a' ? 'AM' : 'PM'
-        this.select('apm', this.apmType === 'a' ? apmValue.toLowerCase() : apmValue)
-        this.select('hour', hourT[1])
+        this.setSanitizedValueToSection('apm', this.apmType === 'a' ? apmValue.toLowerCase() : apmValue)
+        this.setSanitizedValueToSection('hour', hourT[1])
       } else {
-        this.select('hour', nextItem)
+        this.setSanitizedValueToSection('hour', nextItem)
       }
     },
 
@@ -1778,9 +1794,9 @@ export default {
       return this.getNearesChunkByPos((this.$refs.input && this.$refs.input.selectionStart) || 0)
     },
 
-    getSlotPosByToken (slot) {
-      if (!this.tokenChunksPos) { return { start: 0, end: 0 } }
-      const targetChunk = this.tokenChunksPos.find(chk => chk.token === slot.token)
+    getChunkPosByToken (token) {
+      if (!this.tokenChunksPos || !token) { return { start: 0, end: 0 } }
+      const targetChunk = this.tokenChunksPos.find(chk => chk.token === token)
       return targetChunk ? targetChunk : { start: 0, end: 0 }
     },
 
@@ -1837,8 +1853,8 @@ export default {
       return !isNaN(parseFloat(value)) && isFinite(value)
     },
 
-    getTokenRegex (typeToken) {
-      switch (typeToken) {
+    getTokenRegex (token) {
+      switch (token) {
         case 'HH':
           return '([01][0-9]|2[0-3]|H{2})'
         case 'H':
@@ -1868,19 +1884,19 @@ export default {
       }
     },
 
-    isEmptyValue (typeToken, testValue) {
-      return (!testValue || !testValue.length) || (testValue && testValue === typeToken)
+    isEmptyValue (targetToken, testValue) {
+      return (!testValue || !testValue.length) || (testValue && testValue === targetToken)
     },
 
-    isValidValue (typeToken, testValue) {
-      if (!typeToken || this.isEmptyValue(typeToken, testValue)) { return false }
-      const tokenRegexStr = this.getTokenRegex(typeToken)
+    isValidValue (targetToken, testValue) {
+      if (!targetToken || this.isEmptyValue(targetToken, testValue)) { return false }
+      const tokenRegexStr = this.getTokenRegex(targetToken)
       if (!tokenRegexStr || !tokenRegexStr.length) { return false }
       return (new RegExp(`^${tokenRegexStr}$`)).test(testValue)
     },
 
-    sanitizedValue (typeToken, inputValue) {
-      if (this.isValidValue(typeToken, inputValue)) {
+    sanitizedValue (targetToken, inputValue) {
+      if (this.isValidValue(targetToken, inputValue)) {
         return inputValue
       }
       return ''
