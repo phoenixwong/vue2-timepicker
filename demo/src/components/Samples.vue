@@ -35,6 +35,7 @@ export default {
       demoArgs: undefined,
 
       dropdownStatus: 'closed',
+      focusState: 'blurred',
 
       lazyData: {
         hh: '06',
@@ -45,6 +46,8 @@ export default {
       lazyChangeData: undefined,
       lazyInputData: undefined,
       lazyEventTs: undefined,
+
+      manualStringValue: '8:15 pm',
 
       autoScrollData1: '08:40',
       autoScrollData2: '5:30:20 pm',
@@ -65,8 +68,10 @@ export default {
         { title: 'Disable Picker', anchor: 'disablePicker' },
         { title: 'The @change Event', anchor: 'onChangeSample' },
         { title: 'Lazy Event Mode', anchor: 'lazyEvents' },
-        { title: '@open and @close event', anchor: 'openAndClose' },
         { title: 'Keyboard Support', anchor: 'kbSupport' },
+        { title: 'Manual Input', anchor: 'manualInput'},
+        { title: '@open and @close event', anchor: 'openAndClose' },
+        { title: '@focus and @blur event', anchor: 'focusAndBlur' },
         { title: 'Customized Picker Labels', anchor: 'customPickerLabels' },
         { title: 'Adjust Input Width', anchor: 'inputWidth' },
         { title: 'Auto-Scroll', anchor: 'autoScroll' }
@@ -517,34 +522,6 @@ section#mostlyUsedSamples
       highlight-code(v-if="lazyInputData" lang="json" data-title="The lazy `input` event data") {{ lazyInputData }}
       highlight-code(v-if="lazyChangeData" lang="json" data-title="The lazy `change` event data") {{ lazyChangeData }}
 
-  //- Open And Close Event
-  sample-block#openAndClose
-    template(v-slot:title)
-      code open
-      | &nbsp;and&nbsp;
-      code close
-      | &nbsp;event
-    p(slot="description")
-      | Help identifying current status of the dropdown picker
-    template(v-slot:codes)
-      highlight-code(lang="javascript" data-title="JS")
-        | // Define a variable for logging the status
-        | data () {
-        |   return {
-        |     dropdownStatus: 'closed'
-        |   }
-        | }
-      highlight-code(lang="html" data-title="HTML")
-        | &lt;p&gt;Dropdown Status: I'm <pre>{{</pre>dropdownStatus<pre>}}</pre>!&lt;/p&gt;
-        | &nbsp;
-        | &lt;vue-timepicker @open="dropdownStatus = 'opened'" @close="dropdownStatus = 'closed'"&gt;&lt;/vue-timepicker&gt;
-    template(v-slot:preview)
-      p
-        b Dropdown Status:
-        | &nbsp;I'm {{dropdownStatus}}!
-      p
-        vue-timepicker(@open="dropdownStatus = 'opened'" @close="dropdownStatus = 'closed'")
-
   //- Keyboard Support
   sample-block#kbSupport
     template(v-slot:title) Keyboard Support
@@ -610,6 +587,90 @@ section#mostlyUsedSamples
         label(for="oneMoreInput") One More Text Input
       p
         input#oneMoreInput.native-input(type="text" placeholder="More Text")
+
+  //- Manual Input
+  sample-block#manualInput
+    template(v-slot:title) Manual Input
+    p(slot="description")
+      | Allow users to input values manually. Please note that the additional <code>hide-dropdown</code> option works with <code>manual-input</code> mode only.
+    template(v-slot:codes)
+      highlight-code(lang="html" data-title="HTML")
+        | &lt;!-- 24-hour format with empty init value --&gt;
+        | &lt;vue-timepicker manual-input&gt;&lt;/vue-timepicker&gt;
+        |
+        | &lt;!-- 12-hour format with a predefined value --&gt;
+        | &lt;vue-timepicker format="h:mm a" v-model="manualStringValue" manual-input&gt;&lt;/vue-timepicker&gt;
+        |
+        | &lt;!-- Manual input + hide dropdown --&gt;
+        | &lt;vue-timepicker manual-input hide-dropdown&gt;&lt;/vue-timepicker&gt;
+      highlight-code(lang="javascript" data-title="JS")
+        | data () {
+        |   return {
+        |     manualStringValue: '8:15 pm'
+        |   }
+        | }
+    template(v-slot:preview)
+      b 24-hour format with empty init value
+      p
+        vue-timepicker(manual-input)
+      b 12-hour format with a predefined value
+      p
+        vue-timepicker(format="h:mm a" v-model="manualStringValue" manual-input)
+      b Manual input + hide dropdown
+      p
+        vue-timepicker(manual-input hide-dropdown)
+
+  //- Open And Close Event
+  sample-block#openAndClose
+    template(v-slot:title)
+      code open
+      | &nbsp;and&nbsp;
+      code close
+      | &nbsp;event
+    p(slot="description")
+      | Help identifying current status of the dropdown picker
+    template(v-slot:codes)
+      highlight-code(lang="javascript" data-title="JS")
+        | // Define a variable for logging the status
+        | data () {
+        |   return {
+        |     dropdownStatus: 'closed'
+        |   }
+        | }
+      highlight-code(lang="html" data-title="HTML")
+        | &lt;p&gt;Dropdown Status: I'm <pre>{{</pre>dropdownStatus<pre>}}</pre>!&lt;/p&gt;
+        | &nbsp;
+        | &lt;vue-timepicker @open="dropdownStatus = 'opened'" @close="dropdownStatus = 'closed'"&gt;&lt;/vue-timepicker&gt;
+    template(v-slot:preview)
+      b Dropdown Status: I'm {{dropdownStatus}}!
+      p
+        vue-timepicker(@open="dropdownStatus = 'opened'" @close="dropdownStatus = 'closed'")
+
+  //- Focus And Blur Event
+  sample-block#focusAndBlur
+    template(v-slot:title)
+      code focus
+      | &nbsp;and&nbsp;
+      code blur
+      | &nbsp;event
+    p(slot="description")
+      | Help to identify the focus/blur state of the Timepicker when the dropdown is force hidden by <code>hide-dropdown</code>.
+    template(v-slot:codes)
+      highlight-code(lang="javascript" data-title="JS")
+        | // Define a variable for logging the status
+        | data () {
+        |   return {
+        |     focusState: 'blurred'
+        |   }
+        | }
+      highlight-code(lang="html" data-title="HTML")
+        | &lt;p&gt;Focus Status: I'm <pre>{{</pre>focusState<pre>}}</pre>!&lt;/p&gt;
+        | &nbsp;
+        | &lt;vue-timepicker manual-input hide-dropdown @focus="focusState = 'focused'" @blur="focusState = 'blurred'"&gt;&lt;/vue-timepicker&gt;
+    template(v-slot:preview)
+      b Focus State: I'm {{focusState}}!
+      p
+        vue-timepicker(manual-input hide-dropdown @focus="focusState = 'focused'" @blur="focusState = 'blurred'")
 
   //- Custom Labels
   sample-block#customPickerLabels

@@ -2407,6 +2407,28 @@ module.exports = !$assign || __webpack_require__("79e5")(function () {
 
 /***/ }),
 
+/***/ "7514":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+// 22.1.3.8 Array.prototype.find(predicate, thisArg = undefined)
+var $export = __webpack_require__("5ca1");
+var $find = __webpack_require__("0a49")(5);
+var KEY = 'find';
+var forced = true;
+// Shouldn't skip holes
+if (KEY in []) Array(1)[KEY](function () { forced = false; });
+$export($export.P + $export.F * forced, 'Array', {
+  find: function find(callbackfn /* , that = undefined */) {
+    return $find(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
+  }
+});
+__webpack_require__("9c6c")(KEY);
+
+
+/***/ }),
+
 /***/ "765d":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4172,12 +4194,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5cf45188-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/vue-timepicker.vue?vue&type=template&id=bb386be6&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"vue__time-picker time-picker",style:(_vm.inputWidthStyle)},[_c('input',{staticClass:"display-time",class:[_vm.inputClass, {'disabled': _vm.disabled}],style:(_vm.inputWidthStyle),attrs:{"type":"text","id":_vm.id,"name":_vm.name,"placeholder":_vm.placeholder ? _vm.placeholder : _vm.formatString,"tabindex":_vm.disabled ? -1 : _vm.tabindex,"disabled":_vm.disabled,"readonly":""},domProps:{"value":_vm.inputIsEmpty ? null : _vm.customDisplayTime},on:{"focus":_vm.onFocus,"blur":_vm.debounceBlur,"keydown":function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"esc",27,$event.key,["Esc","Escape"])){ return null; }if($event.ctrlKey||$event.shiftKey||$event.altKey||$event.metaKey){ return null; }return _vm.escBlur($event)}}}),(!_vm.showDropdown && _vm.showClearBtn)?_c('span',{staticClass:"clear-btn",attrs:{"tabindex":"-1"},on:{"click":_vm.clearTime}},[_vm._v("×")]):_vm._e(),(_vm.showDropdown)?_c('div',{staticClass:"time-picker-overlay",attrs:{"tabindex":"-1"},on:{"click":_vm.toggleDropdown}}):_vm._e(),_c('div',{directives:[{name:"show",rawName:"v-show",value:(_vm.showDropdown),expression:"showDropdown"}],staticClass:"dropdown",style:(_vm.inputWidthStyle),attrs:{"tabindex":"-1"},on:{"mouseup":_vm.keepFocusing,"click":function($event){$event.stopPropagation();}}},[_c('div',{staticClass:"select-list",style:(_vm.inputWidthStyle),attrs:{"tabindex":"-1"}},[(!_vm.advancedKeyboard)?[_c('ul',{staticClass:"hours",on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.hourLabelText)}}),_vm._l((_vm.hours),function(hr,hIndex){return [(!_vm.opts.hideDisabledHours || (_vm.opts.hideDisabledHours && !_vm.isDisabledHour(hr)))?_c('li',{key:hIndex,class:{active: _vm.hour === hr},attrs:{"disabled":_vm.isDisabledHour(hr)},domProps:{"textContent":_vm._s(hr)},on:{"click":function($event){return _vm.select('hour', hr)}}}):_vm._e()]})],2),_c('ul',{staticClass:"minutes",on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.minuteLabelText)}}),_vm._l((_vm.minutes),function(m,mIndex){return [(!_vm.opts.hideDisabledMinutes || (_vm.opts.hideDisabledMinutes && !_vm.isDisabledMinute(m)))?_c('li',{key:mIndex,class:{active: _vm.minute === m},attrs:{"disabled":_vm.isDisabledMinute(m)},domProps:{"textContent":_vm._s(m)},on:{"click":function($event){return _vm.select('minute', m)}}}):_vm._e()]})],2),(_vm.secondType)?_c('ul',{staticClass:"seconds",on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.secondLabelText)}}),_vm._l((_vm.seconds),function(s,sIndex){return [(!_vm.opts.hideDisabledSeconds || (_vm.opts.hideDisabledSeconds && !_vm.isDisabledSecond(s)))?_c('li',{key:sIndex,class:{active: _vm.second === s},attrs:{"disabled":_vm.isDisabledSecond(s)},domProps:{"textContent":_vm._s(s)},on:{"click":function($event){return _vm.select('second', s)}}}):_vm._e()]})],2):_vm._e(),(_vm.apmType)?_c('ul',{staticClass:"apms",on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.apmLabelText)}}),_vm._l((_vm.apms),function(a,aIndex){return [(!_vm.opts.hideDisabledHours || (_vm.opts.hideDisabledHours && !_vm.isDisabledApm(a)))?_c('li',{key:aIndex,class:{active: _vm.apm === a},attrs:{"disabled":_vm.isDisabledApm(a)},domProps:{"textContent":_vm._s(_vm.apmDisplayText(a))},on:{"click":function($event){return _vm.select('apm', a)}}}):_vm._e()]})],2):_vm._e()]:_vm._e(),(_vm.advancedKeyboard)?[_c('ul',{staticClass:"hours",attrs:{"tabindex":"-1"},on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",attrs:{"tabindex":"-1"},domProps:{"textContent":_vm._s(_vm.hourLabelText)}}),_vm._l((_vm.hours),function(hr,hIndex){return [(!_vm.opts.hideDisabledHours || (_vm.opts.hideDisabledHours && !_vm.isDisabledHour(hr)))?_c('li',{key:hIndex,class:{active: _vm.hour === hr},attrs:{"tabindex":_vm.isDisabledHour(hr) ? -1 : _vm.tabindex,"data-key":hr,"disabled":_vm.isDisabledHour(hr)},domProps:{"textContent":_vm._s(hr)},on:{"click":function($event){return _vm.select('hour', hr)},"keydown":[function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"space",32,$event.key,[" ","Spacebar"])){ return null; }$event.preventDefault();return _vm.select('hour', hr)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }$event.preventDefault();return _vm.select('hour', hr)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }$event.preventDefault();return _vm.prevItem('hours', hr)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }$event.preventDefault();return _vm.nextItem('hours', hr)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"left",37,$event.key,["Left","ArrowLeft"])){ return null; }if('button' in $event && $event.button !== 0){ return null; }$event.preventDefault();return _vm.toLeftColumn('hours')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"right",39,$event.key,["Right","ArrowRight"])){ return null; }if('button' in $event && $event.button !== 2){ return null; }$event.preventDefault();return _vm.toRightColumn('hours')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"esc",27,$event.key,["Esc","Escape"])){ return null; }if($event.ctrlKey||$event.shiftKey||$event.altKey||$event.metaKey){ return null; }return _vm.debounceBlur($event)}],"blur":_vm.debounceBlur,"focus":_vm.keepFocusing}}):_vm._e()]})],2),_c('ul',{staticClass:"minutes",attrs:{"tabindex":"-1"},on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",attrs:{"tabindex":"-1"},domProps:{"textContent":_vm._s(_vm.minuteLabelText)}}),_vm._l((_vm.minutes),function(m,mIndex){return [(!_vm.opts.hideDisabledMinutes || (_vm.opts.hideDisabledMinutes && !_vm.isDisabledMinute(m)))?_c('li',{key:mIndex,class:{active: _vm.minute === m},attrs:{"tabindex":_vm.isDisabledMinute(m) ? -1 : _vm.tabindex,"data-key":m,"disabled":_vm.isDisabledMinute(m)},domProps:{"textContent":_vm._s(m)},on:{"click":function($event){return _vm.select('minute', m)},"keydown":[function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"space",32,$event.key,[" ","Spacebar"])){ return null; }$event.preventDefault();return _vm.select('minute', m)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }$event.preventDefault();return _vm.select('minute', m)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }$event.preventDefault();return _vm.prevItem('minutes', m)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }$event.preventDefault();return _vm.nextItem('minutes', m)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"left",37,$event.key,["Left","ArrowLeft"])){ return null; }if('button' in $event && $event.button !== 0){ return null; }$event.preventDefault();return _vm.toLeftColumn('minutes')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"right",39,$event.key,["Right","ArrowRight"])){ return null; }if('button' in $event && $event.button !== 2){ return null; }$event.preventDefault();return _vm.toRightColumn('minutes')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"esc",27,$event.key,["Esc","Escape"])){ return null; }if($event.ctrlKey||$event.shiftKey||$event.altKey||$event.metaKey){ return null; }return _vm.debounceBlur($event)}],"blur":_vm.debounceBlur,"focus":_vm.keepFocusing}}):_vm._e()]})],2),(_vm.secondType)?_c('ul',{staticClass:"seconds",attrs:{"tabindex":"-1"},on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",attrs:{"tabindex":"-1"},domProps:{"textContent":_vm._s(_vm.secondLabelText)}}),_vm._l((_vm.seconds),function(s,sIndex){return [(!_vm.opts.hideDisabledSeconds || (_vm.opts.hideDisabledSeconds && !_vm.isDisabledSecond(s)))?_c('li',{key:sIndex,class:{active: _vm.second === s},attrs:{"tabindex":_vm.isDisabledSecond(s) ? -1 : _vm.tabindex,"data-key":s,"disabled":_vm.isDisabledSecond(s)},domProps:{"textContent":_vm._s(s)},on:{"click":function($event){return _vm.select('second', s)},"keydown":[function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"space",32,$event.key,[" ","Spacebar"])){ return null; }$event.preventDefault();return _vm.select('second', s)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }$event.preventDefault();return _vm.select('second', s)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }$event.preventDefault();return _vm.prevItem('seconds', s)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }$event.preventDefault();return _vm.nextItem('seconds', s)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"left",37,$event.key,["Left","ArrowLeft"])){ return null; }if('button' in $event && $event.button !== 0){ return null; }$event.preventDefault();return _vm.toLeftColumn('seconds')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"right",39,$event.key,["Right","ArrowRight"])){ return null; }if('button' in $event && $event.button !== 2){ return null; }$event.preventDefault();return _vm.toRightColumn('seconds')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"esc",27,$event.key,["Esc","Escape"])){ return null; }if($event.ctrlKey||$event.shiftKey||$event.altKey||$event.metaKey){ return null; }return _vm.debounceBlur($event)}],"blur":_vm.debounceBlur,"focus":_vm.keepFocusing}}):_vm._e()]})],2):_vm._e(),(_vm.apmType)?_c('ul',{staticClass:"apms",attrs:{"tabindex":"-1"},on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",attrs:{"tabindex":"-1"},domProps:{"textContent":_vm._s(_vm.apmLabelText)}}),_vm._l((_vm.apms),function(a,aIndex){return [(!_vm.opts.hideDisabledHours || (_vm.opts.hideDisabledHours && !_vm.isDisabledApm(a)))?_c('li',{key:aIndex,class:{active: _vm.apm === a},attrs:{"tabindex":_vm.isDisabledApm(a) ? -1 : _vm.tabindex,"data-key":a,"disabled":_vm.isDisabledApm(a)},domProps:{"textContent":_vm._s(_vm.apmDisplayText(a))},on:{"click":function($event){return _vm.select('apm', a)},"keydown":[function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"space",32,$event.key,[" ","Spacebar"])){ return null; }$event.preventDefault();return _vm.select('apm', a)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }$event.preventDefault();return _vm.select('apm', a)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }$event.preventDefault();return _vm.prevItem('apms', a)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }$event.preventDefault();return _vm.nextItem('apms', a)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"left",37,$event.key,["Left","ArrowLeft"])){ return null; }if('button' in $event && $event.button !== 0){ return null; }$event.preventDefault();return _vm.toLeftColumn('apms')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"right",39,$event.key,["Right","ArrowRight"])){ return null; }if('button' in $event && $event.button !== 2){ return null; }$event.preventDefault();return _vm.toRightColumn('apms')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"esc",27,$event.key,["Esc","Escape"])){ return null; }if($event.ctrlKey||$event.shiftKey||$event.altKey||$event.metaKey){ return null; }return _vm.debounceBlur($event)}],"blur":_vm.debounceBlur,"focus":_vm.keepFocusing}}):_vm._e()]})],2):_vm._e()]:_vm._e()],2)])])}
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"5cf45188-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/vue-timepicker.vue?vue&type=template&id=44af6b9a&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"vue__time-picker time-picker",style:(_vm.inputWidthStyle)},[_c('input',{ref:"input",staticClass:"display-time",class:[_vm.inputClass, {'is-empty': _vm.inputIsEmpty, 'invalid': _vm.hasInvalidInput, 'all-selected': _vm.allValueSelected, 'disabled': _vm.disabled}],style:(_vm.inputWidthStyle),attrs:{"type":"text","id":_vm.id,"name":_vm.name,"placeholder":_vm.placeholder ? _vm.placeholder : _vm.formatString,"tabindex":_vm.disabled ? -1 : _vm.tabindex,"disabled":_vm.disabled,"readonly":!_vm.manualInput,"autocomplete":_vm.autocomplete},domProps:{"value":_vm.inputIsEmpty ? null : _vm.customDisplayTime},on:{"focus":_vm.onFocus,"change":_vm.onChange,"blur":_vm.debounceBlur,"mousedown":_vm.onMouseDown,"keydown":[_vm.keyDownHandler,function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"esc",27,$event.key,["Esc","Escape"])){ return null; }if($event.ctrlKey||$event.shiftKey||$event.altKey||$event.metaKey){ return null; }return _vm.escBlur($event)}],"compositionstart":_vm.onCompostionStart,"compositionend":_vm.onCompostionEnd,"paste":_vm.pasteHandler}}),(!_vm.showDropdown && _vm.showClearBtn)?_c('span',{staticClass:"clear-btn",attrs:{"tabindex":"-1"},on:{"click":_vm.clearTime}},[_vm._v("×")]):_vm._e(),(_vm.showDropdown)?_c('div',{staticClass:"time-picker-overlay",attrs:{"tabindex":"-1"},on:{"click":_vm.toggleDropdown}}):_vm._e(),_c('div',{directives:[{name:"show",rawName:"v-show",value:(_vm.showDropdown && !_vm.opts.hideDropdown),expression:"showDropdown && !opts.hideDropdown"}],staticClass:"dropdown",style:(_vm.inputWidthStyle),attrs:{"tabindex":"-1"},on:{"mouseup":_vm.keepFocusing,"click":function($event){$event.stopPropagation();}}},[_c('div',{staticClass:"select-list",style:(_vm.inputWidthStyle),attrs:{"tabindex":"-1"}},[(!_vm.opts.advancedKeyboard)?[_c('ul',{staticClass:"hours",on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.hourLabelText)}}),_vm._l((_vm.hours),function(hr,hIndex){return [(!_vm.opts.hideDisabledHours || (_vm.opts.hideDisabledHours && !_vm.isDisabledHour(hr)))?_c('li',{key:hIndex,class:{active: _vm.hour === hr},attrs:{"disabled":_vm.isDisabledHour(hr),"data-key":hr},domProps:{"textContent":_vm._s(hr)},on:{"click":function($event){return _vm.select('hour', hr)}}}):_vm._e()]})],2),_c('ul',{staticClass:"minutes",on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.minuteLabelText)}}),_vm._l((_vm.minutes),function(m,mIndex){return [(!_vm.opts.hideDisabledMinutes || (_vm.opts.hideDisabledMinutes && !_vm.isDisabledMinute(m)))?_c('li',{key:mIndex,class:{active: _vm.minute === m},attrs:{"disabled":_vm.isDisabledMinute(m),"data-key":m},domProps:{"textContent":_vm._s(m)},on:{"click":function($event){return _vm.select('minute', m)}}}):_vm._e()]})],2),(_vm.secondType)?_c('ul',{staticClass:"seconds",on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.secondLabelText)}}),_vm._l((_vm.seconds),function(s,sIndex){return [(!_vm.opts.hideDisabledSeconds || (_vm.opts.hideDisabledSeconds && !_vm.isDisabledSecond(s)))?_c('li',{key:sIndex,class:{active: _vm.second === s},attrs:{"disabled":_vm.isDisabledSecond(s),"data-key":s},domProps:{"textContent":_vm._s(s)},on:{"click":function($event){return _vm.select('second', s)}}}):_vm._e()]})],2):_vm._e(),(_vm.apmType)?_c('ul',{staticClass:"apms",on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.apmLabelText)}}),_vm._l((_vm.apms),function(a,aIndex){return [(!_vm.opts.hideDisabledHours || (_vm.opts.hideDisabledHours && !_vm.isDisabledApm(a)))?_c('li',{key:aIndex,class:{active: _vm.apm === a},attrs:{"disabled":_vm.isDisabledApm(a),"data-key":a},domProps:{"textContent":_vm._s(_vm.apmDisplayText(a))},on:{"click":function($event){return _vm.select('apm', a)}}}):_vm._e()]})],2):_vm._e()]:_vm._e(),(_vm.opts.advancedKeyboard)?[_c('ul',{staticClass:"hours",attrs:{"tabindex":"-1"},on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",attrs:{"tabindex":"-1"},domProps:{"textContent":_vm._s(_vm.hourLabelText)}}),_vm._l((_vm.hours),function(hr,hIndex){return [(!_vm.opts.hideDisabledHours || (_vm.opts.hideDisabledHours && !_vm.isDisabledHour(hr)))?_c('li',{key:hIndex,class:{active: _vm.hour === hr},attrs:{"tabindex":_vm.isDisabledHour(hr) ? -1 : _vm.tabindex,"data-key":hr,"disabled":_vm.isDisabledHour(hr)},domProps:{"textContent":_vm._s(hr)},on:{"click":function($event){return _vm.select('hour', hr)},"keydown":[function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"space",32,$event.key,[" ","Spacebar"])){ return null; }$event.preventDefault();return _vm.select('hour', hr)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }$event.preventDefault();return _vm.select('hour', hr)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }$event.preventDefault();return _vm.prevItem('hours', hr)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }$event.preventDefault();return _vm.nextItem('hours', hr)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"left",37,$event.key,["Left","ArrowLeft"])){ return null; }if('button' in $event && $event.button !== 0){ return null; }$event.preventDefault();return _vm.toLeftColumn('hours')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"right",39,$event.key,["Right","ArrowRight"])){ return null; }if('button' in $event && $event.button !== 2){ return null; }$event.preventDefault();return _vm.toRightColumn('hours')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"esc",27,$event.key,["Esc","Escape"])){ return null; }if($event.ctrlKey||$event.shiftKey||$event.altKey||$event.metaKey){ return null; }return _vm.debounceBlur($event)}],"blur":_vm.debounceBlur,"focus":_vm.keepFocusing}}):_vm._e()]})],2),_c('ul',{staticClass:"minutes",attrs:{"tabindex":"-1"},on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",attrs:{"tabindex":"-1"},domProps:{"textContent":_vm._s(_vm.minuteLabelText)}}),_vm._l((_vm.minutes),function(m,mIndex){return [(!_vm.opts.hideDisabledMinutes || (_vm.opts.hideDisabledMinutes && !_vm.isDisabledMinute(m)))?_c('li',{key:mIndex,class:{active: _vm.minute === m},attrs:{"tabindex":_vm.isDisabledMinute(m) ? -1 : _vm.tabindex,"data-key":m,"disabled":_vm.isDisabledMinute(m)},domProps:{"textContent":_vm._s(m)},on:{"click":function($event){return _vm.select('minute', m)},"keydown":[function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"space",32,$event.key,[" ","Spacebar"])){ return null; }$event.preventDefault();return _vm.select('minute', m)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }$event.preventDefault();return _vm.select('minute', m)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }$event.preventDefault();return _vm.prevItem('minutes', m)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }$event.preventDefault();return _vm.nextItem('minutes', m)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"left",37,$event.key,["Left","ArrowLeft"])){ return null; }if('button' in $event && $event.button !== 0){ return null; }$event.preventDefault();return _vm.toLeftColumn('minutes')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"right",39,$event.key,["Right","ArrowRight"])){ return null; }if('button' in $event && $event.button !== 2){ return null; }$event.preventDefault();return _vm.toRightColumn('minutes')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"esc",27,$event.key,["Esc","Escape"])){ return null; }if($event.ctrlKey||$event.shiftKey||$event.altKey||$event.metaKey){ return null; }return _vm.debounceBlur($event)}],"blur":_vm.debounceBlur,"focus":_vm.keepFocusing}}):_vm._e()]})],2),(_vm.secondType)?_c('ul',{staticClass:"seconds",attrs:{"tabindex":"-1"},on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",attrs:{"tabindex":"-1"},domProps:{"textContent":_vm._s(_vm.secondLabelText)}}),_vm._l((_vm.seconds),function(s,sIndex){return [(!_vm.opts.hideDisabledSeconds || (_vm.opts.hideDisabledSeconds && !_vm.isDisabledSecond(s)))?_c('li',{key:sIndex,class:{active: _vm.second === s},attrs:{"tabindex":_vm.isDisabledSecond(s) ? -1 : _vm.tabindex,"data-key":s,"disabled":_vm.isDisabledSecond(s)},domProps:{"textContent":_vm._s(s)},on:{"click":function($event){return _vm.select('second', s)},"keydown":[function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"space",32,$event.key,[" ","Spacebar"])){ return null; }$event.preventDefault();return _vm.select('second', s)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }$event.preventDefault();return _vm.select('second', s)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }$event.preventDefault();return _vm.prevItem('seconds', s)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }$event.preventDefault();return _vm.nextItem('seconds', s)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"left",37,$event.key,["Left","ArrowLeft"])){ return null; }if('button' in $event && $event.button !== 0){ return null; }$event.preventDefault();return _vm.toLeftColumn('seconds')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"right",39,$event.key,["Right","ArrowRight"])){ return null; }if('button' in $event && $event.button !== 2){ return null; }$event.preventDefault();return _vm.toRightColumn('seconds')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"esc",27,$event.key,["Esc","Escape"])){ return null; }if($event.ctrlKey||$event.shiftKey||$event.altKey||$event.metaKey){ return null; }return _vm.debounceBlur($event)}],"blur":_vm.debounceBlur,"focus":_vm.keepFocusing}}):_vm._e()]})],2):_vm._e(),(_vm.apmType)?_c('ul',{staticClass:"apms",attrs:{"tabindex":"-1"},on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",attrs:{"tabindex":"-1"},domProps:{"textContent":_vm._s(_vm.apmLabelText)}}),_vm._l((_vm.apms),function(a,aIndex){return [(!_vm.opts.hideDisabledHours || (_vm.opts.hideDisabledHours && !_vm.isDisabledApm(a)))?_c('li',{key:aIndex,class:{active: _vm.apm === a},attrs:{"tabindex":_vm.isDisabledApm(a) ? -1 : _vm.tabindex,"data-key":a,"disabled":_vm.isDisabledApm(a)},domProps:{"textContent":_vm._s(_vm.apmDisplayText(a))},on:{"click":function($event){return _vm.select('apm', a)},"keydown":[function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"space",32,$event.key,[" ","Spacebar"])){ return null; }$event.preventDefault();return _vm.select('apm', a)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }$event.preventDefault();return _vm.select('apm', a)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }$event.preventDefault();return _vm.prevItem('apms', a)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }$event.preventDefault();return _vm.nextItem('apms', a)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"left",37,$event.key,["Left","ArrowLeft"])){ return null; }if('button' in $event && $event.button !== 0){ return null; }$event.preventDefault();return _vm.toLeftColumn('apms')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"right",39,$event.key,["Right","ArrowRight"])){ return null; }if('button' in $event && $event.button !== 2){ return null; }$event.preventDefault();return _vm.toRightColumn('apms')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"esc",27,$event.key,["Esc","Escape"])){ return null; }if($event.ctrlKey||$event.shiftKey||$event.altKey||$event.metaKey){ return null; }return _vm.debounceBlur($event)}],"blur":_vm.debounceBlur,"focus":_vm.keepFocusing}}):_vm._e()]})],2):_vm._e()]:_vm._e()],2)])])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/vue-timepicker.vue?vue&type=template&id=bb386be6&
+// CONCATENATED MODULE: ./src/vue-timepicker.vue?vue&type=template&id=44af6b9a&
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime-corejs2/core-js/symbol/iterator.js
 var iterator = __webpack_require__("5d58");
@@ -4212,17 +4234,11 @@ var es6_regexp_split = __webpack_require__("28a5");
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.function.name.js
 var es6_function_name = __webpack_require__("7f7f");
 
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.array.find.js
+var es6_array_find = __webpack_require__("7514");
+
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.string.includes.js
 var es6_string_includes = __webpack_require__("2fdb");
-
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.array.find-index.js
-var es6_array_find_index = __webpack_require__("20d6");
-
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es7.symbol.async-iterator.js
-var es7_symbol_async_iterator = __webpack_require__("ac4d");
-
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.symbol.js
-var es6_symbol = __webpack_require__("8a81");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
 var es6_regexp_match = __webpack_require__("4917");
@@ -4232,6 +4248,15 @@ var es6_array_iterator = __webpack_require__("cadf");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.object.keys.js
 var es6_object_keys = __webpack_require__("456d");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es7.symbol.async-iterator.js
+var es7_symbol_async_iterator = __webpack_require__("ac4d");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.symbol.js
+var es6_symbol = __webpack_require__("8a81");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.array.find-index.js
+var es6_array_find_index = __webpack_require__("20d6");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.array.sort.js
 var es6_array_sort = __webpack_require__("55dd");
@@ -4272,6 +4297,7 @@ var es6_number_constructor = __webpack_require__("c5f6");
 
 
 
+
 var CONFIG = {
   HOUR_TOKENS: ['HH', 'H', 'hh', 'h', 'kk', 'k'],
   MINUTE_TOKENS: ['mm', 'm'],
@@ -4288,7 +4314,10 @@ var DEFAULT_OPTIONS = {
   hideDisabledHours: false,
   hideDisabledMinutes: false,
   hideDisabledSeconds: false,
-  hideDisabledItems: false
+  hideDisabledItems: false,
+  advancedKeyboard: false,
+  hideDropdown: false,
+  blurDelay: 300
 };
 /* harmony default export */ var vue_timepickervue_type_script_lang_js_ = ({
   name: 'VueTimepicker',
@@ -4361,6 +4390,10 @@ var DEFAULT_OPTIONS = {
     inputWidth: {
       type: String
     },
+    autocomplete: {
+      type: String,
+      default: 'off'
+    },
     hourLabel: {
       type: String
     },
@@ -4394,6 +4427,14 @@ var DEFAULT_OPTIONS = {
       type: Boolean,
       default: false
     },
+    manualInput: {
+      type: Boolean,
+      default: false
+    },
+    hideDropdown: {
+      type: Boolean,
+      default: false
+    },
     debugMode: {
       type: Boolean,
       default: false
@@ -4418,7 +4459,11 @@ var DEFAULT_OPTIONS = {
       second: '',
       apm: '',
       fullValues: undefined,
-      bakDisplayTime: undefined
+      bakDisplayTime: undefined,
+      selectionTimer: undefined,
+      kbInputTimer: undefined,
+      kbInputLog: '',
+      bakCurrentPos: null
     };
   },
   computed: {
@@ -4435,17 +4480,17 @@ var DEFAULT_OPTIONS = {
 
 
       if (!options.minuteInterval || options.minuteInterval < 1 || options.minuteInterval > 60) {
+        if (this.debugMode) {
+          if (options.minuteInterval > 60) {
+            this.debugLog("\"minute-interval\" should be less than 60. Current value is ".concat(this.minuteInterval));
+          } else if (options.minuteInterval === 0 || options.minuteInterval < 1) {
+            this.debugLog("\"minute-interval\" should be NO less than 1. Current value is ".concat(this.minuteInterval));
+          }
+        }
+
         if (options.minuteInterval === 0) {
           options.minuteInterval = 60;
         } else {
-          if (this.debugMode) {
-            if (options.minuteInterval > 60) {
-              this.debugLog("\"minute-interval\" should be less than 60. Current value is ".concat(this.minuteInterval));
-            } else if (options.minuteInterval < 1) {
-              this.debugLog("\"minute-interval\" should be NO less than 1. Current value is ".concat(this.minuteInterval));
-            }
-          }
-
           options.minuteInterval = 1;
         }
       }
@@ -4456,17 +4501,17 @@ var DEFAULT_OPTIONS = {
 
 
       if (!options.secondInterval || options.secondInterval < 1 || options.secondInterval > 60) {
+        if (this.debugMode) {
+          if (options.secondInterval > 60) {
+            this.debugLog("\"second-interval\" should be less than 60. Current value is ".concat(this.secondInterval));
+          } else if (options.secondInterval === 0 || options.secondInterval < 1) {
+            this.debugLog("\"second-interval\" should be NO less than 1. Current value is ".concat(this.secondInterval));
+          }
+        }
+
         if (options.secondInterval === 0) {
           options.secondInterval = 60;
         } else {
-          if (this.debugMode) {
-            if (options.secondInterval > 60) {
-              this.debugLog("\"second-interval\" should be less than 60. Current value is ".concat(this.secondInterval));
-            } else if (options.secondInterval < 1) {
-              this.debugLog("\"second-interval\" should be NO less than 1. Current value is ".concat(this.secondInterval));
-            }
-          }
-
           options.secondInterval = 1;
         }
       }
@@ -4509,6 +4554,26 @@ var DEFAULT_OPTIONS = {
 
       if (this.hideDisabledSeconds || this.hideDisabledItems) {
         options.hideDisabledSeconds = true;
+      }
+
+      if (this.hideDropdown) {
+        if (this.manualInput) {
+          options.hideDropdown = true;
+        } else if (this.debugMode) {
+          this.debugLog('"hide-dropdown" only works with "manual-input" mode');
+        }
+      }
+
+      if (this.advancedKeyboard) {
+        if (!(this.hideDropdown && this.manualInput)) {
+          options.advancedKeyboard = true;
+        } else if (this.debugMode) {
+          this.debugLog('"advanced-keyboard" has no effect when dropdown is force hidden by "hide-dropdown"');
+        }
+      }
+
+      if (this.blurDelay && +this.blurDelay > 0) {
+        options.blurDelay = +this.blurDelay;
       }
 
       return options;
@@ -4649,10 +4714,61 @@ var DEFAULT_OPTIONS = {
 
       return this.hourRangeIn24HrFormat;
     },
+    validHoursList: function validHoursList() {
+      var _this2 = this;
+
+      if (!this.manualInput) {
+        return false;
+      }
+
+      if (this.restrictedHourRange) {
+        var list = [];
+
+        if (this.baseOn12Hours) {
+          list = this.restrictedHourRange.map(function (hr) {
+            var l = hr.substr(0, hr.length - 1);
+            var r = hr.substr(-1);
+            return "".concat(_this2.formatValue(_this2.hourType, l)).concat(r);
+          });
+          var am12Index = list.findIndex(function (hr) {
+            return hr === '12a';
+          });
+
+          if (am12Index > 0) {
+            // Make '12a' the first item in h/hh
+            list.unshift(list.splice(am12Index, 1)[0]);
+          }
+
+          return list;
+        }
+
+        list = this.restrictedHourRange.map(function (hr) {
+          return _this2.formatValue(_this2.hourType, hr);
+        });
+
+        if (list.length > 1 && list[0] && list[0] === '24') {
+          // Make '24' the last item in k/kk
+          list.push(list.shift());
+        }
+
+        return list;
+      }
+
+      if (this.baseOn12Hours) {
+        return [].concat([], this.hours.map(function (hr) {
+          return "".concat(hr, "a");
+        }), this.hours.map(function (hr) {
+          return "".concat(hr, "p");
+        }));
+      }
+
+      return this.hours;
+    },
     has: function has() {
       var result = {
         am: true,
-        pm: true
+        pm: true,
+        customApmText: false
       };
 
       if (this.hourRangeIn24HrFormat && this.hourRangeIn24HrFormat.length) {
@@ -4661,10 +4777,14 @@ var DEFAULT_OPTIONS = {
         result.pm = range.some(this.hasPm);
       }
 
+      if (this.amText && this.amText.length || this.pmText && this.pmText.length) {
+        result.customApmText = true;
+      }
+
       return result;
     },
     minuteRangeList: function minuteRangeList() {
-      var _this2 = this;
+      var _this3 = this;
 
       if (!this.opts.minuteRange) {
         return false;
@@ -4678,8 +4798,8 @@ var DEFAULT_OPTIONS = {
       var formatedValue;
       this.opts.minuteRange.forEach(function (value) {
         if (value instanceof Array) {
-          if (value.length > 2 && _this2.debugMode) {
-            _this2.debugLog("Nested array within \"minute-range\" must contain no more than two items. Only the first two items of ".concat(JSON.stringify(value), " will be taken into account."));
+          if (value.length > 2 && _this3.debugMode) {
+            _this3.debugLog("Nested array within \"minute-range\" must contain no more than two items. Only the first two items of ".concat(JSON.stringify(value), " will be taken into account."));
           }
 
           var start = value[0];
@@ -4690,18 +4810,18 @@ var DEFAULT_OPTIONS = {
               continue;
             }
 
-            formatedValue = _this2.formatValue(_this2.minuteType, i);
+            formatedValue = _this3.formatValue(_this3.minuteType, i);
 
             if (!range.includes(formatedValue)) {
               range.push(formatedValue);
             }
           }
         } else {
-          if (value < 0 || value > 59) {
+          if (+value < 0 || +value > 59) {
             return;
           }
 
-          formatedValue = _this2.formatValue(_this2.minuteType, value);
+          formatedValue = _this3.formatValue(_this3.minuteType, value);
 
           if (!range.includes(formatedValue)) {
             range.push(formatedValue);
@@ -4725,7 +4845,7 @@ var DEFAULT_OPTIONS = {
       return range;
     },
     secondRangeList: function secondRangeList() {
-      var _this3 = this;
+      var _this4 = this;
 
       if (!this.opts.secondRange) {
         return false;
@@ -4739,8 +4859,8 @@ var DEFAULT_OPTIONS = {
       var formatedValue;
       this.opts.secondRange.forEach(function (value) {
         if (value instanceof Array) {
-          if (value.length > 2 && _this3.debugMode) {
-            _this3.debugLog("Nested array within \"second-range\" must contain no more than two items. Only the first two items of ".concat(JSON.stringify(value), " will be taken into account."));
+          if (value.length > 2 && _this4.debugMode) {
+            _this4.debugLog("Nested array within \"second-range\" must contain no more than two items. Only the first two items of ".concat(JSON.stringify(value), " will be taken into account."));
           }
 
           var start = value[0];
@@ -4751,18 +4871,18 @@ var DEFAULT_OPTIONS = {
               continue;
             }
 
-            formatedValue = _this3.formatValue(_this3.secondType, i);
+            formatedValue = _this4.formatValue(_this4.secondType, i);
 
             if (!range.includes(formatedValue)) {
               range.push(formatedValue);
             }
           }
         } else {
-          if (value < 0 || value > 59) {
+          if (+value < 0 || +value > 59) {
             return;
           }
 
-          formatedValue = _this3.formatValue(_this3.secondType, value);
+          formatedValue = _this4.formatValue(_this4.secondType, value);
 
           if (!range.includes(formatedValue)) {
             range.push(formatedValue);
@@ -4805,6 +4925,159 @@ var DEFAULT_OPTIONS = {
       return {
         width: this.inputWidth
       };
+    },
+    tokenRegexBase: function tokenRegexBase() {
+      if (!this.manualInput && !this.useStringValue) {
+        return false;
+      }
+
+      var regexStr = "".concat(this.hourType, "|").concat(this.minuteType);
+
+      if (this.secondType) {
+        regexStr += "|".concat(this.secondType);
+      }
+
+      if (this.apmType) {
+        regexStr += "|".concat(this.apmType);
+      }
+
+      return regexStr;
+    },
+    tokenChunks: function tokenChunks() {
+      if (!this.manualInput && !this.useStringValue) {
+        return false;
+      }
+
+      var formatString = String(this.formatString);
+      var tokensRegxStr = "[(".concat(this.tokenRegexBase, ")]+");
+      var tokensMatchAll = this.getMatchAllByRegex(formatString, tokensRegxStr);
+      var tokenChunks = [];
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = tokensMatchAll[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var tkMatch = _step.value;
+          var rawToken = tkMatch[0];
+          var tokenMatchItem = {
+            index: tkMatch.index,
+            token: rawToken,
+            type: this.getTokenType(rawToken),
+            needsCalibrate: rawToken.length < 2,
+            len: (rawToken || '').length
+          };
+          tokenChunks.push(tokenMatchItem);
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return != null) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      return tokenChunks;
+    },
+    needsPosCalibrate: function needsPosCalibrate() {
+      if (!this.manualInput) {
+        return false;
+      }
+
+      return this.tokenChunks.some(function (chk) {
+        return chk.needsCalibrate;
+      });
+    },
+    tokenChunksPos: function tokenChunksPos() {
+      var _this5 = this;
+
+      if (!this.manualInput) {
+        return false;
+      }
+
+      if (!this.needsPosCalibrate) {
+        return this.tokenChunks.map(function (chk) {
+          return {
+            token: chk.token,
+            type: chk.type,
+            start: chk.index,
+            end: chk.index + chk.len
+          };
+        });
+      }
+
+      var list = [];
+      var calibrateLen = 0;
+      this.tokenChunks.forEach(function (chk) {
+        var chunkCurrentLen; // Adjust for customized AM/PM text
+
+        if (chk.type === 'apm' && _this5.has.customApmText) {
+          if (_this5.apm && _this5.apm.length) {
+            var customApmText = _this5.apm.toLowerCase() === 'am' ? _this5.amText : _this5.pmText;
+            chunkCurrentLen = customApmText && customApmText.length ? customApmText.length : chk.len;
+          } else {
+            chunkCurrentLen = chk.len;
+          } // Others
+
+        } else {
+          chunkCurrentLen = _this5[chk.type] && _this5[chk.type].length ? _this5[chk.type].length : chk.len;
+        }
+
+        list.push({
+          token: chk.token,
+          type: chk.type,
+          start: chk.index + calibrateLen,
+          end: chk.index + calibrateLen + chunkCurrentLen
+        });
+
+        if (chk.needsCalibrate && chunkCurrentLen > chk.len) {
+          calibrateLen += chunkCurrentLen - chk.len;
+        }
+      });
+      return list;
+    },
+    invalidValues: function invalidValues() {
+      if (this.inputIsEmpty) {
+        return [];
+      }
+
+      if (!this.restrictedHourRange && !this.minuteRangeList && !this.secondRangeList && this.opts.minuteInterval === 1 && this.opts.secondInterval === 1) {
+        return [];
+      }
+
+      var result = [];
+
+      if (!this.isEmptyValue(this.hourType, this.hour) && (!this.isValidValue(this.hourType, this.hour) || this.isDisabledHour(this.hour))) {
+        result.push('hour');
+      }
+
+      if (!this.isEmptyValue(this.minuteType, this.minute) && (!this.isValidValue(this.minuteType, this.minute) || this.isDisabledMinute(this.minute) || this.notInMinuteInterval(this.minute))) {
+        result.push('minute');
+      }
+
+      if (this.secondType && !this.isEmptyValue(this.secondType, this.second) && (!this.isValidValue(this.secondType, this.second) || this.isDisabledSecond(this.second) || this.notInSecondInterval(this.second))) {
+        result.push('second');
+      }
+
+      if (this.apmType && !this.isEmptyValue(this.apmType, this.apm) && (!this.isValidValue(this.apmType, this.apm) || this.isDisabledApm(this.apm))) {
+        result.push('apm');
+      }
+
+      if (result.length) {
+        return result;
+      }
+
+      return [];
+    },
+    hasInvalidInput: function hasInvalidInput() {
+      return Boolean(this.invalidValues && this.invalidValues.length);
     }
   },
   watch: {
@@ -4831,11 +5104,20 @@ var DEFAULT_OPTIONS = {
       if (toDisabled && this.showDropdown) {
         this.showDropdown = false;
       }
+    },
+    'invalidValues.length': function invalidValuesLength(newLength, oldLength) {
+      if (newLength && newLength >= 1) {
+        this.$emit('error', this.invalidValues);
+      } else if (oldLength && oldLength >= 1) {
+        this.$emit('error', []);
+      }
     }
   },
   methods: {
-    formatValue: function formatValue(type, i) {
-      switch (type) {
+    formatValue: function formatValue(token, i) {
+      i = +i;
+
+      switch (token) {
         case 'H':
         case 'm':
         case 's':
@@ -4854,7 +5136,11 @@ var DEFAULT_OPTIONS = {
           return String(i);
 
         case 'k':
-          return String(i + 1);
+          if (i === 0) {
+            return '24';
+          }
+
+          return String(i);
 
         case 'hh':
           if (i === 0) {
@@ -4864,7 +5150,11 @@ var DEFAULT_OPTIONS = {
           return i < 10 ? "0".concat(i) : String(i);
 
         case 'kk':
-          return i + 1 < 10 ? "0".concat(i + 1) : String(i + 1);
+          if (i === 0) {
+            return '24';
+          }
+
+          return i < 10 ? "0".concat(i) : String(i);
 
         default:
           return '';
@@ -4884,7 +5174,7 @@ var DEFAULT_OPTIONS = {
       return fallbackValue || '';
     },
     renderFormat: function renderFormat(newFormat) {
-      var _this4 = this;
+      var _this6 = this;
 
       newFormat = newFormat || this.opts.format || DEFAULT_OPTIONS.format;
       this.hourType = this.checkAcceptingType(CONFIG.HOUR_TOKENS, newFormat, 'HH');
@@ -4896,14 +5186,18 @@ var DEFAULT_OPTIONS = {
 
       if (this.secondType) {
         this.renderList('second');
+      } else {
+        this.seconds = [];
       }
 
       if (this.apmType) {
         this.renderApmList();
+      } else {
+        this.apms = [];
       }
 
       this.$nextTick(function () {
-        _this4.readValues();
+        _this6.readValues();
       });
     },
     renderHoursList: function renderHoursList() {
@@ -4911,7 +5205,11 @@ var DEFAULT_OPTIONS = {
       var hours = [];
 
       for (var i = 0; i < hoursCount; i++) {
-        hours.push(this.formatValue(this.hourType, i));
+        if (this.hourType === 'k' || this.hourType === 'kk') {
+          hours.push(this.formatValue(this.hourType, i + 1));
+        } else {
+          hours.push(this.formatValue(this.hourType, i));
+        }
       }
 
       this.hours = hours;
@@ -4968,7 +5266,7 @@ var DEFAULT_OPTIONS = {
       }
     },
     readObjectValues: function readObjectValues(objValue) {
-      var _this5 = this;
+      var _this7 = this;
 
       var timeValue = JSON.parse(JSON.stringify(objValue || {}));
       var values = Object.keys(timeValue); // Failsafe for empty `v-model` object
@@ -4979,21 +5277,26 @@ var DEFAULT_OPTIONS = {
       }
 
       ['hour', 'minute', 'second', 'apm'].forEach(function (section) {
-        var sectionType = _this5["".concat(section, "Type")];
+        var sectionType = _this7["".concat(section, "Type")];
 
         if (values.indexOf(sectionType) > -1) {
-          var sanitizedValue = _this5.sanitizedValue(sectionType, timeValue[sectionType]);
+          var sanitizedValue = _this7.sanitizedValue(sectionType, timeValue[sectionType]);
 
-          _this5[section] = sanitizedValue;
+          _this7[section] = sanitizedValue;
           timeValue[sectionType] = sanitizedValue;
         } else {
-          _this5[section] = '';
+          _this7[section] = '';
         }
       });
       this.timeValue = timeValue;
     },
+    getMatchAllByRegex: function getMatchAllByRegex(testString, regexString) {
+      var str = 'polyfillTest';
+      var needsPolyfill = Boolean(!str.matchAll || typeof str.matchAll !== 'function');
+      return needsPolyfill ? this.polyfillMatchAll(testString, regexString) : testString.matchAll(new RegExp(regexString, 'g'));
+    },
     readStringValues: function readStringValues(stringValue) {
-      var _this6 = this;
+      var _this8 = this;
 
       // Failsafe for empty `v-model` string
       if (!stringValue || !stringValue.length) {
@@ -5002,30 +5305,19 @@ var DEFAULT_OPTIONS = {
       }
 
       var formatString = String(this.formatString);
-      var regxStr = "".concat(this.hourType, "|").concat(this.minuteType);
-
-      if (this.secondType) {
-        regxStr += "|".concat(this.secondType);
-      }
-
-      if (this.apmType) {
-        regxStr += "|".concat(this.apmType);
-      }
-
-      var tokensRegxStr = "[(".concat(regxStr, ")]+");
-      var othersRegxStr = "[^(".concat(regxStr, ")]+");
-      var needsPolyfill = Boolean(!formatString.matchAll || typeof formatString.matchAll !== 'function');
-      var tokensMatchAll = needsPolyfill ? this.matchAllPolyfill(formatString, tokensRegxStr) : formatString.matchAll(new RegExp(tokensRegxStr, 'g'));
-      var othersMatchAll = needsPolyfill ? this.matchAllPolyfill(formatString, othersRegxStr) : formatString.matchAll(new RegExp(othersRegxStr, 'g'));
+      var tokensRegxStr = "[(".concat(this.tokenRegexBase, ")]+");
+      var othersRegxStr = "[^(".concat(this.tokenRegexBase, ")]+");
+      var tokensMatchAll = this.getMatchAllByRegex(formatString, tokensRegxStr);
+      var othersMatchAll = this.getMatchAllByRegex(formatString, othersRegxStr);
       var chunks = [];
       var tokenChunks = [];
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
 
       try {
-        for (var _iterator = tokensMatchAll[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var tkMatch = _step.value;
+        for (var _iterator2 = tokensMatchAll[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var tkMatch = _step2.value;
           var tokenMatchItem = {
             index: tkMatch.index,
             token: tkMatch[0],
@@ -5033,33 +5325,6 @@ var DEFAULT_OPTIONS = {
           };
           chunks.push(tokenMatchItem);
           tokenChunks.push(tokenMatchItem);
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return != null) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
-      }
-
-      var _iteratorNormalCompletion2 = true;
-      var _didIteratorError2 = false;
-      var _iteratorError2 = undefined;
-
-      try {
-        for (var _iterator2 = othersMatchAll[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-          var otMatch = _step2.value;
-          chunks.push({
-            index: otMatch.index,
-            token: otMatch[0]
-          });
         }
       } catch (err) {
         _didIteratorError2 = true;
@@ -5076,13 +5341,40 @@ var DEFAULT_OPTIONS = {
         }
       }
 
+      var _iteratorNormalCompletion3 = true;
+      var _didIteratorError3 = false;
+      var _iteratorError3 = undefined;
+
+      try {
+        for (var _iterator3 = othersMatchAll[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          var otMatch = _step3.value;
+          chunks.push({
+            index: otMatch.index,
+            token: otMatch[0]
+          });
+        }
+      } catch (err) {
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
+            _iterator3.return();
+          }
+        } finally {
+          if (_didIteratorError3) {
+            throw _iteratorError3;
+          }
+        }
+      }
+
       chunks.sort(function (l, r) {
         return l.index < r.index ? -1 : 1;
       });
       var regexCombo = '';
       chunks.forEach(function (chunk) {
         if (chunk.isValueToken) {
-          var tokenRegex = _this6.getTokenRegex(chunk.token) || '';
+          var tokenRegex = _this8.getTokenRegex(chunk.token) || '';
           regexCombo += tokenRegex;
         } else {
           var safeChars = chunk.token.replace(/\\{0}(\*|\?|\.|\+)/g, '\\$1');
@@ -5097,8 +5389,8 @@ var DEFAULT_OPTIONS = {
         var timeValue = {};
         valueResults.forEach(function (value, vrIndex) {
           if (tokenChunks[vrIndex]) {
-            var tokenType = tokenChunks[vrIndex].token;
-            timeValue[tokenType] = _this6.setValueFromString(value, tokenType);
+            var targetToken = tokenChunks[vrIndex].token;
+            timeValue[targetToken] = _this8.setValueFromString(value, targetToken);
           }
         });
         this.timeValue = timeValue;
@@ -5111,11 +5403,11 @@ var DEFAULT_OPTIONS = {
         }
       } else {
         if (this.debugMode) {
-          this.debugLog("The input string in \"v-model\" does NOT match the \"format\" pattern\nformat: ".concat(this.formatString, "\nv-model: ").concat(this.value));
+          this.debugLog("The input string in \"v-model\" does NOT match the \"format\" pattern\nformat: ".concat(this.formatString, "\nv-model: ").concat(stringValue));
         }
       }
     },
-    matchAllPolyfill: function matchAllPolyfill(targetString, regxStr) {
+    polyfillMatchAll: function polyfillMatchAll(targetString, regxStr) {
       var matchesList = targetString.match(new RegExp(regxStr, 'g'));
       var result = [];
       var indicesReg = [];
@@ -5196,12 +5488,12 @@ var DEFAULT_OPTIONS = {
       return stdValue;
     },
     fillValues: function fillValues(forceEmit) {
-      var _this7 = this;
+      var _this9 = this;
 
       var fullValues = {};
       var baseHour = this.hour;
       var baseHourType = this.hourType;
-      var hourValue = baseHour || baseHour === 0 ? Number(baseHour) : '';
+      var hourValue = this.isNumber(baseHour) ? +baseHour : '';
       var apmValue = this.baseOn12Hours && this.apm ? String(this.apm).toLowerCase() : false;
       CONFIG.HOUR_TOKENS.forEach(function (token) {
         if (token === baseHourType) {
@@ -5218,7 +5510,7 @@ var DEFAULT_OPTIONS = {
             if (!String(hourValue).length) {
               fullValues[token] = '';
               return;
-            } else if (_this7.baseOn12Hours) {
+            } else if (_this9.baseOn12Hours) {
               if (apmValue === 'pm') {
                 value = hourValue < 12 ? hourValue + 12 : hourValue;
               } else {
@@ -5236,7 +5528,7 @@ var DEFAULT_OPTIONS = {
             if (!String(hourValue).length) {
               fullValues[token] = '';
               return;
-            } else if (_this7.baseOn12Hours) {
+            } else if (_this9.baseOn12Hours) {
               if (apmValue === 'pm') {
                 value = hourValue < 12 ? hourValue + 12 : hourValue;
               } else {
@@ -5260,11 +5552,11 @@ var DEFAULT_OPTIONS = {
                 fullValues.a = '';
                 fullValues.A = '';
                 return;
-              } else if (hourValue > 11) {
+              } else if (hourValue > 11 && hourValue < 24) {
                 apm = 'pm';
                 value = hourValue === 12 ? 12 : hourValue % 12;
               } else {
-                if (_this7.baseOn12Hours) {
+                if (_this9.baseOn12Hours) {
                   apm = '';
                 } else {
                   apm = 'am';
@@ -5281,8 +5573,8 @@ var DEFAULT_OPTIONS = {
         }
       });
 
-      if (this.minute || this.minute === 0) {
-        var minuteValue = Number(this.minute);
+      if (this.isNumber(this.minute)) {
+        var minuteValue = +this.minute;
         fullValues.m = String(minuteValue);
         fullValues.mm = minuteValue < 10 ? "0".concat(minuteValue) : String(minuteValue);
       } else {
@@ -5290,8 +5582,8 @@ var DEFAULT_OPTIONS = {
         fullValues.mm = '';
       }
 
-      if (this.second || this.second === 0) {
-        var secondValue = Number(this.second);
+      if (this.isNumber(this.second)) {
+        var secondValue = +this.second;
         fullValues.s = String(secondValue);
         fullValues.ss = secondValue < 10 ? "0".concat(secondValue) : String(secondValue);
       } else {
@@ -5357,21 +5649,6 @@ var DEFAULT_OPTIONS = {
     hasPm: function hasPm(value) {
       return value >= 12 && value < 24;
     },
-    doubleCheckHourValue: function doubleCheckHourValue() {
-      if (!this.hour || !this.apm || !this.restrictedHourRange || !this.hourRangeIn24HrFormat) {
-        return;
-      }
-
-      var hourIn24 = this.translate12hRange("".concat(this.hour).concat(this.apm.substr(0, 1)));
-
-      if (!this.hourRangeIn24HrFormat.includes(hourIn24)) {
-        this.hour = '';
-
-        if (this.debugMode) {
-          this.debugLog("After switching AM/PM, the hour value is no longer in the \"hour-range\". Reset it to empty now.");
-        }
-      }
-    },
     isDisabledHour: function isDisabledHour(value) {
       if (!this.restrictedHourRange) {
         return false;
@@ -5414,8 +5691,28 @@ var DEFAULT_OPTIONS = {
 
       return !this.has[(value || '').toLowerCase()];
     },
+    notInMinuteInterval: function notInMinuteInterval(value) {
+      if (this.opts.minuteInterval === 1) {
+        return false;
+      }
+
+      return +value % this.opts.minuteInterval !== 0;
+    },
+    notInSecondInterval: function notInSecondInterval(value) {
+      if (this.opts.secondInterval === 1) {
+        return false;
+      }
+
+      return +value % this.opts.secondInterval !== 0;
+    },
     forceApmSelection: function forceApmSelection() {
       if (!this.apm || !this.apm.length) {
+        if (this.manualInput) {
+          // In Manual Input Mode
+          // Skip this to allow users to paste a string value from clipboard
+          return;
+        }
+
         if (this.has.am) {
           this.apm = this.apmType === 'A' ? 'AM' : 'am';
         } else if (this.has.pm) {
@@ -5447,15 +5744,23 @@ var DEFAULT_OPTIONS = {
       this.showDropdown = !this.showDropdown;
 
       if (this.showDropdown) {
-        this.$emit('open');
-        this.isFocusing = true; // Record to check if value did changed in the later phase
+        if (!this.opts.hideDropdown) {
+          this.$emit('open');
+        }
+
+        this.isFocusing = true;
+        this.$emit('focus'); // Record to check if value did changed in the later phase
 
         if (this.lazy) {
           this.bakDisplayTime = String(this.displayTime || '');
         }
       } else {
-        this.$emit('close');
+        if (!this.opts.hideDropdown) {
+          this.$emit('close');
+        }
+
         this.isFocusing = false;
+        this.$emit('blur');
 
         if (this.lazy) {
           this.fillValues(true);
@@ -5463,15 +5768,18 @@ var DEFAULT_OPTIONS = {
         }
       }
 
-      if (this.restrictedHourRange && this.baseOn12Hours) {
-        if (this.showDropdown) {
-          this.forceApmSelection();
-          this.checkForAutoScroll();
-        } else {
-          this.emptyApmSelection();
+      if (this.showDropdown) {
+        if (this.manualInput) {
+          return;
         }
-      } else if (this.showDropdown) {
+
+        if (this.restrictedHourRange && this.baseOn12Hours) {
+          this.forceApmSelection();
+        }
+
         this.checkForAutoScroll();
+      } else if (this.restrictedHourRange && this.baseOn12Hours) {
+        this.emptyApmSelection();
       }
     },
     select: function select(type, value) {
@@ -5499,10 +5807,6 @@ var DEFAULT_OPTIONS = {
         }
 
         this.apm = value;
-
-        if (this.restrictedHourRange) {
-          this.doubleCheckHourValue();
-        }
       }
     },
     clearTime: function clearTime() {
@@ -5515,6 +5819,10 @@ var DEFAULT_OPTIONS = {
       this.second = '';
       this.apm = '';
 
+      if (this.manualInput && this.$refs && this.$refs.input && this.$refs.input.value.length) {
+        this.$refs.input.value = '';
+      }
+
       if (this.lazy) {
         this.fillValues(true);
       }
@@ -5523,16 +5831,20 @@ var DEFAULT_OPTIONS = {
     // Auto-Scroll
     //
     checkForAutoScroll: function checkForAutoScroll() {
-      var _this8 = this;
+      var _this10 = this;
 
-      if (this.autoScroll && !this.inputIsEmpty) {
+      if (this.inputIsEmpty) {
+        return;
+      }
+
+      if (this.autoScroll) {
         this.$nextTick(function () {
-          _this8.scrollToSelectedValues();
+          _this10.scrollToSelectedValues();
         });
-      } else if (!this.inputIsEmpty && this.advancedKeyboard) {
+      } else if (this.opts.advancedKeyboard) {
         // Auto-focus on selected hour value for advanced-keyboard
         this.$nextTick(function () {
-          _this8.scrollToSelected('hours');
+          _this10.scrollToSelected('hours');
         });
       }
     },
@@ -5547,7 +5859,7 @@ var DEFAULT_OPTIONS = {
       if (targetList && targetValue) {
         targetList.scrollTop = targetValue.offsetTop || 0;
 
-        if (this.advancedKeyboard && columnClass === 'hours') {
+        if (this.opts.advancedKeyboard && columnClass === 'hours') {
           targetValue.focus();
         }
       }
@@ -5593,20 +5905,19 @@ var DEFAULT_OPTIONS = {
       }
     },
     debounceBlur: function debounceBlur() {
-      var _this9 = this;
+      var _this11 = this;
 
       if (this.disabled) {
         return;
       }
 
       this.isFocusing = false;
-      var delay = +(this.blurDelay || 0) || 300;
       window.clearTimeout(this.debounceTimer);
       this.debounceTimer = window.setTimeout(function () {
-        window.clearTimeout(_this9.debounceTimer);
+        window.clearTimeout(_this11.debounceTimer);
 
-        _this9.onBlur();
-      }, delay);
+        _this11.onBlur();
+      }, this.opts.blurDelay);
     },
     onBlur: function onBlur() {
       if (this.disabled) {
@@ -5630,7 +5941,7 @@ var DEFAULT_OPTIONS = {
     activeItemInCol: function activeItemInCol(columnClass) {
       return this.$el.querySelectorAll("ul.".concat(columnClass, " > li.active:not(.hint)"));
     },
-    getSideItems: function getSideItems(columnClass, dataKey) {
+    getClosestSibling: function getClosestSibling(columnClass, dataKey) {
       var getPrevious = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
       var siblingsInCol = this.validItemsInCol(columnClass);
       var selfIndex = Array.prototype.findIndex.call(siblingsInCol, function (sbl) {
@@ -5638,40 +5949,45 @@ var DEFAULT_OPTIONS = {
       }); // Already the first item
 
       if (getPrevious && selfIndex === 0) {
-        if (this.debugMode) {
-          this.debugLog("\"".concat(dataKey, "\" is the first valid item in \"").concat(columnClass, "\" list already"));
-        }
-
-        return;
+        return siblingsInCol[siblingsInCol.length - 1];
       } // Already the last item
 
 
       if (!getPrevious && selfIndex === siblingsInCol.length - 1) {
-        if (this.debugMode) {
-          this.debugLog("\"".concat(dataKey, "\" is the last valid item in \"").concat(columnClass, "\" list already"));
-        }
+        return siblingsInCol[0];
+      } // Selected value not in the valid values list
 
-        return;
+
+      if (selfIndex < 0) {
+        return siblingsInCol[0];
       }
 
       if (getPrevious) {
         return siblingsInCol[selfIndex - 1];
-      } else {
-        return siblingsInCol[selfIndex + 1];
       }
+
+      return siblingsInCol[selfIndex + 1];
     },
-    prevItem: function prevItem(columnClass, dataKey) {
-      var targetItem = this.getSideItems(columnClass, dataKey, true);
+    prevItem: function prevItem(columnClass, dataKey, isManualInput) {
+      var targetItem = this.getClosestSibling(columnClass, dataKey, true);
 
       if (targetItem) {
-        targetItem.focus();
+        if (isManualInput) {
+          return targetItem;
+        } else {
+          targetItem.focus();
+        }
       }
     },
-    nextItem: function nextItem(columnClass, dataKey) {
-      var targetItem = this.getSideItems(columnClass, dataKey, false);
+    nextItem: function nextItem(columnClass, dataKey, isManualInput) {
+      var targetItem = this.getClosestSibling(columnClass, dataKey, false);
 
       if (targetItem) {
-        targetItem.focus();
+        if (isManualInput) {
+          return targetItem;
+        } else {
+          targetItem.focus();
+        }
       }
     },
     getSideColumnClass: function getSideColumnClass(columnClass) {
@@ -5793,6 +6109,474 @@ var DEFAULT_OPTIONS = {
       }
     },
     //
+    // Manual Input
+    //
+    onMouseDown: function onMouseDown() {
+      var _this12 = this;
+
+      if (!this.manualInput) {
+        return;
+      }
+
+      window.clearTimeout(this.selectionTimer);
+      this.selectionTimer = window.setTimeout(function () {
+        window.clearTimeout(_this12.selectionTimer);
+
+        if (_this12.$refs && _this12.$refs.input) {
+          var nearestSlot = _this12.getNearesChunkByPos(_this12.$refs.input.selectionStart || 0);
+
+          _this12.debounceSetInputSelection(nearestSlot);
+        }
+      }, 50);
+    },
+    keyDownHandler: function keyDownHandler(evt) {
+      if (evt.isComposing || evt.keyCode === 229) {
+        // Skip IME inputs
+        evt.preventDefault();
+        evt.stopPropagation();
+        return false;
+      } // Numbers
+
+
+      if (evt.keyCode >= 48 && evt.keyCode <= 57 || evt.keyCode >= 96 && evt.keyCode <= 105) {
+        evt.preventDefault();
+        this.keyboardInput(evt.key); // A|P|M
+      } else if ([65, 80, 77].includes(evt.keyCode)) {
+        evt.preventDefault();
+        this.keyboardInput(evt.key, true); // Arrow keys
+      } else if (evt.keyCode >= 37 && evt.keyCode <= 40) {
+        evt.preventDefault();
+        this.arrowHandler(evt); // Delete|Backspace
+      } else if (evt.keyCode === 8 || evt.keyCode === 46) {
+        evt.preventDefault();
+        this.clearTime(); // Tab
+      } else if (evt.keyCode === 9) {
+        this.tabHandler(evt); // Prevent any Non-ESC and non-pasting inputs
+      } else if (evt.keyCode !== 27 && !(evt.metaKey || evt.ctrlKey)) {
+        evt.preventDefault();
+      }
+    },
+    onCompostionStart: function onCompostionStart(evt) {
+      evt.preventDefault();
+      evt.stopPropagation();
+      this.bakCurrentPos = this.getCurrentTokenChunk();
+      return false;
+    },
+    onCompostionEnd: function onCompostionEnd(evt) {
+      var _this13 = this;
+
+      evt.preventDefault();
+      evt.stopPropagation();
+      var cpsData = evt.data;
+      var inputIsCustomApmText = false;
+
+      if (this.has.customApmText) {
+        inputIsCustomApmText = this.isCustomApmText(cpsData);
+      }
+
+      if (inputIsCustomApmText) {
+        this.setSanitizedValueToSection('apm', inputIsCustomApmText);
+      }
+
+      if (this.has.customApmText) {
+        this.$refs.input.value = this.customDisplayTime;
+      } else {
+        this.$refs.input.value = this.displayTime;
+      }
+
+      this.$nextTick(function () {
+        if (_this13.bakCurrentPos) {
+          var bakPos = JSON.parse(JSON.stringify(_this13.bakCurrentPos));
+
+          if (inputIsCustomApmText) {
+            bakPos.end = bakPos.start + cpsData.length;
+          }
+
+          _this13.debounceSetInputSelection(bakPos);
+
+          _this13.bakCurrentPos = null;
+        }
+      });
+      return false;
+    },
+    pasteHandler: function pasteHandler(evt) {
+      evt.preventDefault();
+      var pastingText = (evt.clipboardData || window.clipboardData).getData('text');
+
+      if (this.debugMode) {
+        this.debugLog("Pasting value \"".concat(pastingText, "\" from clipboard"));
+      }
+
+      if (!pastingText || !pastingText.length) {
+        return;
+      } // Replace custom AM/PM text (if any)
+
+
+      if (this.has.customApmText) {
+        pastingText = this.replaceCustomApmText(pastingText);
+      }
+
+      if (this.inputIsEmpty) {
+        this.readStringValues(pastingText);
+      } else {
+        this.kbInputLog = pastingText.substr(-2, 2);
+        this.debounceSetKbInput();
+      }
+    },
+    arrowHandler: function arrowHandler(evt) {
+      var direction = {
+        37: 'L',
+        38: 'U',
+        39: 'R',
+        40: 'D'
+      }[evt.keyCode];
+
+      if (direction === 'U' || direction === 'D') {
+        if (this.inputIsEmpty) {
+          this.selectFirstValidValue();
+        } else {
+          var currentChunk = this.getCurrentTokenChunk();
+
+          if (!currentChunk) {
+            this.selectFirstValidValue();
+            return;
+          }
+
+          var tokenType = currentChunk.type;
+          this.getClosestValidItemInCol(tokenType, this[tokenType], direction);
+          var newChunkPos = this.getCurrentTokenChunk();
+          this.debounceSetInputSelection(newChunkPos);
+        }
+      } else if (direction === 'R') {
+        this.toLateralToken(false);
+      } else if (direction === 'L') {
+        this.toLateralToken(true);
+      }
+    },
+    tabHandler: function tabHandler(evt) {
+      if (!this.inputIsEmpty && this.tokenChunksPos && this.tokenChunksPos.length) {
+        var currentChunk = this.getCurrentTokenChunk();
+
+        if (!currentChunk) {
+          return;
+        }
+
+        var lastChunk = this.tokenChunksPos[this.tokenChunksPos.length - 1];
+
+        if (currentChunk.token !== lastChunk.token) {
+          evt.preventDefault();
+          this.toLateralToken(false);
+        }
+      }
+    },
+    keyboardInput: function keyboardInput(newChar) {
+      var isApm = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+      var currentChunk = this.getCurrentTokenChunk();
+
+      if (!currentChunk || currentChunk.type !== 'apm' && isApm || currentChunk.type === 'apm' && !isApm) {
+        return;
+      }
+
+      this.kbInputLog = "".concat(this.kbInputLog.substr(-1)).concat(newChar);
+      this.debounceSetKbInput();
+    },
+    debounceSetKbInput: function debounceSetKbInput() {
+      var _this14 = this;
+
+      window.clearTimeout(this.kbInputTimer);
+      this.kbInputTimer = window.setTimeout(function () {
+        window.clearTimeout(_this14.kbInputTimer);
+
+        _this14.setKbInput(_this14.kbInputLog);
+
+        _this14.kbInputLog = '';
+      }, 500);
+    },
+    setKbInput: function setKbInput(value) {
+      var currentChunk = this.getCurrentTokenChunk();
+
+      if (!currentChunk) {
+        return;
+      }
+
+      var chunkType = currentChunk.type;
+      var chunkToken = currentChunk.token;
+      var validValue;
+
+      if (chunkType === 'apm') {
+        if ((value || '').toLowerCase().includes('a')) {
+          validValue = 'am';
+        } else if ((value || '').toLowerCase().includes('p')) {
+          validValue = 'pm';
+        }
+
+        if (validValue) {
+          validValue = chunkToken === 'A' ? validValue.toUpperCase() : validValue;
+        }
+      } else {
+        if (this.isValidValue(chunkToken, value)) {
+          validValue = value;
+        } else {
+          var lastInputValue = this.formatValue(chunkToken, value.substr(-1));
+
+          if (this.isValidValue(chunkToken, lastInputValue)) {
+            validValue = lastInputValue;
+          }
+        }
+      }
+
+      if (validValue) {
+        this.setSanitizedValueToSection(chunkType, validValue);
+        var newChunkPos = this.getCurrentTokenChunk();
+        this.debounceSetInputSelection(newChunkPos);
+      }
+
+      if (this.debugMode) {
+        if (validValue) {
+          this.debugLog("Successfully set value \"".concat(validValue, "\" from latest input \"").concat(value, "\" for column \"").concat(chunkType, "\""));
+        } else {
+          this.debugLog("Value \"".concat(value, "\" is invalid in the \"").concat(chunkType, "\" column"));
+        }
+      }
+    },
+    // Form Autofill
+    onChange: function onChange() {
+      if (!this.$refs || !this.$refs.input || !this.manualInput) {
+        return;
+      }
+
+      var autoFillValue = this.$refs.input.value || '';
+
+      if (autoFillValue && autoFillValue.length) {
+        this.readStringValues(autoFillValue);
+      }
+    },
+    getNearesChunkByPos: function getNearesChunkByPos(startPos) {
+      if (!this.tokenChunksPos || !this.tokenChunksPos.length) {
+        return;
+      }
+
+      var nearest;
+      var nearestDelta = -1;
+
+      for (var i = 0; i < this.tokenChunksPos.length; i++) {
+        var chunk = JSON.parse(JSON.stringify(this.tokenChunksPos[i]));
+
+        if (chunk.start === startPos) {
+          return chunk;
+        }
+
+        var delta = Math.abs(chunk.start - startPos);
+
+        if (nearestDelta < 0) {
+          nearest = chunk;
+          nearestDelta = delta;
+        } else {
+          if (nearestDelta <= delta) {
+            return nearest;
+          }
+
+          nearestDelta = delta;
+          nearest = chunk;
+        }
+      }
+
+      return nearest;
+    },
+    selectFirstValidValue: function selectFirstValidValue() {
+      if (!this.tokenChunksPos || !this.tokenChunksPos.length) {
+        return;
+      }
+
+      var firstTokenType = this.tokenChunksPos[0].type;
+
+      if (firstTokenType) {
+        this.selectFirstValidValueInCol(firstTokenType);
+      }
+    },
+    selectFirstValidValueInCol: function selectFirstValidValueInCol(tokenType) {
+      if (tokenType === 'hour') {
+        this.selectFirstValidHour();
+      } else {
+        this.getClosestValidItemInCol(tokenType, this[tokenType]);
+      }
+    },
+    selectFirstValidHour: function selectFirstValidHour() {
+      var _this15 = this;
+
+      if (!this.validHoursList || !this.validHoursList.length) {
+        return;
+      }
+
+      var hourChunk = this.tokenChunksPos.find(function (chk) {
+        return chk.token === _this15.hourType;
+      });
+
+      if (!hourChunk) {
+        return;
+      }
+
+      var hourToken = hourChunk.token;
+      this.setManualHour(this.validHoursList[0]);
+      var newChunkPos = this.getChunkPosByToken(hourToken);
+      this.debounceSetInputSelection(newChunkPos);
+    },
+    getClosestValidItemInCol: function getClosestValidItemInCol(column, currentValue) {
+      var _this16 = this;
+
+      var direction = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'U';
+
+      if (column === 'hour') {
+        if (!this.validHoursList || !this.validHoursList.length) {
+          if (this.debugMode) {
+            this.debugLog("No valid hour values found, please check your \"hour-range\" config\nhour-range: ".concat(JSON.stringify(this.hourRange)));
+          }
+
+          return;
+        }
+
+        var currentIndex = this.validHoursList.findIndex(function (item) {
+          if (!_this16.baseOn12Hours) {
+            return item === currentValue;
+          } else {
+            var valueKey = "".concat(currentValue).concat((_this16.apm || '').toLowerCase() === 'pm' ? 'p' : 'a');
+            return item === valueKey;
+          }
+        });
+        var nextIndex;
+
+        if (currentIndex === -1) {
+          nextIndex = 0;
+        } else if (direction === 'D') {
+          nextIndex = currentIndex === 0 ? this.validHoursList.length - 1 : currentIndex - 1;
+        } else {
+          nextIndex = (currentIndex + 1) % this.validHoursList.length;
+        }
+
+        var nextItem = this.validHoursList[nextIndex];
+        this.setManualHour(nextItem);
+      } else {
+        var _nextItem = direction === 'D' ? this.prevItem("".concat(column, "s"), this[column], true) : this.nextItem("".concat(column, "s"), this[column], true);
+
+        if (_nextItem) {
+          this.select(column, _nextItem.getAttribute('data-key'));
+        }
+      }
+    },
+    setSanitizedValueToSection: function setSanitizedValueToSection(section, inputValue) {
+      if (!section || !this["".concat(section, "Type")]) {
+        return;
+      } // NOTE: Disabled values are allowed here, followed by an 'error' event, though
+
+
+      var sanitizedValue = this.sanitizedValue(this["".concat(section, "Type")], inputValue);
+      this[section] = sanitizedValue;
+    },
+    setManualHour: function setManualHour(nextItem) {
+      if (this.is12hRange(nextItem)) {
+        var hourT = nextItem.match(/^(\d{1,2})(a|p|A|P)$/);
+        var apmValue = hourT[2] === 'a' ? 'AM' : 'PM';
+        this.setSanitizedValueToSection('apm', this.apmType === 'a' ? apmValue.toLowerCase() : apmValue);
+        this.setSanitizedValueToSection('hour', hourT[1]);
+      } else {
+        this.setSanitizedValueToSection('hour', nextItem);
+      }
+    },
+    debounceSetInputSelection: function debounceSetInputSelection(_ref) {
+      var _this17 = this;
+
+      var _ref$start = _ref.start,
+          start = _ref$start === void 0 ? 0 : _ref$start,
+          _ref$end = _ref.end,
+          end = _ref$end === void 0 ? 0 : _ref$end;
+      this.$nextTick(function () {
+        _this17.setInputSelectionRange(start, end);
+      });
+      window.clearTimeout(this.selectionTimer);
+      this.selectionTimer = window.setTimeout(function () {
+        window.clearTimeout(_this17.selectionTimer); // Double-check selection for 12hr format
+
+        if (_this17.$refs.input && (_this17.$refs.input.selectionStart !== start || _this17.$refs.input.selectionEnd !== end)) {
+          _this17.setInputSelectionRange(start, end);
+        }
+      }, 30);
+    },
+    setInputSelectionRange: function setInputSelectionRange(start, end) {
+      if (this.$refs && this.$refs.input) {
+        this.$refs.input.setSelectionRange(start, end);
+      }
+    },
+    getCurrentTokenChunk: function getCurrentTokenChunk() {
+      return this.getNearesChunkByPos(this.$refs.input && this.$refs.input.selectionStart || 0);
+    },
+    getChunkPosByToken: function getChunkPosByToken(token) {
+      if (!this.tokenChunksPos || !token) {
+        return {
+          start: 0,
+          end: 0
+        };
+      }
+
+      var targetChunk = this.tokenChunksPos.find(function (chk) {
+        return chk.token === token;
+      });
+      return targetChunk ? targetChunk : {
+        start: 0,
+        end: 0
+      };
+    },
+    toLateralToken: function toLateralToken(toLeft) {
+      var currentChunk = this.getCurrentTokenChunk();
+
+      if (!currentChunk) {
+        this.selectFirstValidValue();
+        return;
+      }
+
+      var currentChunkIndex = this.tokenChunksPos.findIndex(function (chk) {
+        return chk.start === currentChunk.start;
+      });
+
+      if (!toLeft && currentChunkIndex >= this.tokenChunksPos.length - 1 || toLeft && currentChunkIndex === 0) {
+        if (this.debugMode) {
+          if (toLeft) {
+            this.debugLog('You\'re in the leftmost slot already');
+          } else {
+            this.debugLog('You\'re in the rightmost slot already');
+          }
+        }
+
+        return;
+      }
+
+      var targetSlotPos = toLeft ? this.tokenChunksPos[currentChunkIndex - 1] : this.tokenChunksPos[currentChunkIndex + 1];
+      this.debounceSetInputSelection(targetSlotPos);
+    },
+    isCustomApmText: function isCustomApmText(inputData) {
+      if (!inputData || !inputData.length) {
+        return false;
+      }
+
+      if (this.amText && this.amText === inputData) {
+        return this.apmType === 'A' ? 'AM' : 'am';
+      }
+
+      if (this.pmText && this.pmText === inputData) {
+        return this.apmType === 'A' ? 'PM' : 'pm';
+      }
+
+      return false;
+    },
+    replaceCustomApmText: function replaceCustomApmText(inputString) {
+      if (this.amText && this.amText.length && inputString.includes(this.amText)) {
+        return inputString.replace(new RegExp(this.amText, 'g'), this.apmType === 'A' ? 'AM' : 'am');
+      } else if (this.pmText && this.pmText.length && inputString.includes(this.pmText)) {
+        return inputString.replace(new RegExp(this.pmText, 'g'), this.apmType === 'A' ? 'PM' : 'pm');
+      }
+
+      return inputString;
+    },
+    //
     // Helpers
     //
     is12hRange: function is12hRange(value) {
@@ -5801,8 +6585,8 @@ var DEFAULT_OPTIONS = {
     isNumber: function isNumber(value) {
       return !isNaN(parseFloat(value)) && isFinite(value);
     },
-    getTokenRegex: function getTokenRegex(typeToken) {
-      switch (typeToken) {
+    getTokenRegex: function getTokenRegex(token) {
+      switch (token) {
         case 'HH':
           return '([01][0-9]|2[0-3]|H{2})';
 
@@ -5843,15 +6627,15 @@ var DEFAULT_OPTIONS = {
           return '';
       }
     },
-    isEmptyValue: function isEmptyValue(typeToken, testValue) {
-      return !testValue || !testValue.length || testValue && testValue === typeToken;
+    isEmptyValue: function isEmptyValue(targetToken, testValue) {
+      return !testValue || !testValue.length || testValue && testValue === targetToken;
     },
-    isValidValue: function isValidValue(typeToken, testValue) {
-      if (!typeToken || this.isEmptyValue(typeToken, testValue)) {
+    isValidValue: function isValidValue(targetToken, testValue) {
+      if (!targetToken || this.isEmptyValue(targetToken, testValue)) {
         return false;
       }
 
-      var tokenRegexStr = this.getTokenRegex(typeToken);
+      var tokenRegexStr = this.getTokenRegex(targetToken);
 
       if (!tokenRegexStr || !tokenRegexStr.length) {
         return false;
@@ -5859,15 +6643,33 @@ var DEFAULT_OPTIONS = {
 
       return new RegExp("^".concat(tokenRegexStr, "$")).test(testValue);
     },
-    sanitizedValue: function sanitizedValue(typeToken, inputValue) {
-      if (this.isValidValue(typeToken, inputValue)) {
+    sanitizedValue: function sanitizedValue(targetToken, inputValue) {
+      if (this.isValidValue(targetToken, inputValue)) {
         return inputValue;
       }
 
       return '';
     },
+    getTokenType: function getTokenType(token) {
+      switch (token) {
+        case "".concat(this.hourType):
+          return 'hour';
+
+        case "".concat(this.minuteType):
+          return 'minute';
+
+        case "".concat(this.secondType):
+          return 'second';
+
+        case "".concat(this.apmType):
+          return 'apm';
+
+        default:
+          return '';
+      }
+    },
     debugLog: function debugLog(logText) {
-      var _this10 = this;
+      var _this18 = this;
 
       if (!logText || !logText.length) {
         return;
@@ -5892,35 +6694,35 @@ var DEFAULT_OPTIONS = {
           inputClasses = [].concat([], this.inputClass);
         } else if (typeof_typeof(this.inputClass) === 'object') {
           Object.keys(this.inputClass).forEach(function (clsName) {
-            if (_this10.inputClass[clsName]) {
+            if (_this18.inputClass[clsName]) {
               inputClasses.push(clsName);
             }
           });
         }
 
-        var _iteratorNormalCompletion3 = true;
-        var _didIteratorError3 = false;
-        var _iteratorError3 = undefined;
+        var _iteratorNormalCompletion4 = true;
+        var _didIteratorError4 = false;
+        var _iteratorError4 = undefined;
 
         try {
-          for (var _iterator3 = inputClasses[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-            var inputClass = _step3.value;
+          for (var _iterator4 = inputClasses[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+            var inputClass = _step4.value;
 
             if (inputClass && inputClass.trim().length) {
               identifier += ".".concat(inputClass.trim());
             }
           }
         } catch (err) {
-          _didIteratorError3 = true;
-          _iteratorError3 = err;
+          _didIteratorError4 = true;
+          _iteratorError4 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
-              _iterator3.return();
+            if (!_iteratorNormalCompletion4 && _iterator4.return != null) {
+              _iterator4.return();
             }
           } finally {
-            if (_didIteratorError3) {
-              throw _iteratorError3;
+            if (_didIteratorError4) {
+              throw _iteratorError4;
             }
           }
         }
@@ -5937,10 +6739,14 @@ var DEFAULT_OPTIONS = {
   },
   mounted: function mounted() {
     window.clearTimeout(this.debounceTimer);
+    window.clearTimeout(this.selectionTimer);
+    window.clearTimeout(this.kbInputTimer);
     this.renderFormat();
   },
   beforeDestroy: function beforeDestroy() {
     window.clearTimeout(this.debounceTimer);
+    window.clearTimeout(this.selectionTimer);
+    window.clearTimeout(this.kbInputTimer);
   }
 });
 // CONCATENATED MODULE: ./src/vue-timepicker.vue?vue&type=script&lang=js&

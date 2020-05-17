@@ -68,8 +68,11 @@ export default {
       disablePicker: false,
       closeOnComplete: false,
       advancedKeyboard: false,
+      manualInput: false,
+      hideDropdown: false,
       lazyMode: false,
       autoScroll: false,
+      skipErrorStyle: false,
       debugMode: false,
 
       customBlurDelay: false,
@@ -77,7 +80,7 @@ export default {
 
       playgroundData: {},
       playgroundFullValue: {},
-      playgroundDisplayTime: undefined,
+      playgroundErroredData: undefined,
 
       scrollTop: 0,
 
@@ -131,11 +134,29 @@ export default {
       return result
     },
 
+    toHideDropdown () {
+      if (!this.manualInput) { return false }
+      return this.hideDropdown
+    },
+
+    useAdvancedKeyboard () {
+      if (this.toHideDropdown) { return false }
+      return this.advancedKeyboard
+    },
+
+    showErroredData () {
+      return Boolean(this.playgroundErroredData && this.playgroundErroredData.length)
+    },
+
     htmlCodeWithVar () {
       let start = '<vue-timepicker'
       let end = '\n  v-model="yourTimeValue">\n</vue-timepicker>'
 
       start += (`\n  format="${this.formatString}"`)
+
+      if (this.skipErrorStyle) {
+        start += ('\n  input-class="skip-error-style"')
+      }
 
       if (this.customInterval.minute) {
         start += (`\n  :minute-interval="${this.interval.minute}"`)
@@ -172,7 +193,15 @@ export default {
         start += ('\n  close-on-complete')
       }
 
-      if (this.advancedKeyboard) {
+      if (this.manualInput) {
+        start += ('\n  manual-input')
+      }
+
+      if (this.toHideDropdown) {
+        start += ('\n  hide-dropdown')
+      }
+
+      if (this.useAdvancedKeyboard) {
         start += ('\n  advanced-keyboard')
       }
 
@@ -434,9 +463,12 @@ export default {
     },
 
     changeHandler (eventData) {
-      this.playgroundFullValue = eventData.data
-      this.playgroundDisplayTime = eventData.displayTime
+      this.playgroundFullValue = eventData
       this.updateRangeValue(eventData.data)
+    },
+
+    errorHandler (eventData) {
+      this.playgroundErroredData = eventData
     },
 
     scrollHandler (evt) {
@@ -738,7 +770,31 @@ section#playground
             input(v-model="autoScroll" type="radio" id="auto_scroll_false" name="auto_scroll", :value="false")
             | &nbsp;Disable
 
-      #advancedKeyboard.config-block
+      #manualInput.config-block
+        h3.subtitle
+          a.anchor #
+          | Manually Input Support
+        config-row(is-group)
+          label.options(for="manual_input_true")
+            input(v-model="manualInput" type="radio" id="manual_input_true" name="manual_input", :value="true")
+            | &nbsp;Enable
+          label.options(for="manual_input_false")
+            input(v-model="manualInput" type="radio" id="manual_input_false" name="manual_input", :value="false")
+            | &nbsp;Disable
+
+      #hideDropdown.config-block(v-if="manualInput")
+        h3.subtitle
+          a.anchor #
+          | Hide Dropdown
+        config-row(is-group)
+          label.options(for="hide_dropdown_true")
+            input(v-model="hideDropdown" type="radio" id="hide_dropdown_true" name="hide_dropdown", :value="true")
+            | &nbsp;Enable
+          label.options(for="hide_dropdown_false")
+            input(v-model="hideDropdown" type="radio" id="hide_dropdown_false" name="hide_dropdown", :value="false")
+            | &nbsp;Disable
+
+      #advancedKeyboard.config-block(v-if="!toHideDropdown")
         h3.subtitle
           a.anchor #
           | Advanced Keyboard Support
@@ -762,6 +818,18 @@ section#playground
             input(v-model.number="blurDelay" type="range" min="50" max="1500" step="50")
             span(v-text="blurDelay")
 
+      #skipErrorStyle.config-block
+        h3.subtitle
+          a.anchor #
+          | Skip Error Style
+        config-row(is-group)
+          label.options(for="skip_error_true")
+            input(v-model="skipErrorStyle" type="radio" id="skip_error_true" name="skip_error", :value="true")
+            | &nbsp;Enable
+          label.options(for="skip_error_false")
+            input(v-model="skipErrorStyle" type="radio" id="skip_error_false" name="skip_error", :value="false")
+            | &nbsp;Disable
+
       #debugMode.config-block
         h3.subtitle
           a.anchor #
@@ -779,10 +847,12 @@ section#playground
   //-
   aside.previews(:style="asideStyle")
     #playgroundPreview.preview
-      b Format string:&nbsp;
-      span(v-text="formatString")
+      label(for="vueTimepickerInPlayground")
+        b Format string:&nbsp;
+        span(v-text="formatString")
       p
         vue-timepicker(v-model="playgroundData"
+                       id="vueTimepickerInPlayground"
                        :format="formatString"
                        :minute-interval="interval.minute"
                        :second-interval="showSeconds ? interval.second : null"
@@ -790,21 +860,25 @@ section#playground
                        :minute-range="customRange.minute ? minuteRange : null"
                        :second-range="(showSeconds && customRange.second) ? secondRange : null"
                        :close-on-complete="closeOnComplete"
-                       :advanced-keyboard="advancedKeyboard"
+                       :advanced-keyboard="useAdvancedKeyboard"
+                       :manual-input="manualInput"
+                       :hide-dropdown="toHideDropdown"
                        :blur-delay="blurDelay"
                        :hide-clear-button="hideClearBtn"
                        :disabled="disablePicker"
                        :lazy="lazyMode"
                        :auto-scroll="autoScroll"
                        :debug-mode="debugMode"
-                       @change="changeHandler")
+                       :input-class="skipErrorStyle ? 'skip-error-style' : null"
+                       @change="changeHandler"
+                       @error="errorHandler")
 
     #htmlCodePreview.codes
       highlight-code(lang="html" data-title="HTML") {{ htmlCodeWithVar }}
 
     #dispatchedValue.codes
       highlight-code(lang="json" data-title="@change event data") {{ playgroundFullValue }}
-      highlight-code(lang="html" data-title="@change event displayTime") "{{ playgroundDisplayTime || '' }}"
+      highlight-code(v-if="showErroredData" lang="json" data-title="@error event data") {{ playgroundErroredData }}
 
   //-
   //- Customized Range Panels
@@ -875,6 +949,7 @@ section#playground
   #playgroundPreview
     box-sizing: border-box
     background: #fff
+    padding: 1em 1.5em
 
   .range-item,
   .invalid-range

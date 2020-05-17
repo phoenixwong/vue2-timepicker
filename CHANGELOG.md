@@ -2,6 +2,22 @@
 
 > The Change Log of Vue2 Timepicker `vue2-timepicker`
 
+## v 1.1.0
+
+### New
+
+- Support manually input values with the `manual-input` toggle.
+- Enable to hide the dropdown menu with `hide-dropdown` in Manual Input (`manual-input`) mode.
+- Added conditional helper classes `is-empty`, `invalid` and `all-selected` to the `<input>` element.
+- Change the `<input>` border to red color when user input is invalid. E.g., when it contains a disabled hour value. You can mute this auto-styling by adding `"skip-error-style"` to `input-class`.
+- Add support to the `autocomplete` attribute.
+- Emit `error` event when the input value becomes invalid.
+- Emit `focus` and `blur` events to help to identify the focus/blur state. Useful when the dropdown is force hidden by `hide-dropdown`.
+
+### Improvements
+
+Enable seamless loop from the start or end of a column in `advanced-keyboard` mode.
+
 ## v 1.0.8
 
 ### Improvements
