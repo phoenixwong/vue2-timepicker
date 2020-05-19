@@ -64,6 +64,7 @@ export default {
 
     autoScroll: { type: Boolean, default: false },
     manualInput: { type: Boolean, default: false },
+    manualInputDelay: { type: Number, default: 1000 },
     hideDropdown: { type: Boolean, default: false },
 
     debugMode: { type: Boolean, default: false }
@@ -1604,6 +1605,7 @@ export default {
       const currentChunk = this.getCurrentTokenChunk()
       if (!currentChunk || (currentChunk.type !== 'apm' && isApm) || (currentChunk.type === 'apm' && !isApm)) { return }
       this.kbInputLog = `${this.kbInputLog.substr(-1)}${newChar}`
+      this.setKbInput(this.kbInputLog)
       this.debounceSetKbInput()
     },
 
@@ -1611,9 +1613,8 @@ export default {
       window.clearTimeout(this.kbInputTimer)
       this.kbInputTimer = window.setTimeout(() => {
         window.clearTimeout(this.kbInputTimer)
-        this.setKbInput(this.kbInputLog)
         this.kbInputLog = ''
-      }, 500)
+      }, this.manualInputDelay)
     },
 
     setKbInput (value) {
