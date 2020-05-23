@@ -19,7 +19,8 @@ const DEFAULT_OPTIONS = {
   hideDisabledItems: false,
   advancedKeyboard: false,
   hideDropdown: false,
-  blurDelay: 300
+  blurDelay: 300,
+  manualInputTimeout: 1000
 }
 
 export default {
@@ -64,7 +65,7 @@ export default {
 
     autoScroll: { type: Boolean, default: false },
     manualInput: { type: Boolean, default: false },
-    manualInputDelay: { type: Number, default: 1000 },
+    manualInputTimeout: { type: [ Number, String ] },
     hideDropdown: { type: Boolean, default: false },
 
     debugMode: { type: Boolean, default: false }
@@ -200,6 +201,10 @@ export default {
 
       if (this.blurDelay && +this.blurDelay > 0) {
         options.blurDelay = +this.blurDelay
+      }
+
+      if (this.manualInputTimeout && +this.manualInputTimeout > 0) {
+        options.manualInputTimeout = +this.manualInputTimeout
       }
 
       return options
@@ -1492,13 +1497,16 @@ export default {
       // Arrow keys
       } else if (evt.keyCode >= 37 && evt.keyCode <= 40) {
         evt.preventDefault()
+        this.clearKbInputLog()
         this.arrowHandler(evt)
       // Delete|Backspace
       } else if (evt.keyCode === 8 || evt.keyCode === 46) {
         evt.preventDefault()
+        this.clearKbInputLog()
         this.clearTime()
       // Tab
       } else if (evt.keyCode === 9) {
+        this.clearKbInputLog()
         this.tabHandler(evt)
       // Prevent any Non-ESC and non-pasting inputs
       } else if (evt.keyCode !== 27 && !(evt.metaKey || evt.ctrlKey)) {
@@ -1562,7 +1570,8 @@ export default {
         this.readStringValues(pastingText)
       } else {
         this.kbInputLog = pastingText.substr(-2, 2)
-        this.debounceSetKbInput()
+        this.setKbInput()
+        this.debounceClearKbLog()
       }
     },
 
@@ -1605,21 +1614,26 @@ export default {
       const currentChunk = this.getCurrentTokenChunk()
       if (!currentChunk || (currentChunk.type !== 'apm' && isApm) || (currentChunk.type === 'apm' && !isApm)) { return }
       this.kbInputLog = `${this.kbInputLog.substr(-1)}${newChar}`
-      this.setKbInput(this.kbInputLog)
-      this.debounceSetKbInput()
+      this.setKbInput()
+      this.debounceClearKbLog()
     },
 
-    debounceSetKbInput () {
+    clearKbInputLog () {
+      window.clearTimeout(this.kbInputTimer)
+      this.kbInputLog = ''
+    },
+
+    debounceClearKbLog () {
       window.clearTimeout(this.kbInputTimer)
       this.kbInputTimer = window.setTimeout(() => {
-        window.clearTimeout(this.kbInputTimer)
-        this.kbInputLog = ''
-      }, this.manualInputDelay)
+        this.clearKbInputLog()
+      }, this.opts.manualInputTimeout)
     },
 
     setKbInput (value) {
+      value = value || this.kbInputLog
       const currentChunk = this.getCurrentTokenChunk()
-      if (!currentChunk) { return }
+      if (!currentChunk || !value || !value.length) { return }
       const chunkType = currentChunk.type
       const chunkToken = currentChunk.token
 

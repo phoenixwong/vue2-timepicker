@@ -78,6 +78,9 @@ export default {
       customBlurDelay: false,
       blurDelay: 300,
 
+      customManualInputTimeout: false,
+      manualInputTimeout: 1000,
+
       playgroundData: {},
       playgroundFullValue: {},
       playgroundErroredData: undefined,
@@ -183,6 +186,10 @@ export default {
 
       if (this.customBlurDelay) {
         start += (`\n  :blur-delay="${this.blurDelay}"`)
+      }
+
+      if (this.customManualInputTimeout) {
+        start += (`\n  :manual-input-timeout="${this.manualInputTimeout}"`)
       }
 
       if (this.lazyMode) {
@@ -592,6 +599,10 @@ export default {
 
     toggleBlurDelay () {
       this.blurDelay = 300
+    },
+
+    toggleManualInputTimeout () {
+      this.manualInputTimeout = 1000
     }
   },
 
@@ -817,6 +828,18 @@ section#playground
           label.range-wrapper(v-if="customBlurDelay")
             input(v-model.number="blurDelay" type="range" min="50" max="1500" step="50")
             span(v-text="blurDelay")
+
+      #manualInputTimeout.config-block(v-if="manualInput")
+        h3.subtitle
+          a.anchor #
+          | Customized Manual Input Timeout
+        config-row(is-group)
+          label.options
+            input(v-model="customManualInputTimeout" type="checkbox" @input="toggleManualInputTimeout")
+            | &nbsp;Set Manual Input Timeout
+          label.range-wrapper(v-if="customManualInputTimeout")
+            input(v-model.number="manualInputTimeout" type="range" min="50" max="5000" step="50")
+            span(v-text="manualInputTimeout")
 
       #skipErrorStyle.config-block
         h3.subtitle
