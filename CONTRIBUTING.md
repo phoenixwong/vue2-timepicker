@@ -15,8 +15,11 @@ yarn dev
 
 For detailed explanation on how things work, checkout the [Vue Cli Guide](https://cli.vuejs.org/guide/).
 
-> NOTE: Start from `^0.2.0`, we develop Demo pages with [**Yarn**](
+**NOTE:**
+
+- Start from `^0.2.0`, we develop Demo pages with [**Yarn**](
 https://yarnpkg.com/), [**Pug**](https://pugjs.org/), and [**Stylus**](http://stylus-lang.com/)
+- Upgraded to **@vue/cli v4** from `^1.1.1`
 
 ---
 

@@ -138,11 +138,12 @@ section#mostlyUsedSamples
       | string, you can set timepicker in form of 12 hours
     template(v-slot:codes)
       highlight-code(lang="html" data-title="HTML")
-        | &lt;!-- 12-hour sample 1 --&gt;
-        | &lt;vue-timepicker format="hh:mm A"&gt;&lt;/vue-timepicker&gt;
-        | &nbsp;
-        | &lt;!-- 12-hour sample 2 --&gt;
-        | &lt;vue-timepicker format="h:m a"&gt;&lt;/vue-timepicker&gt;
+        pre
+          | &lt;!-- 12-hour sampleaa 1 --&gt;
+          | &lt;vue-timepicker format="hh:mm A"&gt;&lt;/vue-timepicker&gt;
+          | &nbsp;
+          | &lt;!-- 12-hour sample 2 --&gt;
+          | &lt;vue-timepicker format="h:m a"&gt;&lt;/vue-timepicker&gt;
     template(v-slot:preview)
       b 12-hour sample 1
       p
@@ -175,14 +176,15 @@ section#mostlyUsedSamples
       | for example
     template(v-slot:codes)
       highlight-code(lang="html" data-title="HTML")
-        | &lt;!-- 10-minute interval --&gt;
-        | &lt;vue-timepicker :minute-interval="10"&gt;&lt;/vue-timepicker&gt;
-        | &nbsp;
-        | &lt;!-- 15-second interval --&gt;
-        | &lt;vue-timepicker format="HH:mm:ss" :second-interval="15"&gt;&lt;/vue-timepicker&gt;
-        | &nbsp;
-        | &lt;!-- 5-minute interval plus 10-second interval --&gt;
-        | &lt;vue-timepicker format="hh:mm:ss" :minute-interval="5" :second-interval="10"&gt;&lt;/vue-timepicker&gt;
+        pre
+          | &lt;!-- 10-minute interval --&gt;
+          | &lt;vue-timepicker :minute-interval="10"&gt;&lt;/vue-timepicker&gt;
+          | &nbsp;
+          | &lt;!-- 15-second interval --&gt;
+          | &lt;vue-timepicker format="HH:mm:ss" :second-interval="15"&gt;&lt;/vue-timepicker&gt;
+          | &nbsp;
+          | &lt;!-- 5-minute interval plus 10-second interval --&gt;
+          | &lt;vue-timepicker format="hh:mm:ss" :minute-interval="5" :second-interval="10"&gt;&lt;/vue-timepicker&gt;
     template(v-slot:preview)
       b 10-minute interval
       p
@@ -203,18 +205,19 @@ section#mostlyUsedSamples
       | Timepicker takes <code>v-model</code> value in object format by default.
     template(v-slot:codes)
       highlight-code(lang="javascript" data-title="JS")
-        | // Define format and initial data
-        | data () {
-        |   return {
-        |     yourFormat: 'hh:mm:ss a',
-        |     yourData: {
-        |       hh: '03',
-        |       mm: '05',
-        |       ss: '00',
-        |       a: 'am'
-        |     }
-        |   }
-        | }
+        pre
+          | // Define format and initial data
+          | data () {
+          |   return {
+          |     yourFormat: 'hh:mm:ss a',
+          |     yourData: {
+          |       hh: '03',
+          |       mm: '05',
+          |       ss: '00',
+          |       a: 'am'
+          |     }
+          |   }
+          | }
       highlight-code(lang="html" data-title="HTML")
         | &lt;vue-timepicker :format="yourFormat" v-model="yourData"&gt;&lt;/vue-timepicker&gt;
     template(v-slot:preview)
@@ -231,26 +234,28 @@ section#mostlyUsedSamples
       | From <code>v1.0.0+</code>, timepicker also supports <code>v-model</code> value in string format.
     template(v-slot:codes)
       highlight-code(lang="javascript" data-title="JS")
-        | // Set initial data in string format
-        | data () {
-        |   return {
-        |     simpleStringValue: '02:30',
-        |
-        |     // paired with format 'h:mm:ss A'
-        |     yourStringValue: '3:mm:05 A',
-        |
-        |     unsetStringValue: ''
-        |   }
-        | }
+        pre
+          | // Set initial data in string format
+          | data () {
+          |   return {
+          |     simpleStringValue: '02:30',
+          |
+          |     // paired with format 'h:mm:ss A'
+          |     yourStringValue: '3:mm:05 A',
+          |
+          |     unsetStringValue: ''
+          |   }
+          | }
       highlight-code(lang="html" data-title="HTML")
-        | &lt;!-- default 24-hour sample --&gt;
-        | &lt;vue-timepicker v-model="simpleStringValue"&gt;&lt;/vue-timepicker&gt;
-        |
-        | &lt;!-- 12-hour format with partial value set --&gt;
-        | &lt;vue-timepicker v-model="yourStringValue" format="h:mm:ss A"&gt;&lt;/vue-timepicker&gt;
-        |
-        | &lt;!-- unset/unknown initial value --&gt;
-        | &lt;vue-timepicker v-model="unsetStringValue"&gt;&lt;/vue-timepicker&gt;
+        pre
+          | &lt;!-- default 24-hour sample --&gt;
+          | &lt;vue-timepicker v-model="simpleStringValue"&gt;&lt;/vue-timepicker&gt;
+          |
+          | &lt;!-- 12-hour format with partial value set --&gt;
+          | &lt;vue-timepicker v-model="yourStringValue" format="h:mm:ss A"&gt;&lt;/vue-timepicker&gt;
+          |
+          | &lt;!-- unset/unknown initial value --&gt;
+          | &lt;vue-timepicker v-model="unsetStringValue"&gt;&lt;/vue-timepicker&gt;
     template(v-slot:preview)
       b default 24-hour sample
       p
@@ -282,23 +287,25 @@ section#mostlyUsedSamples
       | usage
     template(v-slot:codes)
       highlight-code(lang="javascript" data-title="JS")
-        | data () {
-        |   return {
-        |     yourDaysArray: [
-        |       {start_time: {HH: '08', mm: '00'}, end_time: {HH: '09', mm: '00'}},
-        |       {start_time: {HH: '15', mm: '00'}, end_time: {HH: '', mm: ''}},
-        |       {start_time: {HH: '', mm: ''}, end_time: {HH: '13', mm: '30'}},
-        |       {start_time: {HH: '', mm: ''}, end_time: {HH: '', mm: ''}}
-        |     ]
-        |   }
-        | }
+        pre
+          | data () {
+          |   return {
+          |     yourDaysArray: [
+          |       {start_time: {HH: '08', mm: '00'}, end_time: {HH: '09', mm: '00'}},
+          |       {start_time: {HH: '15', mm: '00'}, end_time: {HH: '', mm: ''}},
+          |       {start_time: {HH: '', mm: ''}, end_time: {HH: '13', mm: '30'}},
+          |       {start_time: {HH: '', mm: ''}, end_time: {HH: '', mm: ''}}
+          |     ]
+          |   }
+          | }
       highlight-code(lang="html" data-title="HTML")
-        | &lt;p v-for="(day, index) in yourDaysArray"&gt;
-        |   &lt;label&gt;Day <span>{{</span> index + 1 <span>}}</span>: &lt;/label&gt;
-        |   &lt;vue-timepicker v-model="day.start_time" placeholder="Start Time"&gt;&lt;/vue-timepicker&gt;
-        |   &lt;span&gt; to &lt;/span&gt;
-        |   &lt;vue-timepicker v-model="day.end_time" placeholder="End Time"&gt;&lt;/vue-timepicker&gt;
-        | &lt;/p&gt;
+        pre
+          | &lt;p v-for="(day, index) in yourDaysArray"&gt;
+          |   &lt;label&gt;Day <span>{{</span> index + 1 <span>}}</span>: &lt;/label&gt;
+          |   &lt;vue-timepicker v-model="day.start_time" placeholder="Start Time"&gt;&lt;/vue-timepicker&gt;
+          |   &lt;span&gt; to &lt;/span&gt;
+          |   &lt;vue-timepicker v-model="day.end_time" placeholder="End Time"&gt;&lt;/vue-timepicker&gt;
+          | &lt;/p&gt;
     template(v-slot:preview)
       p(v-for="(day, index) in yourDaysArray")
         label Day {{ index + 1 }}:&nbsp;
@@ -314,13 +321,14 @@ section#mostlyUsedSamples
     p(slot="description") Define the hour values you want and disable the rest
     template(v-slot:codes)
       highlight-code(lang="html" data-title="HTML")
-        | &lt;!-- Hour Range Sample 1 --&gt;
-        | &lt;vue-timepicker :hour-range="[5, [8, 12], [14, 17], 19]"&gt;&lt;/vue-timepicker&gt;
-        | &lt;!-- >> Equals to :hour-range="[5, 8, 9, 10, 11, 12, 14, 15, 16, 17, 19]" --&gt;
-        | &nbsp;
-        | &lt;!-- Hour Range Sample 2 (12-hour format) --&gt;
-        | &lt;vue-timepicker :hour-range="['7a', '9a', '11a', '1p', ['3p', '5p'], '7p']" format="hh:mm a"&gt;&lt;/vue-timepicker&gt;
-        | &lt;!-- >> Equals to :hour-range="['7a', '9a', '11a', '1p', '3p', '4p', '5p', '7p']" --&gt;
+        pre
+          | &lt;!-- Hour Range Sample 1 --&gt;
+          | &lt;vue-timepicker :hour-range="[5, [8, 12], [14, 17], 19]"&gt;&lt;/vue-timepicker&gt;
+          | &lt;!-- >> Equals to :hour-range="[5, 8, 9, 10, 11, 12, 14, 15, 16, 17, 19]" --&gt;
+          | &nbsp;
+          | &lt;!-- Hour Range Sample 2 (12-hour format) --&gt;
+          | &lt;vue-timepicker :hour-range="['7a', '9a', '11a', '1p', ['3p', '5p'], '7p']" format="hh:mm a"&gt;&lt;/vue-timepicker&gt;
+          | &lt;!-- >> Equals to :hour-range="['7a', '9a', '11a', '1p', '3p', '4p', '5p', '7p']" --&gt;
     template(v-slot:preview)
       b Hour Range Sample 1
       p
@@ -336,20 +344,21 @@ section#mostlyUsedSamples
       p Similar to Hour Range, you can set available minute/second values base on your needs.
     template(v-slot:codes)
       highlight-code(lang="html" data-title="HTML")
-        | &lt;!-- Minute range only --&gt;
-        | &lt;vue-timepicker :minute-range="[0, 6, [10, 30], 42, 50]"&gt;&lt;/vue-timepicker&gt;
-        |
-        | &lt;!-- Minute range + 5-minute interval --&gt;
-        | &lt;vue-timepicker :minute-range="[0, 6, [10, 30], 42, 50]" :minute-interval="5"&gt;&lt;/vue-timepicker&gt;
-        |
-        | &lt;!-- Second range only --&gt;
-        | &lt;vue-timepicker format="H:m:s" :second-range="[0, 6, [10, 30], 42, 50]"&gt;&lt;/vue-timepicker&gt;
-        |
-        | &lt;!-- Second range + 10-second interval --&gt;
-        | &lt;vue-timepicker format="H:m:s" :second-range="[0, 6, [10, 30], 42, 50]" :second-interval="10"&gt;&lt;/vue-timepicker&gt;
-        |
-        | &lt;!-- Minute and Second ranges + 10-minute interval + 5-second interval --&gt;
-        | &lt;vue-timepicker format="HH:mm:ss" :minute-range="[0, 6, [10, 30], 42, 50]" :second-range="[0, 6, [10, 30], 42, 50]" :minute-interval="10" :second-interval="5"&gt;&lt;/vue-timepicker&gt;
+        pre
+          | &lt;!-- Minute range only --&gt;
+          | &lt;vue-timepicker :minute-range="[0, 6, [10, 30], 42, 50]"&gt;&lt;/vue-timepicker&gt;
+          |
+          | &lt;!-- Minute range + 5-minute interval --&gt;
+          | &lt;vue-timepicker :minute-range="[0, 6, [10, 30], 42, 50]" :minute-interval="5"&gt;&lt;/vue-timepicker&gt;
+          |
+          | &lt;!-- Second range only --&gt;
+          | &lt;vue-timepicker format="H:m:s" :second-range="[0, 6, [10, 30], 42, 50]"&gt;&lt;/vue-timepicker&gt;
+          |
+          | &lt;!-- Second range + 10-second interval --&gt;
+          | &lt;vue-timepicker format="H:m:s" :second-range="[0, 6, [10, 30], 42, 50]" :second-interval="10"&gt;&lt;/vue-timepicker&gt;
+          |
+          | &lt;!-- Minute and Second ranges + 10-minute interval + 5-second interval --&gt;
+          | &lt;vue-timepicker format="HH:mm:ss" :minute-range="[0, 6, [10, 30], 42, 50]" :second-range="[0, 6, [10, 30], 42, 50]" :minute-interval="10" :second-interval="5"&gt;&lt;/vue-timepicker&gt;
     template(v-slot:preview)
       b Minute range only
       p
@@ -387,17 +396,18 @@ section#mostlyUsedSamples
           | : Hide disabled <b>second</b> values only.
     template(v-slot:codes)
       highlight-code(lang="html" data-title="HTML")
-        | &lt;!-- hide-disabled-items --&gt;
-        | &lt;vue-timepicker hide-disabled-items format="HH:mm:ss" :hour-range="[[9, 17]]" :minute-range="[0, 10, 15, 30, 50]" :second-range="[5, 15, 25, 45]"&gt;&lt;/vue-timepicker&gt;
-        |
-        | &lt;!-- hide-disabled-hours --&gt;
-        | &lt;vue-timepicker hide-disabled-hours format="HH:mm:ss" :hour-range="[[9, 17]]" :minute-range="[0, 10, 15, 30, 50]" :second-range="[5, 15, 25, 45]"&gt;&lt;/vue-timepicker&gt;
-        |
-        | &lt;!-- hide-disabled-minutes --&gt;
-        | &lt;vue-timepicker hide-disabled-minutes format="HH:mm:ss" :hour-range="[[9, 17]]" :minute-range="[0, 10, 15, 30, 50]" :second-range="[5, 15, 25, 45]"&gt;&lt;/vue-timepicker&gt;
-        |
-        | &lt;!-- hide-disabled-seconds --&gt;
-        | &lt;vue-timepicker hide-disabled-seconds format="HH:mm:ss" :hour-range="[[9, 17]]" :minute-range="[0, 10, 15, 30, 50]" :second-range="[5, 15, 25, 45]"&gt;&lt;/vue-timepicker&gt;
+        pre
+          | &lt;!-- hide-disabled-items --&gt;
+          | &lt;vue-timepicker hide-disabled-items format="HH:mm:ss" :hour-range="[[9, 17]]" :minute-range="[0, 10, 15, 30, 50]" :second-range="[5, 15, 25, 45]"&gt;&lt;/vue-timepicker&gt;
+          |
+          | &lt;!-- hide-disabled-hours --&gt;
+          | &lt;vue-timepicker hide-disabled-hours format="HH:mm:ss" :hour-range="[[9, 17]]" :minute-range="[0, 10, 15, 30, 50]" :second-range="[5, 15, 25, 45]"&gt;&lt;/vue-timepicker&gt;
+          |
+          | &lt;!-- hide-disabled-minutes --&gt;
+          | &lt;vue-timepicker hide-disabled-minutes format="HH:mm:ss" :hour-range="[[9, 17]]" :minute-range="[0, 10, 15, 30, 50]" :second-range="[5, 15, 25, 45]"&gt;&lt;/vue-timepicker&gt;
+          |
+          | &lt;!-- hide-disabled-seconds --&gt;
+          | &lt;vue-timepicker hide-disabled-seconds format="HH:mm:ss" :hour-range="[[9, 17]]" :minute-range="[0, 10, 15, 30, 50]" :second-range="[5, 15, 25, 45]"&gt;&lt;/vue-timepicker&gt;
     template(v-slot:preview)
       b hide-disabled-items
       p
@@ -419,11 +429,12 @@ section#mostlyUsedSamples
       | Automatically close the dropdown when user finish selecting <b>all</b> of the required fields.
     template(v-slot:codes)
       highlight-code(lang="html" data-title="HTML")
-        | &lt;!-- Auto-close on complete --&gt;
-        | &lt;vue-timepicker format="hh:mm A" close-on-complete&gt;&lt;/vue-timepicker&gt;
-        |
-        | &lt;!-- Default - close by clicking anywhere outside of the dropdown --&gt;
-        | &lt;vue-timepicker format="hh:mm A"&gt;&lt;/vue-timepicker&gt;
+        pre
+          | &lt;!-- Auto-close on complete --&gt;
+          | &lt;vue-timepicker format="hh:mm A" close-on-complete&gt;&lt;/vue-timepicker&gt;
+          |
+          | &lt;!-- Default - close by clicking anywhere outside of the dropdown --&gt;
+          | &lt;vue-timepicker format="hh:mm A"&gt;&lt;/vue-timepicker&gt;
     template(v-slot:preview)
       b Auto-close on complete
       p
@@ -469,25 +480,27 @@ section#mostlyUsedSamples
       p Play around with the two pickers below to see their data changes in live.
     template(v-slot:codes)
       highlight-code(lang="html" data-title="HTML")
-        | &lt;!-- No argument --&gt;
-        | &lt;vue-timepicker v-model="demoData1" @change="changeHandler"&gt;&lt;/vue-timepicker&gt;
-        | &nbsp;
-        | &lt;!-- Custom argument --&gt;
-        | &lt;vue-timepicker v-model="demoData2" @change="otherChangeHandler($event, 'foo', 42)"&gt;&lt;/vue-timepicker&gt;
+        pre
+          | &lt;!-- No argument --&gt;
+          | &lt;vue-timepicker v-model="demoData1" @change="changeHandler"&gt;&lt;/vue-timepicker&gt;
+          | &nbsp;
+          | &lt;!-- Custom argument --&gt;
+          | &lt;vue-timepicker v-model="demoData2" @change="otherChangeHandler($event, 'foo', 42)"&gt;&lt;/vue-timepicker&gt;
       highlight-code(lang="javascript" data-title="JS")
-        | methods: {
-        |   // No argument
-        |   changeHandler (eventData) {
-        |     // eventData -&gt; {data: {HH:..., mm:...}, displayTime: 'HH:mm'}
-        |   },
-        |
-        |   // Customized arguments
-        |   otherChangeHandler (eventData, arg1, arg2) {
-        |     // eventData -&gt; {data: {HH:..., mm:...}, displayTime: 'HH:mm'}
-        |     // arg1 -&gt; 'foo'
-        |     // arg2 -&gt; 42
-        |   }
-        | }
+        pre
+          | methods: {
+          |   // No argument
+          |   changeHandler (eventData) {
+          |     // eventData -&gt; {data: {HH:..., mm:...}, displayTime: 'HH:mm'}
+          |   },
+          |
+          |   // Customized arguments
+          |   otherChangeHandler (eventData, arg1, arg2) {
+          |     // eventData -&gt; {data: {HH:..., mm:...}, displayTime: 'HH:mm'}
+          |     // arg1 -&gt; 'foo'
+          |     // arg2 -&gt; 42
+          |   }
+          | }
     template(v-slot:preview)
       b No argument
       p
@@ -550,22 +563,23 @@ section#mostlyUsedSamples
 
     template(v-slot:codes)
       highlight-code(lang="html" data-title="HTML")
-        | &lt;label for="otherInput"&gt;Text Input&lt;label/&gt;
-        | &lt;input id="otherInput" type="text" placeholder="Text" /&gt;
-        |
-        | &lt;!-- Default, with minimal keyboard support --&gt;
-        | &lt;label for="simplePicker"&gt;Default Vue Timepicker&lt;label/&gt;
-        | &lt;vue-timepicker id="simplePicker"&gt;&lt;/vue-timepicker&gt;
-        |
-        | &lt;label for="moreInput"&gt;Number Input&lt;label/&gt;
-        | &lt;input id="moreInput" type="number" placeholder="Number" /&gt;
-        |
-        | &lt;!-- Advanced Keyboard Support Enabled --&gt;
-        | &lt;label for="pickerKB"&gt;Vue Timepicker with Advanced Keyboard support&lt;label/&gt;
-        | &lt;vue-timepicker advanced-keyboard format="h:mm:ss A" :hour-range="[['7a', '5p']]" id="pickerKB"&gt;&lt;/vue-timepicker&gt;
-        |
-        | &lt;label for="oneMoreInput"&gt;One More Text Input&lt;label/&gt;
-        | &lt;input id="oneMoreInput" type="text" placeholder="More Text" /&gt;
+        pre
+          | &lt;label for="otherInput"&gt;Text Input&lt;label/&gt;
+          | &lt;input id="otherInput" type="text" placeholder="Text" /&gt;
+          |
+          | &lt;!-- Default, with minimal keyboard support --&gt;
+          | &lt;label for="simplePicker"&gt;Default Vue Timepicker&lt;label/&gt;
+          | &lt;vue-timepicker id="simplePicker"&gt;&lt;/vue-timepicker&gt;
+          |
+          | &lt;label for="moreInput"&gt;Number Input&lt;label/&gt;
+          | &lt;input id="moreInput" type="number" placeholder="Number" /&gt;
+          |
+          | &lt;!-- Advanced Keyboard Support Enabled --&gt;
+          | &lt;label for="pickerKB"&gt;Vue Timepicker with Advanced Keyboard support&lt;label/&gt;
+          | &lt;vue-timepicker advanced-keyboard format="h:mm:ss A" :hour-range="[['7a', '5p']]" id="pickerKB"&gt;&lt;/vue-timepicker&gt;
+          |
+          | &lt;label for="oneMoreInput"&gt;One More Text Input&lt;label/&gt;
+          | &lt;input id="oneMoreInput" type="text" placeholder="More Text" /&gt;
     template(v-slot:preview)
       b
         label(for="otherInput") Text Input
@@ -595,20 +609,22 @@ section#mostlyUsedSamples
       | Allow users to input values manually. Please note that the additional <code>hide-dropdown</code> option works with <code>manual-input</code> mode only.
     template(v-slot:codes)
       highlight-code(lang="html" data-title="HTML")
-        | &lt;!-- 24-hour format with empty init value --&gt;
-        | &lt;vue-timepicker manual-input&gt;&lt;/vue-timepicker&gt;
-        |
-        | &lt;!-- 12-hour format with a predefined value --&gt;
-        | &lt;vue-timepicker format="h:mm a" v-model="manualStringValue" manual-input&gt;&lt;/vue-timepicker&gt;
-        |
-        | &lt;!-- Manual input + hide dropdown --&gt;
-        | &lt;vue-timepicker manual-input hide-dropdown&gt;&lt;/vue-timepicker&gt;
+        pre
+          | &lt;!-- 24-hour format with empty init value --&gt;
+          | &lt;vue-timepicker manual-input&gt;&lt;/vue-timepicker&gt;
+          |
+          | &lt;!-- 12-hour format with a predefined value --&gt;
+          | &lt;vue-timepicker format="h:mm a" v-model="manualStringValue" manual-input&gt;&lt;/vue-timepicker&gt;
+          |
+          | &lt;!-- Manual input + hide dropdown --&gt;
+          | &lt;vue-timepicker manual-input hide-dropdown&gt;&lt;/vue-timepicker&gt;
       highlight-code(lang="javascript" data-title="JS")
-        | data () {
-        |   return {
-        |     manualStringValue: '8:15 pm'
-        |   }
-        | }
+        pre
+          | data () {
+          |   return {
+          |     manualStringValue: '8:15 pm'
+          |   }
+          | }
     template(v-slot:preview)
       b 24-hour format with empty init value
       p
@@ -631,16 +647,18 @@ section#mostlyUsedSamples
       | Help identifying current status of the dropdown picker
     template(v-slot:codes)
       highlight-code(lang="javascript" data-title="JS")
-        | // Define a variable for logging the status
-        | data () {
-        |   return {
-        |     dropdownStatus: 'closed'
-        |   }
-        | }
+        pre
+          | // Define a variable for logging the status
+          | data () {
+          |   return {
+          |     dropdownStatus: 'closed'
+          |   }
+          | }
       highlight-code(lang="html" data-title="HTML")
-        | &lt;p&gt;Dropdown Status: I'm <pre>{{</pre>dropdownStatus<pre>}}</pre>!&lt;/p&gt;
-        | &nbsp;
-        | &lt;vue-timepicker @open="dropdownStatus = 'opened'" @close="dropdownStatus = 'closed'"&gt;&lt;/vue-timepicker&gt;
+        pre
+          | &lt;p&gt;Dropdown Status: I'm <span>{{</span>dropdownStatus<span>}}</span>!&lt;/p&gt;
+          | &nbsp;
+          | &lt;vue-timepicker @open="dropdownStatus = 'opened'" @close="dropdownStatus = 'closed'"&gt;&lt;/vue-timepicker&gt;
     template(v-slot:preview)
       b Dropdown Status: I'm {{dropdownStatus}}!
       p
@@ -657,16 +675,18 @@ section#mostlyUsedSamples
       | Help to identify the focus/blur state of the Timepicker when the dropdown is force hidden by <code>hide-dropdown</code>.
     template(v-slot:codes)
       highlight-code(lang="javascript" data-title="JS")
-        | // Define a variable for logging the status
-        | data () {
-        |   return {
-        |     focusState: 'blurred'
-        |   }
-        | }
+        pre
+          | // Define a variable for logging the status
+          | data () {
+          |   return {
+          |     focusState: 'blurred'
+          |   }
+          | }
       highlight-code(lang="html" data-title="HTML")
-        | &lt;p&gt;Focus Status: I'm <pre>{{</pre>focusState<pre>}}</pre>!&lt;/p&gt;
-        | &nbsp;
-        | &lt;vue-timepicker manual-input hide-dropdown @focus="focusState = 'focused'" @blur="focusState = 'blurred'"&gt;&lt;/vue-timepicker&gt;
+        pre
+          | &lt;p&gt;Focus Status: I'm <span>{{</span>focusState<span>}}</span>!&lt;/p&gt;
+          | &nbsp;
+          | &lt;vue-timepicker manual-input hide-dropdown @focus="focusState = 'focused'" @blur="focusState = 'blurred'"&gt;&lt;/vue-timepicker&gt;
     template(v-slot:preview)
       b Focus State: I'm {{focusState}}!
       p
@@ -679,11 +699,12 @@ section#mostlyUsedSamples
       | Define customized labels for hour, minute, second, and APM pickers.
     template(v-slot:codes)
       highlight-code(lang="html" data-title="HTML")
-        | &lt;!-- 24-hour format with customized hour and minute labels --&gt;
-        | &lt;vue-timepicker hour-label="heure" minute-label="minute"&gt;&lt;/vue-timepicker&gt;
-        |
-        | &lt;!-- 12-hour format with customized am/pm text --&gt;
-        | &lt;vue-timepicker hour-label="時" minute-label="分" second-label="秒" apm-label="午" am-text="上午" pm-text="下午" format="h:mm:ss a"&gt;&lt;/vue-timepicker&gt;
+        pre
+          | &lt;!-- 24-hour format with customized hour and minute labels --&gt;
+          | &lt;vue-timepicker hour-label="heure" minute-label="minute"&gt;&lt;/vue-timepicker&gt;
+          |
+          | &lt;!-- 12-hour format with customized am/pm text --&gt;
+          | &lt;vue-timepicker hour-label="時" minute-label="分" second-label="秒" apm-label="午" am-text="上午" pm-text="下午" format="h:mm:ss a"&gt;&lt;/vue-timepicker&gt;
     template(v-slot:preview)
       b 24-hour format with customized hour and minute label
       p
@@ -701,11 +722,12 @@ section#mostlyUsedSamples
       | and the dropdown picker's width
     template(v-slot:codes)
       highlight-code(lang="html" data-title="HTML")
-        | &lt;!-- In `px` --&gt;
-        | &lt;vue-timepicker input-width="100px"&gt;&lt;/vue-timepicker&gt;
-        |
-        | &lt;!-- In `em` --&gt;
-        | &lt;vue-timepicker input-width="12em" format="HH:mm:ss"&gt;&lt;/vue-timepicker&gt;
+        pre
+          | &lt;!-- In `px` --&gt;
+          | &lt;vue-timepicker input-width="100px"&gt;&lt;/vue-timepicker&gt;
+          |
+          | &lt;!-- In `em` --&gt;
+          | &lt;vue-timepicker input-width="12em" format="HH:mm:ss"&gt;&lt;/vue-timepicker&gt;
     template(v-slot:preview)
       b In `px`
       p
@@ -720,19 +742,21 @@ section#mostlyUsedSamples
     p(slot="description") Auto-scroll to selected value on dropdown open.
     template(v-slot:codes)
       highlight-code(lang="html" data-title="HTML")
-        | &lt;!-- Default format --&gt;
-        | &lt;vue-timepicker auto-scroll v-model="autoScrollData1"&gt;&lt;/vue-timepicker&gt;
-        | &nbsp;
-        | &lt;!-- 12-hour format --&gt;
-        | &lt;vue-timepicker auto-scroll format="h:mm:ss a" v-model="autoScrollData2"&gt;&lt;/vue-timepicker&gt;
+        pre
+          | &lt;!-- Default format --&gt;
+          | &lt;vue-timepicker auto-scroll v-model="autoScrollData1"&gt;&lt;/vue-timepicker&gt;
+          | &nbsp;
+          | &lt;!-- 12-hour format --&gt;
+          | &lt;vue-timepicker auto-scroll format="h:mm:ss a" v-model="autoScrollData2"&gt;&lt;/vue-timepicker&gt;
       highlight-code(lang="javascript" data-title="JS")
-        | // Initial values
-        | data () {
-        |   return {
-        |     autoScrollData1: '08:40',
-        |     autoScrollData2: '5:30:20 pm'
-        |   }
-        | }
+        pre
+          | // Initial values
+          | data () {
+          |   return {
+          |     autoScrollData1: '08:40',
+          |     autoScrollData2: '5:30:20 pm'
+          |   }
+          | }
     template(v-slot:preview)
       b Default format
       p

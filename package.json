@@ -2,52 +2,39 @@
   "name": "vue2-timepicker",
   "version": "1.1.0",
   "description": "A dropdown time picker (hour|minute|second) for Vue 2.x, with flexible time format support",
+  "author": "Phoenix Wong <phoenixyfwong@gmail.com>",
   "scripts": {
-    "dev": "cd demo && yarn serve",
-    "dev:init": "cd demo && yarn install",
     "build": "vue-cli-service build --target lib --name VueTimepicker ./src/index.js",
-    "build:demo": "cd demo && yarn build"
+    "build:demo": "cd demo && yarn build",
+    "dev": "cd demo && yarn serve",
+    "dev:init": "cd demo && yarn install"
   },
   "main": "dist/VueTimepicker.umd.js",
   "module": "dist/VueTimepicker.common.js",
-  "unpkg": "dist/VueTimepicker.umd.min.js",
-  "css": "dist/VueTimepicker.css",
   "browser": {
     "./sfc": "src/vue-timepicker.vue"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/phoenixwong/vue2-timepicker.git"
-  },
-  "keywords": [
-    "vue",
-    "vue2",
-    "time",
-    "picker",
-    "dropdown",
-    "input",
-    "UI"
-  ],
-  "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.11.0",
-    "@vue/cli-plugin-eslint": "^3.11.0",
-    "@vue/cli-service": "^3.11.0",
-    "babel-eslint": "^10.0.3",
-    "core-js": "^2.6.9",
-    "eslint": "^5.16.0",
-    "eslint-plugin-vue": "^5.0.0",
-    "vue": "^2.6.10",
-    "vue-template-compiler": "^2.6.10"
-  },
-  "peerDependencies": {
-    "vue": "^2.6.5"
-  },
+  "unpkg": "dist/VueTimepicker.umd.min.js",
   "files": [
     "dist/*",
     "src/*",
     "*.json",
     "*.md"
   ],
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.3.1",
+    "@vue/cli-plugin-eslint": "~4.3.1",
+    "@vue/cli-service": "~4.3.1",
+    "babel-eslint": "^10.1.0",
+    "core-js": "^3.6.5",
+    "eslint": "^6.8.0",
+    "eslint-plugin-vue": "^6.2.2",
+    "vue": "^2.6.11",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "peerDependencies": {
+    "vue": "^2.6.5"
+  },
   "eslintConfig": {
     "root": true,
     "env": {
@@ -71,10 +58,23 @@
     "> 1%",
     "last 2 versions"
   ],
-  "author": "Phoenix Wong <phoenixyfwong@gmail.com>",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/phoenixwong/vue2-timepicker/issues"
   },
-  "homepage": "https://github.com/phoenixwong/vue2-timepicker#readme"
+  "css": "dist/VueTimepicker.css",
+  "homepage": "https://github.com/phoenixwong/vue2-timepicker#readme",
+  "keywords": [
+    "vue",
+    "vue2",
+    "time",
+    "picker",
+    "dropdown",
+    "input",
+    "UI"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phoenixwong/vue2-timepicker.git"
+  }
 }
