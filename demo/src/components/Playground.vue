@@ -887,6 +887,7 @@ section#playground
                        :manual-input="manualInput"
                        :hide-dropdown="toHideDropdown"
                        :blur-delay="blurDelay"
+                       :manual-input-timeout="manualInputTimeout"
                        :hide-clear-button="hideClearBtn"
                        :disabled="disablePicker"
                        :lazy="lazyMode"
