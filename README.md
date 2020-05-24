@@ -487,13 +487,6 @@ Advance Keyboard support (enabled with `advanced-keyboard`):
 
 Please be aware that after putting the `advanced-keyboard` on, hundreds of additional keyboard event listeners are going to be attached to the component. The amount of listeners depends on how many hours, minutes, and seconds value you enabled in the current Timepicker.
 
-### Manual Input Support
-
-```html
-<vue-timepicker manual-input></vue-timepicker>
-```
-Let users add or change values through the `<input>` box besides the dropdown picker.
-
 ### Blur Delay
 
 ```html
@@ -502,6 +495,29 @@ Let users add or change values through the `<input>` box besides the dropdown pi
 ```
 
 Sets the blur delay time for the dropdown. Defaults to `300` if not set.
+
+### Manual Input Support
+
+```html
+<vue-timepicker manual-input></vue-timepicker>
+```
+Let users add or change values through the `<input>` box besides the dropdown picker.
+
+### Manual Input Timeout
+
+```html
+<!-- Unit: million second -->
+<vue-timepicker :manual-input-timeout="1500"></vue-timepicker>
+```
+
+Works with **manual-input** mode. It sets the timeout for continuous input. Defaults to `1000` if not set.
+
+**How It Works?**
+
+For example, when a user focuses on the **hour** slot (`HH`) of a `"HH:mm"` formatted Timepicker (with the default value `1000`):
+
+- **Case 1:** User first inputs `1`, and then inputs `2` _500ms_ later -> Timepicker takes `12` as the final value and set it to the `"HH"` slot.
+- **Case 2:** User inputs `1`, and then presses the key `2` _1200ms_ later -> Timepicker takes `2` as the final value and set it to `02` for the `"HH"` slot.
 
 ### Lazy Event Mode
 
@@ -582,8 +598,9 @@ Prop                      | Type               | Required | Default Value
 **hide-disabled-seconds** | _Boolean_          | no       | false
 **hide-disabled-items**   | _Boolean_          | no       | false
 **advanced-keyboard**     | _Boolean_          | no       | false
-**manual-input**          | _Boolean_          | no       | false
 **blur-delay**            | _Number_           | no       | 300
+**manual-input**          | _Boolean_          | no       | false
+**manual-input-timeout**  | _Number_           | no       | 1000
 **lazy**                  | _Boolean_          | no       | false
 **auto-scroll**           | _Boolean_          | no       | false
 **debug-mode**            | _Boolean_          | no       | false
