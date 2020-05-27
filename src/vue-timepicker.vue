@@ -3,7 +3,8 @@ const CONFIG = {
   HOUR_TOKENS: ['HH', 'H', 'hh', 'h', 'kk', 'k'],
   MINUTE_TOKENS: ['mm', 'm'],
   SECOND_TOKENS: ['ss', 's'],
-  APM_TOKENS: ['A', 'a']
+  APM_TOKENS: ['A', 'a'],
+  BASIC_TYPES: ['hour', 'minute', 'second', 'apm']
 }
 
 const DEFAULT_OPTIONS = {
@@ -19,7 +20,8 @@ const DEFAULT_OPTIONS = {
   hideDisabledItems: false,
   advancedKeyboard: false,
   hideDropdown: false,
-  blurDelay: 300
+  blurDelay: 300,
+  manualInputTimeout: 1000
 }
 
 export default {
@@ -64,6 +66,7 @@ export default {
 
     autoScroll: { type: Boolean, default: false },
     manualInput: { type: Boolean, default: false },
+    manualInputTimeout: { type: [ Number, String ] },
     hideDropdown: { type: Boolean, default: false },
 
     debugMode: { type: Boolean, default: false }
@@ -199,6 +202,10 @@ export default {
 
       if (this.blurDelay && +this.blurDelay > 0) {
         options.blurDelay = +this.blurDelay
+      }
+
+      if (this.manualInputTimeout && +this.manualInputTimeout > 0) {
+        options.manualInputTimeout = +this.manualInputTimeout
       }
 
       return options
@@ -555,16 +562,16 @@ export default {
       if (!this.restrictedHourRange && !this.minuteRangeList && !this.secondRangeList && this.opts.minuteInterval === 1 && this.opts.secondInterval === 1) { return [] }
 
       const result = []
-      if (!this.isEmptyValue(this.hourType, this.hour) && (!this.isValidValue(this.hourType, this.hour) || this.isDisabledHour(this.hour))) {
+      if (!this.isEmptyValue(this.hourType, this.hour) && (!this.isValidValue(this.hourType, this.hour) || this.isDisabled('hour', this.hour))) {
         result.push('hour')
       }
-      if (!this.isEmptyValue(this.minuteType, this.minute) && (!this.isValidValue(this.minuteType, this.minute) || this.isDisabledMinute(this.minute) || this.notInMinuteInterval(this.minute))) {
+      if (!this.isEmptyValue(this.minuteType, this.minute) && (!this.isValidValue(this.minuteType, this.minute) || this.isDisabled('minute', this.minute) || this.notInMinuteInterval(this.minute))) {
         result.push('minute')
       }
-      if (this.secondType && !this.isEmptyValue(this.secondType, this.second) && (!this.isValidValue(this.secondType, this.second) || this.isDisabledSecond(this.second) || this.notInSecondInterval(this.second))) {
+      if (this.secondType && !this.isEmptyValue(this.secondType, this.second) && (!this.isValidValue(this.secondType, this.second) || this.isDisabled('second', this.second) || this.notInSecondInterval(this.second))) {
         result.push('second')
       }
-      if (this.apmType && !this.isEmptyValue(this.apmType, this.apm) && (!this.isValidValue(this.apmType, this.apm) || this.isDisabledApm(this.apm))) {
+      if (this.apmType && !this.isEmptyValue(this.apmType, this.apm) && (!this.isValidValue(this.apmType, this.apm) || this.isDisabled('apm', this.apm))) {
         result.push('apm')
       }
       if (result.length) {
@@ -617,31 +624,21 @@ export default {
       i = +i
       switch (token) {
         case 'H':
+        case 'h':
+        case 'k':
         case 'm':
         case 's':
+          if (['h', 'k'].includes(token) && i === 0) {
+            return token === 'k' ? '24' : '12'
+          }
           return String(i)
         case 'HH':
         case 'mm':
         case 'ss':
-          return i < 10 ? `0${i}` : String(i)
-        case 'h':
-          if (i === 0) {
-            return '12'
-          }
-          return String(i)
-        case 'k':
-          if (i === 0) {
-            return '24'
-          }
-          return String(i)
         case 'hh':
-          if (i === 0) {
-            return '12'
-          }
-          return i < 10 ? `0${i}` : String(i)
         case 'kk':
-          if (i === 0) {
-            return '24'
+          if (['hh', 'kk'].includes(token) && i === 0) {
+            return token === 'kk' ? '24' : '12'
           }
           return i < 10 ? `0${i}` : String(i)
         default:
@@ -701,36 +698,21 @@ export default {
     },
 
     renderList (listType, interval) {
-      if (!listType || (listType !== 'minute' && listType !== 'second')) { return }
+      if (!['minute','second'].includes(listType)) { return }
 
-      if (listType === 'minute') {
-        interval = interval || this.opts.minuteInterval || DEFAULT_OPTIONS.minuteInterval
-      } else {
-        interval = interval || this.opts.secondInterval || DEFAULT_OPTIONS.secondInterval
-      }
+      const isMinute = listType === 'minute'
+      interval = interval || (isMinute ? (this.opts.minuteInterval || DEFAULT_OPTIONS.minuteInterval) : (this.opts.secondInterval || DEFAULT_OPTIONS.secondInterval))
 
       const result = []
       for (let i = 0; i < 60; i += interval) {
-        if (listType === 'minute') {
-          result.push(this.formatValue(this.minuteType, i))
-        } else {
-          result.push(this.formatValue(this.secondType, i))
-        }
+        result.push(this.formatValue(isMinute ? this.minuteType : this.secondType, i))
       }
 
-      if (listType === 'minute') {
-        this.minutes = result
-      } else {
-        this.seconds = result
-      }
+      isMinute ? this.minutes = result : this.seconds = result
     },
 
     renderApmList () {
-      let apms = []
-      if (this.apmType) {
-        apms = this.apmType === 'A' ? ['AM', 'PM'] : ['am', 'pm']
-      }
-      this.apms = apms
+      this.apms = this.apmType === 'A' ? ['AM', 'PM'] : ['am', 'pm']
     },
 
     readValues () {
@@ -757,7 +739,7 @@ export default {
         return
       }
 
-      ['hour', 'minute', 'second', 'apm'].forEach(section => {
+      CONFIG.BASIC_TYPES.forEach(section => {
         const sectionType = this[`${section}Type`]
         if (values.indexOf(sectionType) > -1) {
           const sanitizedValue = this.sanitizedValue(sectionType, timeValue[sectionType])
@@ -891,27 +873,12 @@ export default {
       this.timeValue = timeValue
     },
 
-    setValueFromString (parsedValue, tokenType) {
-      if (!tokenType || !parsedValue) { return '' }
-      let stdValue = ''
-      switch (tokenType) {
-        case `${this.hourType}`:
-          stdValue = (parsedValue !== this.hourType) ? parsedValue : ''
-          this.hour = stdValue
-          break
-        case `${this.minuteType}`:
-          stdValue = (parsedValue !== this.minuteType) ? parsedValue : ''
-          this.minute = stdValue
-          break
-        case `${this.secondType}`:
-          stdValue = (parsedValue !== this.secondType) ? parsedValue : ''
-          this.second = stdValue
-          break
-        case `${this.apmType}`:
-          stdValue = (parsedValue !== this.apmType) ? parsedValue : ''
-          this.apm = stdValue
-          break
-      }
+    setValueFromString (parsedValue, token) {
+      if (!token || !parsedValue) { return '' }
+      const tokenType = this.getTokenType(token)
+      if (!tokenType || !tokenType.length) { return '' }
+      const stdValue = (parsedValue !== this[`${tokenType}Type`]) ? parsedValue : ''
+      this[tokenType] = stdValue
       return stdValue
     },
 
@@ -922,7 +889,7 @@ export default {
       const baseHourType = this.hourType
 
       const hourValue = this.isNumber(baseHour) ? +baseHour : ''
-      const apmValue = (this.baseOn12Hours && this.apm) ? String(this.apm).toLowerCase() : false
+      const apmValue = (this.baseOn12Hours && this.apm) ? this.lowerCasedApm(this.apm) : false
 
       CONFIG.HOUR_TOKENS.forEach((token) => {
         if (token === baseHourType) {
@@ -1073,6 +1040,27 @@ export default {
       return value >= 12 && value < 24
     },
 
+    isDisabled (type, value) {
+      if (!this.isBasicType(type)) { return true }
+      switch (type) {
+        case 'hour':
+          return this.isDisabledHour(value)
+        case 'minute':
+        case 'second':
+          if (!this[`${type}RangeList`]) {
+            return false
+          }
+          return !this[`${type}RangeList`].includes(value)
+        case 'apm':
+          if (!this.restrictedHourRange) {
+            return false
+          }
+          return !this.has[this.lowerCasedApm(value)]
+        default:
+          return true
+      }
+    },
+
     isDisabledHour (value) {
       if (!this.restrictedHourRange) { return false }
       if (this.baseOn12Hours) {
@@ -1091,21 +1079,6 @@ export default {
         return false
       }
       return !this.restrictedHourRange.includes(+value)
-    },
-
-    isDisabledMinute (value) {
-      if (!this.minuteRangeList) { return false }
-      return !this.minuteRangeList.includes(value)
-    },
-
-    isDisabledSecond (value) {
-      if (!this.secondRangeList) { return false }
-      return !this.secondRangeList.includes(value)
-    },
-
-    isDisabledApm (value) {
-      if (!this.restrictedHourRange) { return false }
-      return !this.has[(value || '').toLowerCase()]
     },
 
     notInMinuteInterval (value) {
@@ -1140,10 +1113,10 @@ export default {
     },
 
     apmDisplayText (apmValue) {
-      if (this.amText && (apmValue || '').toLowerCase() === 'am') {
+      if (this.amText && this.lowerCasedApm(apmValue) === 'am') {
         return this.amText
       }
-      if (this.pmText && (apmValue || '').toLowerCase() === 'pm') {
+      if (this.pmText && this.lowerCasedApm(apmValue) === 'pm') {
         return this.pmText
       }
       return apmValue
@@ -1187,18 +1160,8 @@ export default {
     },
 
     select (type, value) {
-      if (type === 'hour') {
-        if (this.isDisabledHour(value)) { return }
-        this.hour = value
-      } else if (type === 'minute') {
-        if (this.isDisabledMinute(value)) { return }
-        this.minute = value
-      } else if (type === 'second') {
-        if (this.isDisabledSecond(value)) { return }
-        this.second = value
-      } else if (type === 'apm') {
-        if (this.isDisabledApm(value)) { return }
-        this.apm = value
+      if (this.isBasicType(type) && !this.isDisabled(type, value)) {
+        this[type] = value
       }
     },
 
@@ -1338,25 +1301,17 @@ export default {
       return siblingsInCol[selfIndex + 1]
     },
 
-    prevItem (columnClass, dataKey, isManualInput) {
+    prevItem (columnClass, dataKey, isManualInput = false) {
       const targetItem = this.getClosestSibling(columnClass, dataKey, true)
       if (targetItem) {
-        if (isManualInput) {
-          return targetItem
-        } else {
-          targetItem.focus()
-        }
+        return isManualInput ? targetItem : targetItem.focus()
       }
     },
 
-    nextItem (columnClass, dataKey, isManualInput) {
+    nextItem (columnClass, dataKey, isManualInput = false) {
       const targetItem = this.getClosestSibling(columnClass, dataKey, false)
       if (targetItem) {
-        if (isManualInput) {
-          return targetItem
-        } else {
-          targetItem.focus()
-        }
+        return isManualInput ? targetItem : targetItem.focus()
       }
     },
 
@@ -1467,7 +1422,7 @@ export default {
       this.selectionTimer = window.setTimeout(() => {
         window.clearTimeout(this.selectionTimer)
         if (this.$refs && this.$refs.input) {
-          const nearestSlot = this.getNearesChunkByPos(this.$refs.input.selectionStart || 0)
+          const nearestSlot = this.getNearestChunkByPos(this.$refs.input.selectionStart || 0)
           this.debounceSetInputSelection(nearestSlot)
         }
       }, 50)
@@ -1491,13 +1446,16 @@ export default {
       // Arrow keys
       } else if (evt.keyCode >= 37 && evt.keyCode <= 40) {
         evt.preventDefault()
+        this.clearKbInputLog()
         this.arrowHandler(evt)
       // Delete|Backspace
       } else if (evt.keyCode === 8 || evt.keyCode === 46) {
         evt.preventDefault()
+        this.clearKbInputLog()
         this.clearTime()
       // Tab
       } else if (evt.keyCode === 9) {
+        this.clearKbInputLog()
         this.tabHandler(evt)
       // Prevent any Non-ESC and non-pasting inputs
       } else if (evt.keyCode !== 27 && !(evt.metaKey || evt.ctrlKey)) {
@@ -1525,11 +1483,7 @@ export default {
         this.setSanitizedValueToSection('apm', inputIsCustomApmText)
       }
 
-      if (this.has.customApmText) {
-        this.$refs.input.value = this.customDisplayTime
-      } else {
-        this.$refs.input.value = this.displayTime
-      }
+      this.$refs.input.value = this.has.customApmText ? this.customDisplayTime : this.displayTime
 
       this.$nextTick(() => {
         if (this.bakCurrentPos) {
@@ -1561,7 +1515,8 @@ export default {
         this.readStringValues(pastingText)
       } else {
         this.kbInputLog = pastingText.substr(-2, 2)
-        this.debounceSetKbInput()
+        this.setKbInput()
+        this.debounceClearKbLog()
       }
     },
 
@@ -1604,29 +1559,34 @@ export default {
       const currentChunk = this.getCurrentTokenChunk()
       if (!currentChunk || (currentChunk.type !== 'apm' && isApm) || (currentChunk.type === 'apm' && !isApm)) { return }
       this.kbInputLog = `${this.kbInputLog.substr(-1)}${newChar}`
-      this.debounceSetKbInput()
+      this.setKbInput()
+      this.debounceClearKbLog()
     },
 
-    debounceSetKbInput () {
+    clearKbInputLog () {
+      window.clearTimeout(this.kbInputTimer)
+      this.kbInputLog = ''
+    },
+
+    debounceClearKbLog () {
       window.clearTimeout(this.kbInputTimer)
       this.kbInputTimer = window.setTimeout(() => {
-        window.clearTimeout(this.kbInputTimer)
-        this.setKbInput(this.kbInputLog)
-        this.kbInputLog = ''
-      }, 500)
+        this.clearKbInputLog()
+      }, this.opts.manualInputTimeout)
     },
 
     setKbInput (value) {
+      value = value || this.kbInputLog
       const currentChunk = this.getCurrentTokenChunk()
-      if (!currentChunk) { return }
+      if (!currentChunk || !value || !value.length) { return }
       const chunkType = currentChunk.type
       const chunkToken = currentChunk.token
 
       let validValue
       if (chunkType === 'apm') {
-        if ((value || '').toLowerCase().includes('a')) {
+        if (this.lowerCasedApm(value).includes('a')) {
           validValue = 'am'
-        } else if ((value || '').toLowerCase().includes('p')) {
+        } else if (this.lowerCasedApm(value).includes('p')) {
           validValue = 'pm'
         }
         if (validValue) {
@@ -1650,9 +1610,9 @@ export default {
       }
       if (this.debugMode) {
         if (validValue) {
-          this.debugLog(`Successfully set value "${validValue}" from latest input "${value}" for column "${chunkType}"`)
+          this.debugLog(`Successfully set value "${validValue}" from latest input "${value}" for the "${chunkType}" slot`)
         } else {
-          this.debugLog(`Value "${value}" is invalid in the "${chunkType}" column`)
+          this.debugLog(`Value "${value}" is invalid in the "${chunkType}" slot`)
         }
       }
     },
@@ -1666,7 +1626,7 @@ export default {
       }
     },
 
-    getNearesChunkByPos (startPos) {
+    getNearestChunkByPos (startPos) {
       if (!this.tokenChunksPos || !this.tokenChunksPos.length) { return }
       let nearest
       let nearestDelta = -1
@@ -1730,7 +1690,7 @@ export default {
           if (!this.baseOn12Hours) {
             return item === currentValue
           } else {
-            const valueKey = `${currentValue}${(this.apm || '').toLowerCase() === 'pm' ? 'p' : 'a'}` 
+            const valueKey = `${currentValue}${this.lowerCasedApm(this.apm) === 'pm' ? 'p' : 'a'}` 
             return item === valueKey
           }
         })
@@ -1791,7 +1751,7 @@ export default {
     },
 
     getCurrentTokenChunk () {
-      return this.getNearesChunkByPos((this.$refs.input && this.$refs.input.selectionStart) || 0)
+      return this.getNearestChunkByPos((this.$refs.input && this.$refs.input.selectionStart) || 0)
     },
 
     getChunkPosByToken (token) {
@@ -1853,6 +1813,14 @@ export default {
       return !isNaN(parseFloat(value)) && isFinite(value)
     },
 
+    isBasicType (type) {
+      return CONFIG.BASIC_TYPES.includes(type)
+    },
+
+    lowerCasedApm (apmValue) {
+      return (apmValue || '').toLowerCase()
+    },
+
     getTokenRegex (token) {
       switch (token) {
         case 'HH':
@@ -1903,18 +1871,9 @@ export default {
     },
 
     getTokenType (token) {
-      switch (token) {
-        case `${this.hourType}`:
-          return 'hour'
-        case `${this.minuteType}`:
-          return 'minute'
-        case `${this.secondType}`:
-          return 'second'
-        case `${this.apmType}`:
-          return 'apm'
-        default:
-          return ''
-      }
+      const typesInUse = CONFIG.BASIC_TYPES.filter(tokenType => this[`${tokenType}Type`])
+      const activeTokens = typesInUse.map(tokenType => this[`${tokenType}Type`])
+      return typesInUse[activeTokens.indexOf(token)] || ''
     },
 
     debugLog (logText) {
@@ -2000,10 +1959,10 @@ export default {
         <ul class="hours" @scroll="keepFocusing">
           <li class="hint" v-text="hourLabelText"></li>
           <template v-for="(hr, hIndex) in hours">
-            <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabledHour(hr))"
+            <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabled('hour', hr))"
                 :key="hIndex"
                 :class="{active: hour === hr}"
-                :disabled="isDisabledHour(hr)"
+                :disabled="isDisabled('hour', hr)"
                 :data-key="hr"
                 v-text="hr"
                 @click="select('hour', hr)"></li>
@@ -2012,10 +1971,10 @@ export default {
         <ul class="minutes" @scroll="keepFocusing">
           <li class="hint" v-text="minuteLabelText"></li>
           <template v-for="(m, mIndex) in minutes">
-            <li v-if="!opts.hideDisabledMinutes || (opts.hideDisabledMinutes && !isDisabledMinute(m))"
+            <li v-if="!opts.hideDisabledMinutes || (opts.hideDisabledMinutes && !isDisabled('minute', m))"
                 :key="mIndex"
                 :class="{active: minute === m}"
-                :disabled="isDisabledMinute(m)"
+                :disabled="isDisabled('minute', m)"
                 :data-key="m"
                 v-text="m"
                 @click="select('minute', m)"></li>
@@ -2024,10 +1983,10 @@ export default {
         <ul class="seconds" v-if="secondType" @scroll="keepFocusing">
           <li class="hint" v-text="secondLabelText"></li>
           <template v-for="(s, sIndex) in seconds">
-            <li v-if="!opts.hideDisabledSeconds || (opts.hideDisabledSeconds && !isDisabledSecond(s))"
+            <li v-if="!opts.hideDisabledSeconds || (opts.hideDisabledSeconds && !isDisabled('second', s))"
                 :key="sIndex"
                 :class="{active: second === s}"
-                :disabled="isDisabledSecond(s)"
+                :disabled="isDisabled('second', s)"
                 :data-key="s"
                 v-text="s"
                 @click="select('second', s)"></li>
@@ -2036,10 +1995,10 @@ export default {
         <ul class="apms" v-if="apmType" @scroll="keepFocusing">
           <li class="hint" v-text="apmLabelText"></li>
           <template v-for="(a, aIndex) in apms">
-            <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabledApm(a))"
+            <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabled('apm', a))"
                 :key="aIndex"
                 :class="{active: apm === a}"
-                :disabled="isDisabledApm(a)"
+                :disabled="isDisabled('apm', a)"
                 :data-key="a"
                 v-text="apmDisplayText(a)"
                 @click="select('apm', a)"></li>
@@ -2055,12 +2014,12 @@ export default {
         <ul class="hours" tabindex="-1" @scroll="keepFocusing">
           <li class="hint" v-text="hourLabelText" tabindex="-1"></li>
           <template v-for="(hr, hIndex) in hours">
-            <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabledHour(hr))"
+            <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabled('hour', hr))"
                 :key="hIndex"
                 :class="{active: hour === hr}"
-                :tabindex="isDisabledHour(hr) ? -1 : tabindex"
+                :tabindex="isDisabled('hour', hr) ? -1 : tabindex"
                 :data-key="hr"
-                :disabled="isDisabledHour(hr)"
+                :disabled="isDisabled('hour', hr)"
                 v-text="hr"
                 @click="select('hour', hr)"
                 @keydown.space.prevent="select('hour', hr)"
@@ -2077,12 +2036,12 @@ export default {
         <ul class="minutes" tabindex="-1" @scroll="keepFocusing">
           <li class="hint" v-text="minuteLabelText" tabindex="-1"></li>
           <template v-for="(m, mIndex) in minutes">
-            <li v-if="!opts.hideDisabledMinutes || (opts.hideDisabledMinutes && !isDisabledMinute(m))"
+            <li v-if="!opts.hideDisabledMinutes || (opts.hideDisabledMinutes && !isDisabled('minute', m))"
                 :key="mIndex"
                 :class="{active: minute === m}"
-                :tabindex="isDisabledMinute(m) ? -1 : tabindex"
+                :tabindex="isDisabled('minute', m) ? -1 : tabindex"
                 :data-key="m"
-                :disabled="isDisabledMinute(m)"
+                :disabled="isDisabled('minute', m)"
                 v-text="m"
                 @click="select('minute', m)"
                 @keydown.space.prevent="select('minute', m)"
@@ -2099,12 +2058,12 @@ export default {
         <ul class="seconds" v-if="secondType" tabindex="-1" @scroll="keepFocusing">
           <li class="hint" v-text="secondLabelText" tabindex="-1"></li>
           <template v-for="(s, sIndex) in seconds">
-            <li v-if="!opts.hideDisabledSeconds || (opts.hideDisabledSeconds && !isDisabledSecond(s))"
+            <li v-if="!opts.hideDisabledSeconds || (opts.hideDisabledSeconds && !isDisabled('second', s))"
                 :key="sIndex"
                 :class="{active: second === s}"
-                :tabindex="isDisabledSecond(s) ? -1 : tabindex"
+                :tabindex="isDisabled('second', s) ? -1 : tabindex"
                 :data-key="s"
-                :disabled="isDisabledSecond(s)"
+                :disabled="isDisabled('second', s)"
                 v-text="s"
                 @click="select('second', s)"
                 @keydown.space.prevent="select('second', s)"
@@ -2121,12 +2080,12 @@ export default {
         <ul class="apms" v-if="apmType" tabindex="-1" @scroll="keepFocusing">
           <li class="hint" v-text="apmLabelText" tabindex="-1"></li>
           <template v-for="(a, aIndex) in apms">
-            <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabledApm(a))"
+            <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabled('apm', a))"
                 :key="aIndex"
                 :class="{active: apm === a}"
-                :tabindex="isDisabledApm(a) ? -1 : tabindex"
+                :tabindex="isDisabled('apm', a) ? -1 : tabindex"
                 :data-key="a"
-                :disabled="isDisabledApm(a)"
+                :disabled="isDisabled('apm', a)"
                 v-text="apmDisplayText(a)"
                 @click="select('apm', a)"
                 @keydown.space.prevent="select('apm', a)"

@@ -2,6 +2,17 @@
 
 > The Change Log of Vue2 Timepicker `vue2-timepicker`
 
+## v 1.1.1
+
+### Improvements
+
+Instant feedback after manual input. Plus, add a new `manual-input-timeout` property to help set up the timeout for continuous input (Thanks to @jost-s).
+
+#### Notes for Contributors
+
+We've upgraded to use vue-cli **v4** in this version. Please check the CONTRIBUTING.md for more info.
+
+
 ## v 1.1.0
 
 ### New
