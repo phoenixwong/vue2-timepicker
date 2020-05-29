@@ -1547,10 +1547,11 @@ export default {
       if (!this.inputIsEmpty && this.tokenChunksPos && this.tokenChunksPos.length) {
         const currentChunk = this.getCurrentTokenChunk()
         if (!currentChunk) { return }
+        const firstChunk = this.tokenChunksPos[0];
         const lastChunk = this.tokenChunksPos[this.tokenChunksPos.length - 1]
-        if (currentChunk.token !== lastChunk.token) {
+        if ((evt.shiftKey && currentChunk.token !== firstChunk.token) || (!evt.shiftKey && currentChunk.token !== lastChunk.token)) {
           evt.preventDefault()
-          this.toLateralToken(false)
+          this.toLateralToken(evt.shiftKey)
         }
       }
     },
