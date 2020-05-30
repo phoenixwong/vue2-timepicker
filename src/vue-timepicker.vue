@@ -95,6 +95,7 @@ export default {
       apm: '',
       fullValues: undefined,
       bakDisplayTime: undefined,
+      doClearApmChecking: false,
 
       selectionTimer: undefined,
       kbInputTimer: undefined,
@@ -219,6 +220,23 @@ export default {
       return this.opts.format || DEFAULT_OPTIONS.format
     },
 
+    inUse () {
+      const typesInUse = CONFIG.BASIC_TYPES.filter(type => this.getTokenByType(type))
+      // Sort types and token by their sequence in the "format" string
+      typesInUse.sort((l, r) => {
+        return this.formatString.indexOf(this.getTokenByType(l) || null) - this.formatString.indexOf(this.getTokenByType(r) || null)
+      })
+      const tokensInUse = typesInUse.map(type => this.getTokenByType(type))
+      return {
+        hour: !!this.hourType,
+        minute: !!this.minuteType,
+        second: !!this.secondType,
+        apm: !!this.apmType,
+        types: typesInUse || [],
+        tokens: tokensInUse || []
+      }
+    },
+
     displayTime () {
       let formatString = String(this.formatString)
       if (this.hour) {
@@ -249,14 +267,18 @@ export default {
 
     allValueSelected () {
       if (
-        (!this.hour || !this.hour.length) ||
-        (!this.minute || !this.minute.length) ||
-        (this.secondType && (!this.second || !this.second.length)) ||
-        (this.apmType && (!this.apm || !this.apm.length))
+        (this.inUse.hour && !this.hour) ||
+        (this.inUse.minute && !this.minute) ||
+        (this.inUse.second && !this.second) ||
+        (this.inUse.apm && !this.apm)
       ) {
         return false
       }
       return true
+    },
+
+    columnsSequence () {
+      return this.inUse.types.map(type => type) || []
     },
 
     showClearBtn () {
@@ -271,7 +293,7 @@ export default {
     },
 
     hourRangeIn24HrFormat () {
-      if (!this.opts.hourRange) { return false }
+      if (!this.hourType || !this.opts.hourRange) { return false }
       if (!this.opts.hourRange.length) { return [] }
 
       const range = []
@@ -342,7 +364,7 @@ export default {
             const r = hr.substr(-1)
             return `${this.formatValue(this.hourType, l)}${r}`
           })
-          const am12Index = list.findIndex(hr => hr === '12a')
+          const am12Index = list.indexOf('12a')
           if (am12Index > 0) {
             // Make '12a' the first item in h/hh
             list.unshift(list.splice(am12Index, 1)[0])
@@ -366,14 +388,17 @@ export default {
 
     has () {
       const result = {
-        am: true,
-        pm: true,
         customApmText: false
       }
-      if (this.hourRangeIn24HrFormat && this.hourRangeIn24HrFormat.length) {
+      const apmEnabled = !!this.apmType
+
+      if (apmEnabled && this.hourRangeIn24HrFormat && this.hourRangeIn24HrFormat.length) {
         const range = [].concat([], this.hourRangeIn24HrFormat)
-        result.am = range.some(this.hasAm)
-        result.pm = range.some(this.hasPm)
+        result.am = range.some(value => value < 12 || value === 24)
+        result.pm = range.some(value => value >= 12 && value < 24)
+      } else {
+        result.am = apmEnabled
+        result.pm = apmEnabled
       }
       if ((this.amText && this.amText.length) || (this.pmText && this.pmText.length)) {
         result.customApmText = true
@@ -382,79 +407,15 @@ export default {
     },
 
     minuteRangeList () {
-      if (!this.opts.minuteRange) { return false }
+      if (!this.minuteType || !this.opts.minuteRange) { return false }
       if (!this.opts.minuteRange.length) { return [] }
-      const range = []
-      let formatedValue
-      this.opts.minuteRange.forEach(value => {
-        if (value instanceof Array) {
-          if (value.length > 2 && this.debugMode) {
-            this.debugLog(`Nested array within "minute-range" must contain no more than two items. Only the first two items of ${JSON.stringify(value)} will be taken into account.`)
-          }
-          const start = value[0]
-          const end = value[1] || value[0]
-          for (let i = +start; i <= +end; i++) {
-            if (i < 0 || i > 59) { continue }
-            formatedValue = this.formatValue(this.minuteType, i)
-            if (!range.includes(formatedValue)) {
-              range.push(formatedValue)
-            }
-          }
-        } else {
-          if (+value < 0 || +value > 59) { return }
-          formatedValue = this.formatValue(this.minuteType, value)
-          if (!range.includes(formatedValue)) {
-            range.push(formatedValue)
-          }
-        }
-      })
-      range.sort((l, r) => { return l - r })
-      // Debug Mode
-      if (this.debugMode) {
-        const validItems = (this.minutes || []).filter(item => range.includes(item))
-        if (!validItems || !validItems.length) {
-          this.debugLog(`The minute list is empty due to the "minute-range" config\nminute-range: ${JSON.stringify(this.minuteRange)}\nminute-interval: ${this.opts.minuteInterval}`)
-        }
-      }
-      return range
+      return this.renderRangeList(this.opts.minuteRange, 'minute')
     },
 
     secondRangeList () {
-      if (!this.opts.secondRange) { return false }
+      if (!this.secondType || !this.opts.secondRange) { return false }
       if (!this.opts.secondRange.length) { return [] }
-      const range = []
-      let formatedValue
-      this.opts.secondRange.forEach(value => {
-        if (value instanceof Array) {
-          if (value.length > 2 && this.debugMode) {
-            this.debugLog(`Nested array within "second-range" must contain no more than two items. Only the first two items of ${JSON.stringify(value)} will be taken into account.`)
-          }
-          const start = value[0]
-          const end = value[1] || value[0]
-          for (let i = +start; i <= +end; i++) {
-            if (i < 0 || i > 59) { continue }
-            formatedValue = this.formatValue(this.secondType, i)
-            if (!range.includes(formatedValue)) {
-              range.push(formatedValue)
-            }
-          }
-        } else {
-          if (+value < 0 || +value > 59) { return }
-          formatedValue = this.formatValue(this.secondType, value)
-          if (!range.includes(formatedValue)) {
-            range.push(formatedValue)
-          }
-        }
-      })
-      range.sort((l, r) => { return l - r })
-      // Debug Mode
-      if (this.debugMode) {
-        const validItems = (this.seconds || []).filter(item => range.includes(item))
-        if (!validItems || !validItems.length) {
-          this.debugLog(`The second list is empty due to the "second-range" config\nsecond-range: ${JSON.stringify(this.secondRange)}\nsecond-interval: ${this.opts.secondInterval}`)
-        }
-      }
-      return range
+      return this.renderRangeList(this.opts.secondRange, 'second')
     },
     
     hourLabelText () {
@@ -478,15 +439,7 @@ export default {
     },
 
     tokenRegexBase () {
-      if (!this.manualInput && !this.useStringValue) { return false }
-      let regexStr = `${this.hourType}|${this.minuteType}`
-      if (this.secondType) {
-        regexStr += `|${this.secondType}`
-      }
-      if (this.apmType) {
-        regexStr += `|${this.apmType}`
-      }
-      return regexStr
+      return this.inUse.tokens.join('|')
     },
 
     tokenChunks () {
@@ -562,16 +515,16 @@ export default {
       if (!this.restrictedHourRange && !this.minuteRangeList && !this.secondRangeList && this.opts.minuteInterval === 1 && this.opts.secondInterval === 1) { return [] }
 
       const result = []
-      if (!this.isEmptyValue(this.hourType, this.hour) && (!this.isValidValue(this.hourType, this.hour) || this.isDisabled('hour', this.hour))) {
+      if (this.inUse.hour && !this.isEmptyValue(this.hourType, this.hour) && (!this.isValidValue(this.hourType, this.hour) || this.isDisabled('hour', this.hour))) {
         result.push('hour')
       }
-      if (!this.isEmptyValue(this.minuteType, this.minute) && (!this.isValidValue(this.minuteType, this.minute) || this.isDisabled('minute', this.minute) || this.notInMinuteInterval(this.minute))) {
+      if (this.inUse.minute && !this.isEmptyValue(this.minuteType, this.minute) && (!this.isValidValue(this.minuteType, this.minute) || this.isDisabled('minute', this.minute) || this.notInInterval('minute', this.minute))) {
         result.push('minute')
       }
-      if (this.secondType && !this.isEmptyValue(this.secondType, this.second) && (!this.isValidValue(this.secondType, this.second) || this.isDisabled('second', this.second) || this.notInSecondInterval(this.second))) {
+      if (this.inUse.second && !this.isEmptyValue(this.secondType, this.second) && (!this.isValidValue(this.secondType, this.second) || this.isDisabled('second', this.second) || this.notInInterval('second', this.second))) {
         result.push('second')
       }
-      if (this.apmType && !this.isEmptyValue(this.apmType, this.apm) && (!this.isValidValue(this.apmType, this.apm) || this.isDisabled('apm', this.apm))) {
+      if (this.inUse.apm && !this.isEmptyValue(this.apmType, this.apm) && (!this.isValidValue(this.apmType, this.apm) || this.isDisabled('apm', this.apm))) {
         result.push('apm')
       }
       if (result.length) {
@@ -621,6 +574,7 @@ export default {
 
   methods: {
     formatValue (token, i) {
+      if (!this.isNumber(i)) { return '' }
       i = +i
       switch (token) {
         case 'H':
@@ -646,38 +600,39 @@ export default {
       }
     },
 
-    checkAcceptingType (validValues, formatString, fallbackValue) {
+    checkAcceptingType (validValues, formatString) {
       if (!validValues || !formatString || !formatString.length) { return '' }
       for (let i = 0; i < validValues.length; i++) {
         if (formatString.indexOf(validValues[i]) > -1) {
           return validValues[i]
         }
       }
-      return fallbackValue || ''
+      return ''
     },
 
     renderFormat (newFormat) {
       newFormat = newFormat || this.opts.format || DEFAULT_OPTIONS.format
 
-      this.hourType = this.checkAcceptingType(CONFIG.HOUR_TOKENS, newFormat, 'HH')
-      this.minuteType = this.checkAcceptingType(CONFIG.MINUTE_TOKENS, newFormat, 'mm')
+      let hourType = this.checkAcceptingType(CONFIG.HOUR_TOKENS, newFormat)
+      let minuteType = this.checkAcceptingType(CONFIG.MINUTE_TOKENS, newFormat)
       this.secondType = this.checkAcceptingType(CONFIG.SECOND_TOKENS, newFormat)
       this.apmType = this.checkAcceptingType(CONFIG.APM_TOKENS, newFormat)
 
-      this.renderHoursList()
-      this.renderList('minute')
-
-      if (this.secondType) {
-        this.renderList('second')
-      } else {
-        this.seconds = []
+      // Failsafe checking
+      if (!hourType && !minuteType && !this.secondType && !this.apmType) {
+        if (this.debugMode && this.format) {
+          this.debugLog(`No valid tokens found in your defined "format" string "${this.format}". Fallback to the default "HH:mm" format.`)
+        }
+        hourType = 'HH'
+        minuteType = 'mm'
       }
+      this.hourType = hourType
+      this.minuteType = minuteType
 
-      if (this.apmType) {
-        this.renderApmList()
-      } else {
-        this.apms = []
-      }
+      this.hourType ? this.renderHoursList() : this.hours = []
+      this.minuteType ? this.renderList('minute') : this.minutes = []
+      this.secondType ? this.renderList('second') : this.seconds = []
+      this.apmType ? this.renderApmList() : this.apms = []
 
       this.$nextTick(() => {
         this.readValues()
@@ -685,7 +640,7 @@ export default {
     },
 
     renderHoursList () {
-      const hoursCount = (this.baseOn12Hours) ? 12 : 24
+      const hoursCount = this.baseOn12Hours ? 12 : 24
       const hours = []
       for (let i = 0; i < hoursCount; i++) {
         if (this.hourType === 'k' || this.hourType === 'kk') {
@@ -698,7 +653,7 @@ export default {
     },
 
     renderList (listType, interval) {
-      if (!['minute','second'].includes(listType)) { return }
+      if (!this.isMinuteOrSecond(listType)) { return }
 
       const isMinute = listType === 'minute'
       interval = interval || (isMinute ? (this.opts.minuteInterval || DEFAULT_OPTIONS.minuteInterval) : (this.opts.secondInterval || DEFAULT_OPTIONS.secondInterval))
@@ -707,7 +662,6 @@ export default {
       for (let i = 0; i < 60; i += interval) {
         result.push(this.formatValue(isMinute ? this.minuteType : this.secondType, i))
       }
-
       isMinute ? this.minutes = result : this.seconds = result
     },
 
@@ -739,14 +693,14 @@ export default {
         return
       }
 
-      CONFIG.BASIC_TYPES.forEach(section => {
-        const sectionType = this[`${section}Type`]
-        if (values.indexOf(sectionType) > -1) {
-          const sanitizedValue = this.sanitizedValue(sectionType, timeValue[sectionType])
-          this[section] = sanitizedValue
-          timeValue[sectionType] = sanitizedValue
+      CONFIG.BASIC_TYPES.forEach(type => {
+        const token = this.getTokenByType(type)
+        if (values.indexOf(token) > -1) {
+          const sanitizedValue = this.sanitizedValue(token, timeValue[token])
+          this[type] = sanitizedValue
+          timeValue[token] = sanitizedValue
         } else {
-          this[section] = ''
+          this[type] = ''
         }
       })
       this.timeValue = timeValue
@@ -862,14 +816,9 @@ export default {
 
     addFallbackValues () {
       const timeValue = {}
-      timeValue[this.hourType] = ''
-      timeValue[this.minuteType] = ''
-      if (this.secondType) {
-        timeValue[this.secondType] = ''
-      }
-      if (this.apmType) {
-        timeValue[this.apmType] = ''
-      }
+      this.inUse.types.forEach(type => {
+        timeValue[this.getTokenByType(type)] = ''
+      })
       this.timeValue = timeValue
     },
 
@@ -877,7 +826,7 @@ export default {
       if (!token || !parsedValue) { return '' }
       const tokenType = this.getTokenType(token)
       if (!tokenType || !tokenType.length) { return '' }
-      const stdValue = (parsedValue !== this[`${tokenType}Type`]) ? parsedValue : ''
+      const stdValue = (parsedValue !== this.getTokenByType(tokenType)) ? parsedValue : ''
       this[tokenType] = stdValue
       return stdValue
     },
@@ -888,97 +837,78 @@ export default {
       const baseHour = this.hour
       const baseHourType = this.hourType
 
-      const hourValue = this.isNumber(baseHour) ? +baseHour : ''
-      const apmValue = (this.baseOn12Hours && this.apm) ? this.lowerCasedApm(this.apm) : false
+      let apmValue
 
-      CONFIG.HOUR_TOKENS.forEach((token) => {
-        if (token === baseHourType) {
-          fullValues[token] = baseHour
-          return
-        }
+      // Hour type or hour value is NOT set in the "format" string
+      if (!baseHourType || !this.isNumber(baseHour)) {
+        CONFIG.HOUR_TOKENS.forEach(token => fullValues[token] = '')
+        apmValue = this.lowerCasedApm(this.apm || '')
+        fullValues.a = apmValue
+        fullValues.A = apmValue.toUpperCase()
 
-        let value
-        let apm
-        switch (token) {
-          case 'H':
-          case 'HH':
-            if (!String(hourValue).length) {
-              fullValues[token] = ''
-              return
-            } else if (this.baseOn12Hours) {
-              if (apmValue === 'pm') {
-                value = hourValue < 12 ? hourValue + 12 : hourValue
+      // Both Hour type and value are set
+      } else {
+        const hourValue = +baseHour
+        const apmValue = (this.baseOn12Hours && this.apm) ? this.lowerCasedApm(this.apm) : false
+
+        CONFIG.HOUR_TOKENS.forEach((token) => {
+          if (token === baseHourType) {
+            fullValues[token] = baseHour
+            return
+          }
+
+          let value
+          let apm
+          switch (token) {
+            case 'H':
+            case 'HH':
+            case 'k':
+            case 'kk':
+              if (this.baseOn12Hours) {
+                if (apmValue === 'pm') {
+                  value = hourValue < 12 ? hourValue + 12 : hourValue
+                } else if (['k', 'kk'].includes(token)) {
+                  value = hourValue === 12 ? 24 : hourValue
+                } else {
+                  value = hourValue % 12
+                }
               } else {
-                value = hourValue % 12
+                if (['k', 'kk'].includes(token)) {
+                  value = hourValue === 0 ? 24 : hourValue
+                } else {
+                  value = hourValue % 24
+                }
               }
-            } else {
-              value = hourValue % 24
-            }
-            fullValues[token] = (token === 'HH' && value < 10) ? `0${value}` : String(value)
-            break
-          case 'k':
-          case 'kk':
-            if (!String(hourValue).length) {
-              fullValues[token] = ''
-              return
-            } else if (this.baseOn12Hours) {
-              if (apmValue === 'pm') {
-                value = hourValue < 12 ? hourValue + 12 : hourValue
+              fullValues[token] = this.formatValue(token, value)
+              break
+            case 'h':
+            case 'hh':
+              // h <-> hh
+              if (this.baseOn12Hours) {
+                value = hourValue
+                apm = apmValue || ''
+              // Read from other hour formats
               } else {
-                value = hourValue === 12 ? 24 : hourValue
-              }
-            } else {
-              value = hourValue === 0 ? 24 : hourValue
-            }
-            fullValues[token] = (token === 'kk' && value < 10) ? `0${value}` : String(value)
-            break
-          case 'h':
-          case 'hh':
-            if (apmValue) {
-              value = hourValue
-              apm = apmValue || 'am'
-            } else {
-              if (!String(hourValue).length) {
-                fullValues[token] = ''
-                fullValues.a = ''
-                fullValues.A = ''
-                return
-              } else if (hourValue > 11 && hourValue < 24) {
-                apm = 'pm'
-                value = hourValue === 12 ? 12 : hourValue % 12
-              } else {
-                if (this.baseOn12Hours) {
-                  apm = ''
+                if (hourValue > 11 && hourValue < 24) {
+                  apm = 'pm'
+                  value = hourValue === 12 ? 12 : hourValue % 12
                 } else {
                   apm = 'am'
+                  value = hourValue % 12 === 0 ? 12 : hourValue
                 }
-                value = hourValue % 12 === 0 ? 12 : hourValue
               }
-            }
-            fullValues[token] = (token === 'hh' && value < 10) ? `0${value}` : String(value)
-            fullValues.a = apm
-            fullValues.A = apm.toUpperCase()
-            break
-        }
-      })
-
-      if (this.isNumber(this.minute)) {
-        const minuteValue = +this.minute
-        fullValues.m = String(minuteValue)
-        fullValues.mm = minuteValue < 10 ? `0${minuteValue}` : String(minuteValue)
-      } else {
-        fullValues.m = ''
-        fullValues.mm = ''
+              fullValues[token] = this.formatValue(token, value)
+              fullValues.a = apm
+              fullValues.A = apm.toUpperCase()
+              break
+          }
+        })
       }
 
-      if (this.isNumber(this.second)) {
-        const secondValue = +this.second
-        fullValues.s = String(secondValue)
-        fullValues.ss = secondValue < 10 ? `0${secondValue}` : String(secondValue)
-      } else {
-        fullValues.s = ''
-        fullValues.ss = ''
-      }
+      fullValues.m = this.formatValue('m', this.minute)
+      fullValues.mm = this.formatValue('mm', this.minute)
+      fullValues.s = this.formatValue('s', this.second)
+      fullValues.ss = this.formatValue('ss', this.second)
 
       this.fullValues = fullValues
 
@@ -1005,16 +935,15 @@ export default {
       }
 
       const fullValues = JSON.parse(JSON.stringify(this.fullValues))
-      const baseTimeValue = JSON.parse(JSON.stringify(this.timeValue || {}))
-      const timeValue = {}
-
-      Object.keys(baseTimeValue).forEach((key) => {
-        timeValue[key] = fullValues[key] || ''
-      })
 
       if (this.useStringValue) {
         this.$emit('input', this.inputIsEmpty ? '' : String(this.displayTime))
       } else {
+        const tokensInUse = this.inUse.tokens || []
+        const timeValue = {}
+        tokensInUse.forEach((token) => {
+          timeValue[token] = fullValues[token] || ''
+        })
         this.$emit('input', JSON.parse(JSON.stringify(timeValue)))
       }
 
@@ -1025,23 +954,15 @@ export default {
     },
 
     translate12hRange (value) {
-      const valueT = value.match(/^(\d{1,2})(a|p|A|P)$/)
+      const valueT = this.match12hRange(value)
       if (+valueT[1] === 12) {
         return +valueT[1] + (valueT[2].toLowerCase() === 'p' ? 0 : 12)
       }
       return +valueT[1] + (valueT[2].toLowerCase() === 'p' ? 12 : 0)
     },
 
-    hasAm (value) {
-      return value < 12 || value === 24
-    },
-
-    hasPm (value) {
-      return value >= 12 && value < 24
-    },
-
     isDisabled (type, value) {
-      if (!this.isBasicType(type)) { return true }
+      if (!this.isBasicType(type) || !this.inUse[type]) { return true }
       switch (type) {
         case 'hour':
           return this.isDisabledHour(value)
@@ -1081,35 +1002,74 @@ export default {
       return !this.restrictedHourRange.includes(+value)
     },
 
-    notInMinuteInterval (value) {
-      if (this.opts.minuteInterval === 1) { return false }
-      return +value % this.opts.minuteInterval !== 0
+    notInInterval (section, value) {
+      if (!section || !this.isMinuteOrSecond(section)) { return }
+      if (this.opts[`${section}Interval`] === 1) { return false }
+      return +value % this.opts[`${section}Interval`] !== 0
     },
 
-    notInSecondInterval (value) {
-      if (this.opts.secondInterval === 1) { return false }
-      return +value % this.opts.secondInterval !== 0
+    renderRangeList (rawRange, section) {
+      if (!rawRange || !section || !this.isMinuteOrSecond(section)) { return [] }
+      const range = []
+      let formatedValue
+      rawRange.forEach(value => {
+        if (value instanceof Array) {
+          if (value.length > 2 && this.debugMode) {
+            this.debugLog(`Nested array within "${section}-range" must contain no more than two items. Only the first two items of ${JSON.stringify(value)} will be taken into account.`)
+          }
+          const start = value[0]
+          const end = value[1] || value[0]
+          for (let i = +start; i <= +end; i++) {
+            if (i < 0 || i > 59) { continue }
+            formatedValue = this.formatValue(this.getTokenByType(section), i)
+            if (!range.includes(formatedValue)) {
+              range.push(formatedValue)
+            }
+          }
+        } else {
+          if (+value < 0 || +value > 59) { return }
+          formatedValue = this.formatValue(this.getTokenByType(section), value)
+          if (!range.includes(formatedValue)) {
+            range.push(formatedValue)
+          }
+        }
+      })
+      range.sort((l, r) => { return l - r })
+      // Debug Mode
+      if (this.debugMode) {
+        const fullList = (section === 'minute' ? this.minutes : this.seconds) || []
+        const validItems = fullList.filter(item => range.includes(item))
+        if (!validItems || !validItems.length) {
+          if (section === 'minute') {
+            this.debugLog(`The minute list is empty due to the "minute-range" config\nminute-range: ${JSON.stringify(this.minuteRange)}\nminute-interval: ${this.opts.minuteInterval}`)
+          } else {
+            this.debugLog(`The second list is empty due to the "second-range" config\nsecond-range: ${JSON.stringify(this.secondRange)}\nsecond-interval: ${this.opts.secondInterval}`)
+          }
+        }
+      }
+      return range
     },
 
     forceApmSelection () {
-      if (!this.apm || !this.apm.length) {
+      if (this.apmType && !this.apm) {
         if (this.manualInput) {
           // In Manual Input Mode
           // Skip this to allow users to paste a string value from clipboard
           return
         }
-        if (this.has.am) {
-          this.apm = this.apmType === 'A' ? 'AM' : 'am'
-        } else if (this.has.pm) {
-          this.apm = this.apmType === 'A' ? 'PM' : 'pm'
+        if (this.has.am || this.has.pm) {
+          this.doClearApmChecking = true
+          const apmValue = this.has.am ? 'am' : 'pm'
+          this.apm = this.apmType === 'A' ? apmValue.toUpperCase() : apmValue
         }
       }
     },
 
     emptyApmSelection () {
-      if (this.hour === '' && this.minute === '' && this.second === '') {
+      if (this.doClearApmChecking && this.hour === '' && this.minute === '' && this.second === '') {
         this.apm = ''
       }
+      this.doClearApmChecking = false
     },
 
     apmDisplayText (apmValue) {
@@ -1162,6 +1122,9 @@ export default {
     select (type, value) {
       if (this.isBasicType(type) && !this.isDisabled(type, value)) {
         this[type] = value
+        if (this.doClearApmChecking) {
+          this.doClearApmChecking = false
+        }
       }
     },
 
@@ -1192,9 +1155,11 @@ export default {
           this.scrollToSelectedValues()
         })
       } else if (this.opts.advancedKeyboard) {
-        // Auto-focus on selected hour value for advanced-keyboard
+        // Auto-focus on selected value in the first column for advanced-keyboard
         this.$nextTick(() => {
-          this.scrollToSelected('hours')
+          const firstColumn = this.inUse.types[0]
+          const firstColumnClass = `${firstColumn}s`
+          this.scrollToSelected(firstColumnClass)
         })
       }
     },
@@ -1205,7 +1170,7 @@ export default {
       const targetValue = this.$el.querySelectorAll(`ul.${columnClass} li.active:not(.hint)`)[0]
       if (targetList && targetValue) {
         targetList.scrollTop = targetValue.offsetTop || 0
-        if (this.opts.advancedKeyboard && columnClass === 'hours') {
+        if (this.opts.advancedKeyboard) {
           targetValue.focus()
         }
       }
@@ -1213,11 +1178,10 @@ export default {
 
     scrollToSelectedValues () {
       if (!this.timeValue || this.inputIsEmpty) { return }
-      this.scrollToSelected('hours')
-      this.scrollToSelected('minutes')
-      if (this.secondType) {
-        this.scrollToSelected('seconds')
-      }
+      this.inUse.types.forEach(section => {
+        const columnClass = `${section}s`
+        this.scrollToSelected(columnClass)
+      })
     },
 
     //
@@ -1254,11 +1218,8 @@ export default {
     },
 
     onBlur () {
-      if (this.disabled) { return }
-      if (!this.isFocusing) {
-        if (this.showDropdown) {
-          this.toggleDropdown()
-        }
+      if (!this.disabled && !this.isFocusing && this.showDropdown) {
+        this.toggleDropdown()
       }
     },
 
@@ -1268,16 +1229,18 @@ export default {
       }
     },
 
-    validItemsInCol (columnClass) {
+    validItemsInCol (column) {
+      const columnClass = `${column}s`
       return this.$el.querySelectorAll(`ul.${columnClass} > li:not(.hint):not([disabled])`)
     },
 
-    activeItemInCol (columnClass) {
+    activeItemInCol (column) {
+      const columnClass = `${column}s`
       return this.$el.querySelectorAll(`ul.${columnClass} > li.active:not(.hint)`)
     },
 
-    getClosestSibling (columnClass, dataKey, getPrevious = false) {
-      const siblingsInCol = this.validItemsInCol(columnClass)
+    getClosestSibling (column, dataKey, getPrevious = false) {
+      const siblingsInCol = this.validItemsInCol(column)
       const selfIndex = Array.prototype.findIndex.call(siblingsInCol, (sbl) => {
         return sbl.getAttribute('data-key') === dataKey
       })
@@ -1301,112 +1264,63 @@ export default {
       return siblingsInCol[selfIndex + 1]
     },
 
-    prevItem (columnClass, dataKey, isManualInput = false) {
-      const targetItem = this.getClosestSibling(columnClass, dataKey, true)
+    prevItem (column, dataKey, isManualInput = false) {
+      const targetItem = this.getClosestSibling(column, dataKey, true)
       if (targetItem) {
         return isManualInput ? targetItem : targetItem.focus()
       }
     },
 
-    nextItem (columnClass, dataKey, isManualInput = false) {
-      const targetItem = this.getClosestSibling(columnClass, dataKey, false)
+    nextItem (column, dataKey, isManualInput = false) {
+      const targetItem = this.getClosestSibling(column, dataKey, false)
       if (targetItem) {
         return isManualInput ? targetItem : targetItem.focus()
       }
     },
 
-    getSideColumnClass (columnClass, toLeft = false) {
-      let targetColumn
-      // Nav to Left
-      if (toLeft) {
-        switch (columnClass) {
-          case 'hours':
-            targetColumn = -1
-            break
-          case 'minutes':
-            targetColumn = 'hours'
-            break
-          case 'seconds':
-            targetColumn = 'minutes'
-            break
-          case 'apms':
-            if (this.secondType) {
-              targetColumn = 'seconds'
-            } else {
-              targetColumn = 'minutes'
-            }
-            break
-        }
-      // Nav to Right
-      } else {
-        switch (columnClass) {
-          case 'hours':
-            targetColumn = 'minutes'
-            break
-          case 'minutes':
-            if (this.secondType) {
-              targetColumn = 'seconds'
-            } else if (this.apmType) {
-              targetColumn = 'apms'
-            } else {
-              targetColumn = 1
-            }
-            break
-          case 'seconds':
-            if (this.apmType) {
-              targetColumn = 'apms'
-            } else {
-              targetColumn = 1
-            }
-            break
-          case 'apms':
-            targetColumn = 1
-            break
-        }
-      }
-
-      if (targetColumn === -1) {
+    getSideColumnName (currentColumn, toLeft = false) {
+      const currentColumnIndex = this.inUse.types.indexOf(currentColumn)
+      if (toLeft && currentColumnIndex <= 0) {
         if (this.debugMode) {
           this.debugLog('You\'re in the leftmost list already')
         }
         return
-      } else if (targetColumn === 1) {
+      } else if (!toLeft && currentColumnIndex === (this.inUse.types.length - 1)) {
         if (this.debugMode) {
           this.debugLog('You\'re in the rightmost list already')
         }
         return
       }
-
-      return targetColumn
+      return this.inUse.types[toLeft ? currentColumnIndex - 1 : currentColumnIndex + 1]
     },
 
-    getFirstItemInSideColumn (columnClass, toLeft = false) {
-      const targetColumnClass = this.getSideColumnClass(columnClass, toLeft)
-      if (!targetColumnClass) { return }
-      const listItems = this.validItemsInCol(targetColumnClass)
+    getFirstItemInSideColumn (currentColumn, toLeft = false) {
+      const targetColumn = this.getSideColumnName(currentColumn, toLeft)
+      if (!targetColumn) { return }
+      const listItems = this.validItemsInCol(targetColumn)
       if (listItems && listItems[0]) {
         return listItems[0]
       }
     },
 
-    getActiveItemInSideColumn (columnClass, toLeft = false) {
-      const targetColumnClass = this.getSideColumnClass(columnClass, toLeft)
-      if (!targetColumnClass) { return }
-      const activeItems = this.activeItemInCol(targetColumnClass)
+    getActiveItemInSideColumn (currentColumn, toLeft = false) {
+      const targetColumn = this.getSideColumnName(currentColumn, toLeft)
+      if (!targetColumn) { return }
+      const activeItems = this.activeItemInCol(targetColumn)
       if (activeItems && activeItems[0]) {
         return activeItems[0]
       }
     },
 
-    toLeftColumn (columnClass) {
-      const targetItem = this.getActiveItemInSideColumn(columnClass, true) || this.getFirstItemInSideColumn(columnClass, true)
+    toLeftColumn (currentColumn) {
+      const targetItem = this.getActiveItemInSideColumn(currentColumn, true) || this.getFirstItemInSideColumn(currentColumn, true)
       if (targetItem) {
         targetItem.focus()
       }
     },
 
-    toRightColumn (columnClass) {
-      const targetItem = this.getActiveItemInSideColumn(columnClass, false) || this.getFirstItemInSideColumn(columnClass, false)
+    toRightColumn (currentColumn) {
+      const targetItem = this.getActiveItemInSideColumn(currentColumn, false) || this.getFirstItemInSideColumn(currentColumn, false)
       if (targetItem) {
         targetItem.focus()
       }
@@ -1619,7 +1533,7 @@ export default {
 
     // Form Autofill
     onChange () {
-      if (!this.$refs || !this.$refs.input || !this.manualInput) { return }
+      if (!this.manualInput || !this.$refs || !this.$refs.input) { return }
       const autoFillValue = this.$refs.input.value || ''
       if (autoFillValue && autoFillValue.length) {
         this.readStringValues(autoFillValue)
@@ -1652,60 +1566,53 @@ export default {
 
     selectFirstValidValue () {
       if (!this.tokenChunksPos || !this.tokenChunksPos.length) { return }
-      const firstTokenType = this.tokenChunksPos[0].type
-      if (firstTokenType) {
-        this.selectFirstValidValueInCol(firstTokenType)   
-      }
-    },
-
-    selectFirstValidValueInCol (tokenType) {
-      if (tokenType === 'hour') {
-        this.selectFirstValidHour()
+      const firstToken = this.tokenChunksPos[0].token
+      const firstSlotType = this.tokenChunksPos[0].type
+      if (firstSlotType === 'hour') {
+        this.getClosestHourItem()
       } else {
-        this.getClosestValidItemInCol(tokenType, this[tokenType])
+        this.getClosestValidItemInCol(firstSlotType, this[firstSlotType])
       }
+      const newChunkPos = this.getChunkPosByToken(firstToken)
+      this.debounceSetInputSelection(newChunkPos)
     },
 
-    selectFirstValidHour () {
-      if (!this.validHoursList || !this.validHoursList.length) { return }
-
-      const hourChunk = this.tokenChunksPos.find(chk => chk.token === this.hourType)
-      if (!hourChunk) { return }
-      const hourToken = hourChunk.token
-
-      this.setManualHour(this.validHoursList[0])
-      const newChunkPos = this.getChunkPosByToken(hourToken)
-      this.debounceSetInputSelection(newChunkPos)
+    getClosestHourItem (currentValue, direction = 'U') {
+      if (!this.validHoursList || !this.validHoursList.length) {
+        if (this.debugMode) {
+          this.debugLog(`No valid hour values found, please check your "hour-range" config\nhour-range: ${JSON.stringify(this.hourRange)}`)
+        }
+        return
+      }
+      if (!currentValue) {
+        this.setManualHour(this.validHoursList[0])
+        return
+      }
+      const currentIndex = this.validHoursList.findIndex(item => {
+        if (!this.baseOn12Hours) {
+          return item === currentValue
+        } else {
+          const valueKey = `${currentValue}${this.lowerCasedApm(this.apm) === 'pm' ? 'p' : 'a'}` 
+          return item === valueKey
+        }
+      })
+      let nextIndex
+      if (currentIndex === -1) {
+        nextIndex = 0
+      } else if (direction === 'D') {
+        nextIndex = currentIndex === 0 ? this.validHoursList.length - 1 : currentIndex - 1
+      } else {
+        nextIndex = (currentIndex + 1) % this.validHoursList.length
+      }
+      const nextItem = this.validHoursList[nextIndex]
+      this.setManualHour(nextItem)
     },
 
     getClosestValidItemInCol (column, currentValue, direction = 'U') {
       if (column === 'hour') {
-        if (!this.validHoursList || !this.validHoursList.length) {
-          if (this.debugMode) {
-            this.debugLog(`No valid hour values found, please check your "hour-range" config\nhour-range: ${JSON.stringify(this.hourRange)}`)
-          }
-          return
-        }
-        const currentIndex = this.validHoursList.findIndex(item => {
-          if (!this.baseOn12Hours) {
-            return item === currentValue
-          } else {
-            const valueKey = `${currentValue}${this.lowerCasedApm(this.apm) === 'pm' ? 'p' : 'a'}` 
-            return item === valueKey
-          }
-        })
-        let nextIndex
-        if (currentIndex === -1) {
-          nextIndex = 0
-        } else if (direction === 'D') {
-          nextIndex = currentIndex === 0 ? this.validHoursList.length - 1 : currentIndex - 1
-        } else {
-          nextIndex = (currentIndex + 1) % this.validHoursList.length
-        }
-        const nextItem = this.validHoursList[nextIndex]
-        this.setManualHour(nextItem)
+        this.getClosestHourItem(currentValue, direction)
       } else {
-        const nextItem = direction === 'D' ? this.prevItem(`${column}s`, this[column], true) : this.nextItem(`${column}s`, this[column], true)
+        const nextItem = direction === 'D' ? this.prevItem(column, this[column], true) : this.nextItem(column, this[column], true)
         if (nextItem) {
           this.select(column, nextItem.getAttribute('data-key'))
         }
@@ -1713,15 +1620,15 @@ export default {
     },
 
     setSanitizedValueToSection (section, inputValue) {
-      if (!section || !this[`${section}Type`]) { return }
+      if (!section || !this.getTokenByType(section)) { return }
       // NOTE: Disabled values are allowed here, followed by an 'error' event, though
-      const sanitizedValue = this.sanitizedValue(this[`${section}Type`], inputValue)
+      const sanitizedValue = this.sanitizedValue(this.getTokenByType(section), inputValue)
       this[section] = sanitizedValue
     },
 
     setManualHour (nextItem) {
       if (this.is12hRange(nextItem)) {
-        const hourT = nextItem.match(/^(\d{1,2})(a|p|A|P)$/)
+        const hourT = this.match12hRange(nextItem)
         const apmValue = hourT[2] === 'a' ? 'AM' : 'PM'
         this.setSanitizedValueToSection('apm', this.apmType === 'a' ? apmValue.toLowerCase() : apmValue)
         this.setSanitizedValueToSection('hour', hourT[1])
@@ -1757,7 +1664,7 @@ export default {
     getChunkPosByToken (token) {
       if (!this.tokenChunksPos || !token) { return { start: 0, end: 0 } }
       const targetChunk = this.tokenChunksPos.find(chk => chk.token === token)
-      return targetChunk ? targetChunk : { start: 0, end: 0 }
+      return targetChunk || { start: 0, end: 0 }
     },
 
     toLateralToken (toLeft) {
@@ -1766,7 +1673,7 @@ export default {
         this.selectFirstValidValue()
         return
       }
-      const currentChunkIndex = this.tokenChunksPos.findIndex(chk => chk.start === currentChunk.start)
+      const currentChunkIndex = this.tokenChunksPos.findIndex(chk => chk.token === currentChunk.token)
       if ((!toLeft && currentChunkIndex >= this.tokenChunksPos.length - 1) || (toLeft && currentChunkIndex === 0)) {
         if (this.debugMode) {
           if (toLeft) {
@@ -1807,6 +1714,10 @@ export default {
 
     is12hRange (value) {
       return /^\d{1,2}(a|p|A|P)$/.test(value)
+    },
+
+    match12hRange (value) {
+      return value.match(/^(\d{1,2})(a|p|A|P)$/)
     },
 
     isNumber (value) {
@@ -1871,9 +1782,15 @@ export default {
     },
 
     getTokenType (token) {
-      const typesInUse = CONFIG.BASIC_TYPES.filter(tokenType => this[`${tokenType}Type`])
-      const activeTokens = typesInUse.map(tokenType => this[`${tokenType}Type`])
-      return typesInUse[activeTokens.indexOf(token)] || ''
+      return this.inUse.types[this.inUse.tokens.indexOf(token)] || ''
+    },
+
+    getTokenByType (type) {
+      return this[`${type}Type`] || ''
+    },
+
+    isMinuteOrSecond (type) {
+      return ['minute', 'second'].includes(type)
     },
 
     debugLog (logText) {
@@ -1956,54 +1873,56 @@ export default {
     <div class="select-list" :style="inputWidthStyle" tabindex="-1">
       <!-- Common Keyboard Support: less event listeners -->
       <template v-if="!opts.advancedKeyboard">
-        <ul class="hours" @scroll="keepFocusing">
-          <li class="hint" v-text="hourLabelText"></li>
-          <template v-for="(hr, hIndex) in hours">
-            <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabled('hour', hr))"
-                :key="hIndex"
-                :class="{active: hour === hr}"
-                :disabled="isDisabled('hour', hr)"
-                :data-key="hr"
-                v-text="hr"
-                @click="select('hour', hr)"></li>
-          </template>
-        </ul>
-        <ul class="minutes" @scroll="keepFocusing">
-          <li class="hint" v-text="minuteLabelText"></li>
-          <template v-for="(m, mIndex) in minutes">
-            <li v-if="!opts.hideDisabledMinutes || (opts.hideDisabledMinutes && !isDisabled('minute', m))"
-                :key="mIndex"
-                :class="{active: minute === m}"
-                :disabled="isDisabled('minute', m)"
-                :data-key="m"
-                v-text="m"
-                @click="select('minute', m)"></li>
-          </template>
-        </ul>
-        <ul class="seconds" v-if="secondType" @scroll="keepFocusing">
-          <li class="hint" v-text="secondLabelText"></li>
-          <template v-for="(s, sIndex) in seconds">
-            <li v-if="!opts.hideDisabledSeconds || (opts.hideDisabledSeconds && !isDisabled('second', s))"
-                :key="sIndex"
-                :class="{active: second === s}"
-                :disabled="isDisabled('second', s)"
-                :data-key="s"
-                v-text="s"
-                @click="select('second', s)"></li>
-          </template>
-        </ul>
-        <ul class="apms" v-if="apmType" @scroll="keepFocusing">
-          <li class="hint" v-text="apmLabelText"></li>
-          <template v-for="(a, aIndex) in apms">
-            <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabled('apm', a))"
-                :key="aIndex"
-                :class="{active: apm === a}"
-                :disabled="isDisabled('apm', a)"
-                :data-key="a"
-                v-text="apmDisplayText(a)"
-                @click="select('apm', a)"></li>
-          </template>
-        </ul>
+        <template v-for="column in columnsSequence">
+          <ul v-if="column === 'hour'" :key="column" class="hours" @scroll="keepFocusing">
+            <li class="hint" v-text="hourLabelText"></li>
+            <template v-for="(hr, hIndex) in hours">
+              <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabled('hour', hr))"
+                  :key="hIndex"
+                  :class="{active: hour === hr}"
+                  :disabled="isDisabled('hour', hr)"
+                  :data-key="hr"
+                  v-text="hr"
+                  @click="select('hour', hr)"></li>
+            </template>
+          </ul>
+          <ul v-if="column === 'minute'" :key="column" class="minutes" @scroll="keepFocusing">
+            <li class="hint" v-text="minuteLabelText"></li>
+            <template v-for="(m, mIndex) in minutes">
+              <li v-if="!opts.hideDisabledMinutes || (opts.hideDisabledMinutes && !isDisabled('minute', m))"
+                  :key="mIndex"
+                  :class="{active: minute === m}"
+                  :disabled="isDisabled('minute', m)"
+                  :data-key="m"
+                  v-text="m"
+                  @click="select('minute', m)"></li>
+            </template>
+          </ul>
+          <ul v-if="column === 'second'" :key="column" class="seconds" @scroll="keepFocusing">
+            <li class="hint" v-text="secondLabelText"></li>
+            <template v-for="(s, sIndex) in seconds">
+              <li v-if="!opts.hideDisabledSeconds || (opts.hideDisabledSeconds && !isDisabled('second', s))"
+                  :key="sIndex"
+                  :class="{active: second === s}"
+                  :disabled="isDisabled('second', s)"
+                  :data-key="s"
+                  v-text="s"
+                  @click="select('second', s)"></li>
+            </template>
+          </ul>
+          <ul v-if="column === 'apm'" :key="column" class="apms" @scroll="keepFocusing">
+            <li class="hint" v-text="apmLabelText"></li>
+            <template v-for="(a, aIndex) in apms">
+              <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabled('apm', a))"
+                  :key="aIndex"
+                  :class="{active: apm === a}"
+                  :disabled="isDisabled('apm', a)"
+                  :data-key="a"
+                  v-text="apmDisplayText(a)"
+                  @click="select('apm', a)"></li>
+            </template>
+          </ul>
+        </template>
       </template><!-- / Common Keyboard Support -->
 
       <!--
@@ -2011,94 +1930,96 @@ export default {
         Addeds hundreds of additional event lisenters
       -->
       <template v-if="opts.advancedKeyboard">
-        <ul class="hours" tabindex="-1" @scroll="keepFocusing">
-          <li class="hint" v-text="hourLabelText" tabindex="-1"></li>
-          <template v-for="(hr, hIndex) in hours">
-            <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabled('hour', hr))"
-                :key="hIndex"
-                :class="{active: hour === hr}"
-                :tabindex="isDisabled('hour', hr) ? -1 : tabindex"
-                :data-key="hr"
-                :disabled="isDisabled('hour', hr)"
-                v-text="hr"
-                @click="select('hour', hr)"
-                @keydown.space.prevent="select('hour', hr)"
-                @keydown.enter.prevent="select('hour', hr)"
-                @keydown.up.prevent="prevItem('hours', hr)"
-                @keydown.down.prevent="nextItem('hours', hr)"
-                @keydown.left.prevent="toLeftColumn('hours')"
-                @keydown.right.prevent="toRightColumn('hours')"
-                @keydown.esc.exact="debounceBlur"
-                @blur="debounceBlur"
-                @focus="keepFocusing"></li>
-          </template>
-        </ul>
-        <ul class="minutes" tabindex="-1" @scroll="keepFocusing">
-          <li class="hint" v-text="minuteLabelText" tabindex="-1"></li>
-          <template v-for="(m, mIndex) in minutes">
-            <li v-if="!opts.hideDisabledMinutes || (opts.hideDisabledMinutes && !isDisabled('minute', m))"
-                :key="mIndex"
-                :class="{active: minute === m}"
-                :tabindex="isDisabled('minute', m) ? -1 : tabindex"
-                :data-key="m"
-                :disabled="isDisabled('minute', m)"
-                v-text="m"
-                @click="select('minute', m)"
-                @keydown.space.prevent="select('minute', m)"
-                @keydown.enter.prevent="select('minute', m)"
-                @keydown.up.prevent="prevItem('minutes', m)"
-                @keydown.down.prevent="nextItem('minutes', m)"
-                @keydown.left.prevent="toLeftColumn('minutes')"
-                @keydown.right.prevent="toRightColumn('minutes')"
-                @keydown.esc.exact="debounceBlur"
-                @blur="debounceBlur"
-                @focus="keepFocusing"></li>
-          </template>
-        </ul>
-        <ul class="seconds" v-if="secondType" tabindex="-1" @scroll="keepFocusing">
-          <li class="hint" v-text="secondLabelText" tabindex="-1"></li>
-          <template v-for="(s, sIndex) in seconds">
-            <li v-if="!opts.hideDisabledSeconds || (opts.hideDisabledSeconds && !isDisabled('second', s))"
-                :key="sIndex"
-                :class="{active: second === s}"
-                :tabindex="isDisabled('second', s) ? -1 : tabindex"
-                :data-key="s"
-                :disabled="isDisabled('second', s)"
-                v-text="s"
-                @click="select('second', s)"
-                @keydown.space.prevent="select('second', s)"
-                @keydown.enter.prevent="select('second', s)"
-                @keydown.up.prevent="prevItem('seconds', s)"
-                @keydown.down.prevent="nextItem('seconds', s)"
-                @keydown.left.prevent="toLeftColumn('seconds')"
-                @keydown.right.prevent="toRightColumn('seconds')"
-                @keydown.esc.exact="debounceBlur"
-                @blur="debounceBlur"
-                @focus="keepFocusing"></li>
-          </template>
-        </ul>
-        <ul class="apms" v-if="apmType" tabindex="-1" @scroll="keepFocusing">
-          <li class="hint" v-text="apmLabelText" tabindex="-1"></li>
-          <template v-for="(a, aIndex) in apms">
-            <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabled('apm', a))"
-                :key="aIndex"
-                :class="{active: apm === a}"
-                :tabindex="isDisabled('apm', a) ? -1 : tabindex"
-                :data-key="a"
-                :disabled="isDisabled('apm', a)"
-                v-text="apmDisplayText(a)"
-                @click="select('apm', a)"
-                @keydown.space.prevent="select('apm', a)"
-                @keydown.enter.prevent="select('apm', a)"
-                @keydown.up.prevent="prevItem('apms', a)"
-                @keydown.down.prevent="nextItem('apms', a)"
-                @keydown.left.prevent="toLeftColumn('apms')"
-                @keydown.right.prevent="toRightColumn('apms')"
-                @keydown.esc.exact="debounceBlur"
-                @blur="debounceBlur"
-                @focus="keepFocusing"></li>
-          </template>
-        </ul>
+        <template v-for="column in columnsSequence">
+          <ul v-if="column === 'hour'" :key="column" class="hours" tabindex="-1" @scroll="keepFocusing">
+            <li class="hint" v-text="hourLabelText" tabindex="-1"></li>
+            <template v-for="(hr, hIndex) in hours">
+              <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabled('hour', hr))"
+                  :key="hIndex"
+                  :class="{active: hour === hr}"
+                  :tabindex="isDisabled('hour', hr) ? -1 : tabindex"
+                  :data-key="hr"
+                  :disabled="isDisabled('hour', hr)"
+                  v-text="hr"
+                  @click="select('hour', hr)"
+                  @keydown.space.prevent="select('hour', hr)"
+                  @keydown.enter.prevent="select('hour', hr)"
+                  @keydown.up.prevent="prevItem('hour', hr)"
+                  @keydown.down.prevent="nextItem('hour', hr)"
+                  @keydown.left.prevent="toLeftColumn('hour')"
+                  @keydown.right.prevent="toRightColumn('hour')"
+                  @keydown.esc.exact="debounceBlur"
+                  @blur="debounceBlur"
+                  @focus="keepFocusing"></li>
+            </template>
+          </ul>
+          <ul v-if="column === 'minute'" :key="column" class="minutes" tabindex="-1" @scroll="keepFocusing">
+            <li class="hint" v-text="minuteLabelText" tabindex="-1"></li>
+            <template v-for="(m, mIndex) in minutes">
+              <li v-if="!opts.hideDisabledMinutes || (opts.hideDisabledMinutes && !isDisabled('minute', m))"
+                  :key="mIndex"
+                  :class="{active: minute === m}"
+                  :tabindex="isDisabled('minute', m) ? -1 : tabindex"
+                  :data-key="m"
+                  :disabled="isDisabled('minute', m)"
+                  v-text="m"
+                  @click="select('minute', m)"
+                  @keydown.space.prevent="select('minute', m)"
+                  @keydown.enter.prevent="select('minute', m)"
+                  @keydown.up.prevent="prevItem('minute', m)"
+                  @keydown.down.prevent="nextItem('minute', m)"
+                  @keydown.left.prevent="toLeftColumn('minute')"
+                  @keydown.right.prevent="toRightColumn('minute')"
+                  @keydown.esc.exact="debounceBlur"
+                  @blur="debounceBlur"
+                  @focus="keepFocusing"></li>
+            </template>
+          </ul>
+          <ul v-if="column === 'second'" :key="column" class="seconds" tabindex="-1" @scroll="keepFocusing">
+            <li class="hint" v-text="secondLabelText" tabindex="-1"></li>
+            <template v-for="(s, sIndex) in seconds">
+              <li v-if="!opts.hideDisabledSeconds || (opts.hideDisabledSeconds && !isDisabled('second', s))"
+                  :key="sIndex"
+                  :class="{active: second === s}"
+                  :tabindex="isDisabled('second', s) ? -1 : tabindex"
+                  :data-key="s"
+                  :disabled="isDisabled('second', s)"
+                  v-text="s"
+                  @click="select('second', s)"
+                  @keydown.space.prevent="select('second', s)"
+                  @keydown.enter.prevent="select('second', s)"
+                  @keydown.up.prevent="prevItem('second', s)"
+                  @keydown.down.prevent="nextItem('second', s)"
+                  @keydown.left.prevent="toLeftColumn('second')"
+                  @keydown.right.prevent="toRightColumn('second')"
+                  @keydown.esc.exact="debounceBlur"
+                  @blur="debounceBlur"
+                  @focus="keepFocusing"></li>
+            </template>
+          </ul>
+          <ul v-if="column === 'apm'" :key="column" class="apms" tabindex="-1" @scroll="keepFocusing">
+            <li class="hint" v-text="apmLabelText" tabindex="-1"></li>
+            <template v-for="(a, aIndex) in apms">
+              <li v-if="!opts.hideDisabledHours || (opts.hideDisabledHours && !isDisabled('apm', a))"
+                  :key="aIndex"
+                  :class="{active: apm === a}"
+                  :tabindex="isDisabled('apm', a) ? -1 : tabindex"
+                  :data-key="a"
+                  :disabled="isDisabled('apm', a)"
+                  v-text="apmDisplayText(a)"
+                  @click="select('apm', a)"
+                  @keydown.space.prevent="select('apm', a)"
+                  @keydown.enter.prevent="select('apm', a)"
+                  @keydown.up.prevent="prevItem('apm', a)"
+                  @keydown.down.prevent="nextItem('apm', a)"
+                  @keydown.left.prevent="toLeftColumn('apm')"
+                  @keydown.right.prevent="toRightColumn('apm')"
+                  @keydown.esc.exact="debounceBlur"
+                  @blur="debounceBlur"
+                  @focus="keepFocusing"></li>
+            </template>
+          </ul>
+        </template>
       </template><!-- / Advanced Keyboard Support -->
     </div>
   </div>
