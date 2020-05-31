@@ -1946,38 +1946,6 @@ module.exports = Object.create || function create(O, Properties) {
 
 /***/ }),
 
-/***/ "7db0":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var $ = __webpack_require__("23e7");
-var $find = __webpack_require__("b727").find;
-var addToUnscopables = __webpack_require__("44d2");
-var arrayMethodUsesToLength = __webpack_require__("ae40");
-
-var FIND = 'find';
-var SKIPS_HOLES = true;
-
-var USES_TO_LENGTH = arrayMethodUsesToLength(FIND);
-
-// Shouldn't skip holes
-if (FIND in []) Array(1)[FIND](function () { SKIPS_HOLES = false; });
-
-// `Array.prototype.find` method
-// https://tc39.github.io/ecma262/#sec-array.prototype.find
-$({ target: 'Array', proto: true, forced: SKIPS_HOLES || !USES_TO_LENGTH }, {
-  find: function find(callbackfn /* , that = undefined */) {
-    return $find(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
-  }
-});
-
-// https://tc39.github.io/ecma262/#sec-array.prototype-@@unscopables
-addToUnscopables(FIND);
-
-
-/***/ }),
-
 /***/ "7dd0":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2575,6 +2543,32 @@ exports.BROKEN_CARET = fails(function () {
   var re = RE('^r', 'gy');
   re.lastIndex = 2;
   return re.exec('str') != null;
+});
+
+
+/***/ }),
+
+/***/ "a15b":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $ = __webpack_require__("23e7");
+var IndexedObject = __webpack_require__("44ad");
+var toIndexedObject = __webpack_require__("fc6a");
+var arrayMethodIsStrict = __webpack_require__("a640");
+
+var nativeJoin = [].join;
+
+var ES3_STRINGS = IndexedObject != Object;
+var STRICT_METHOD = arrayMethodIsStrict('join', ',');
+
+// `Array.prototype.join` method
+// https://tc39.github.io/ecma262/#sec-array.prototype.join
+$({ target: 'Array', proto: true, forced: ES3_STRINGS || !STRICT_METHOD }, {
+  join: function join(separator) {
+    return nativeJoin.call(toIndexedObject(this), separator === undefined ? ',' : separator);
+  }
 });
 
 
@@ -4363,21 +4357,18 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"08a1de70-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/vue-timepicker.vue?vue&type=template&id=b36a12fc&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"vue__time-picker time-picker",style:(_vm.inputWidthStyle)},[_c('input',{ref:"input",staticClass:"display-time",class:[_vm.inputClass, {'is-empty': _vm.inputIsEmpty, 'invalid': _vm.hasInvalidInput, 'all-selected': _vm.allValueSelected, 'disabled': _vm.disabled}],style:(_vm.inputWidthStyle),attrs:{"type":"text","id":_vm.id,"name":_vm.name,"placeholder":_vm.placeholder ? _vm.placeholder : _vm.formatString,"tabindex":_vm.disabled ? -1 : _vm.tabindex,"disabled":_vm.disabled,"readonly":!_vm.manualInput,"autocomplete":_vm.autocomplete},domProps:{"value":_vm.inputIsEmpty ? null : _vm.customDisplayTime},on:{"focus":_vm.onFocus,"change":_vm.onChange,"blur":_vm.debounceBlur,"mousedown":_vm.onMouseDown,"keydown":[_vm.keyDownHandler,function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"esc",27,$event.key,["Esc","Escape"])){ return null; }if($event.ctrlKey||$event.shiftKey||$event.altKey||$event.metaKey){ return null; }return _vm.escBlur($event)}],"compositionstart":_vm.onCompostionStart,"compositionend":_vm.onCompostionEnd,"paste":_vm.pasteHandler}}),(!_vm.showDropdown && _vm.showClearBtn)?_c('span',{staticClass:"clear-btn",attrs:{"tabindex":"-1"},on:{"click":_vm.clearTime}},[_vm._v("×")]):_vm._e(),(_vm.showDropdown)?_c('div',{staticClass:"time-picker-overlay",attrs:{"tabindex":"-1"},on:{"click":_vm.toggleDropdown}}):_vm._e(),_c('div',{directives:[{name:"show",rawName:"v-show",value:(_vm.showDropdown && !_vm.opts.hideDropdown),expression:"showDropdown && !opts.hideDropdown"}],staticClass:"dropdown",style:(_vm.inputWidthStyle),attrs:{"tabindex":"-1"},on:{"mouseup":_vm.keepFocusing,"click":function($event){$event.stopPropagation();}}},[_c('div',{staticClass:"select-list",style:(_vm.inputWidthStyle),attrs:{"tabindex":"-1"}},[(!_vm.opts.advancedKeyboard)?[_c('ul',{staticClass:"hours",on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.hourLabelText)}}),_vm._l((_vm.hours),function(hr,hIndex){return [(!_vm.opts.hideDisabledHours || (_vm.opts.hideDisabledHours && !_vm.isDisabled('hour', hr)))?_c('li',{key:hIndex,class:{active: _vm.hour === hr},attrs:{"disabled":_vm.isDisabled('hour', hr),"data-key":hr},domProps:{"textContent":_vm._s(hr)},on:{"click":function($event){return _vm.select('hour', hr)}}}):_vm._e()]})],2),_c('ul',{staticClass:"minutes",on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.minuteLabelText)}}),_vm._l((_vm.minutes),function(m,mIndex){return [(!_vm.opts.hideDisabledMinutes || (_vm.opts.hideDisabledMinutes && !_vm.isDisabled('minute', m)))?_c('li',{key:mIndex,class:{active: _vm.minute === m},attrs:{"disabled":_vm.isDisabled('minute', m),"data-key":m},domProps:{"textContent":_vm._s(m)},on:{"click":function($event){return _vm.select('minute', m)}}}):_vm._e()]})],2),(_vm.secondType)?_c('ul',{staticClass:"seconds",on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.secondLabelText)}}),_vm._l((_vm.seconds),function(s,sIndex){return [(!_vm.opts.hideDisabledSeconds || (_vm.opts.hideDisabledSeconds && !_vm.isDisabled('second', s)))?_c('li',{key:sIndex,class:{active: _vm.second === s},attrs:{"disabled":_vm.isDisabled('second', s),"data-key":s},domProps:{"textContent":_vm._s(s)},on:{"click":function($event){return _vm.select('second', s)}}}):_vm._e()]})],2):_vm._e(),(_vm.apmType)?_c('ul',{staticClass:"apms",on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.apmLabelText)}}),_vm._l((_vm.apms),function(a,aIndex){return [(!_vm.opts.hideDisabledHours || (_vm.opts.hideDisabledHours && !_vm.isDisabled('apm', a)))?_c('li',{key:aIndex,class:{active: _vm.apm === a},attrs:{"disabled":_vm.isDisabled('apm', a),"data-key":a},domProps:{"textContent":_vm._s(_vm.apmDisplayText(a))},on:{"click":function($event){return _vm.select('apm', a)}}}):_vm._e()]})],2):_vm._e()]:_vm._e(),(_vm.opts.advancedKeyboard)?[_c('ul',{staticClass:"hours",attrs:{"tabindex":"-1"},on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",attrs:{"tabindex":"-1"},domProps:{"textContent":_vm._s(_vm.hourLabelText)}}),_vm._l((_vm.hours),function(hr,hIndex){return [(!_vm.opts.hideDisabledHours || (_vm.opts.hideDisabledHours && !_vm.isDisabled('hour', hr)))?_c('li',{key:hIndex,class:{active: _vm.hour === hr},attrs:{"tabindex":_vm.isDisabled('hour', hr) ? -1 : _vm.tabindex,"data-key":hr,"disabled":_vm.isDisabled('hour', hr)},domProps:{"textContent":_vm._s(hr)},on:{"click":function($event){return _vm.select('hour', hr)},"keydown":[function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"space",32,$event.key,[" ","Spacebar"])){ return null; }$event.preventDefault();return _vm.select('hour', hr)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }$event.preventDefault();return _vm.select('hour', hr)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }$event.preventDefault();return _vm.prevItem('hours', hr)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }$event.preventDefault();return _vm.nextItem('hours', hr)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"left",37,$event.key,["Left","ArrowLeft"])){ return null; }if('button' in $event && $event.button !== 0){ return null; }$event.preventDefault();return _vm.toLeftColumn('hours')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"right",39,$event.key,["Right","ArrowRight"])){ return null; }if('button' in $event && $event.button !== 2){ return null; }$event.preventDefault();return _vm.toRightColumn('hours')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"esc",27,$event.key,["Esc","Escape"])){ return null; }if($event.ctrlKey||$event.shiftKey||$event.altKey||$event.metaKey){ return null; }return _vm.debounceBlur($event)}],"blur":_vm.debounceBlur,"focus":_vm.keepFocusing}}):_vm._e()]})],2),_c('ul',{staticClass:"minutes",attrs:{"tabindex":"-1"},on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",attrs:{"tabindex":"-1"},domProps:{"textContent":_vm._s(_vm.minuteLabelText)}}),_vm._l((_vm.minutes),function(m,mIndex){return [(!_vm.opts.hideDisabledMinutes || (_vm.opts.hideDisabledMinutes && !_vm.isDisabled('minute', m)))?_c('li',{key:mIndex,class:{active: _vm.minute === m},attrs:{"tabindex":_vm.isDisabled('minute', m) ? -1 : _vm.tabindex,"data-key":m,"disabled":_vm.isDisabled('minute', m)},domProps:{"textContent":_vm._s(m)},on:{"click":function($event){return _vm.select('minute', m)},"keydown":[function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"space",32,$event.key,[" ","Spacebar"])){ return null; }$event.preventDefault();return _vm.select('minute', m)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }$event.preventDefault();return _vm.select('minute', m)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }$event.preventDefault();return _vm.prevItem('minutes', m)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }$event.preventDefault();return _vm.nextItem('minutes', m)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"left",37,$event.key,["Left","ArrowLeft"])){ return null; }if('button' in $event && $event.button !== 0){ return null; }$event.preventDefault();return _vm.toLeftColumn('minutes')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"right",39,$event.key,["Right","ArrowRight"])){ return null; }if('button' in $event && $event.button !== 2){ return null; }$event.preventDefault();return _vm.toRightColumn('minutes')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"esc",27,$event.key,["Esc","Escape"])){ return null; }if($event.ctrlKey||$event.shiftKey||$event.altKey||$event.metaKey){ return null; }return _vm.debounceBlur($event)}],"blur":_vm.debounceBlur,"focus":_vm.keepFocusing}}):_vm._e()]})],2),(_vm.secondType)?_c('ul',{staticClass:"seconds",attrs:{"tabindex":"-1"},on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",attrs:{"tabindex":"-1"},domProps:{"textContent":_vm._s(_vm.secondLabelText)}}),_vm._l((_vm.seconds),function(s,sIndex){return [(!_vm.opts.hideDisabledSeconds || (_vm.opts.hideDisabledSeconds && !_vm.isDisabled('second', s)))?_c('li',{key:sIndex,class:{active: _vm.second === s},attrs:{"tabindex":_vm.isDisabled('second', s) ? -1 : _vm.tabindex,"data-key":s,"disabled":_vm.isDisabled('second', s)},domProps:{"textContent":_vm._s(s)},on:{"click":function($event){return _vm.select('second', s)},"keydown":[function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"space",32,$event.key,[" ","Spacebar"])){ return null; }$event.preventDefault();return _vm.select('second', s)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }$event.preventDefault();return _vm.select('second', s)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }$event.preventDefault();return _vm.prevItem('seconds', s)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }$event.preventDefault();return _vm.nextItem('seconds', s)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"left",37,$event.key,["Left","ArrowLeft"])){ return null; }if('button' in $event && $event.button !== 0){ return null; }$event.preventDefault();return _vm.toLeftColumn('seconds')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"right",39,$event.key,["Right","ArrowRight"])){ return null; }if('button' in $event && $event.button !== 2){ return null; }$event.preventDefault();return _vm.toRightColumn('seconds')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"esc",27,$event.key,["Esc","Escape"])){ return null; }if($event.ctrlKey||$event.shiftKey||$event.altKey||$event.metaKey){ return null; }return _vm.debounceBlur($event)}],"blur":_vm.debounceBlur,"focus":_vm.keepFocusing}}):_vm._e()]})],2):_vm._e(),(_vm.apmType)?_c('ul',{staticClass:"apms",attrs:{"tabindex":"-1"},on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",attrs:{"tabindex":"-1"},domProps:{"textContent":_vm._s(_vm.apmLabelText)}}),_vm._l((_vm.apms),function(a,aIndex){return [(!_vm.opts.hideDisabledHours || (_vm.opts.hideDisabledHours && !_vm.isDisabled('apm', a)))?_c('li',{key:aIndex,class:{active: _vm.apm === a},attrs:{"tabindex":_vm.isDisabled('apm', a) ? -1 : _vm.tabindex,"data-key":a,"disabled":_vm.isDisabled('apm', a)},domProps:{"textContent":_vm._s(_vm.apmDisplayText(a))},on:{"click":function($event){return _vm.select('apm', a)},"keydown":[function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"space",32,$event.key,[" ","Spacebar"])){ return null; }$event.preventDefault();return _vm.select('apm', a)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }$event.preventDefault();return _vm.select('apm', a)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }$event.preventDefault();return _vm.prevItem('apms', a)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }$event.preventDefault();return _vm.nextItem('apms', a)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"left",37,$event.key,["Left","ArrowLeft"])){ return null; }if('button' in $event && $event.button !== 0){ return null; }$event.preventDefault();return _vm.toLeftColumn('apms')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"right",39,$event.key,["Right","ArrowRight"])){ return null; }if('button' in $event && $event.button !== 2){ return null; }$event.preventDefault();return _vm.toRightColumn('apms')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"esc",27,$event.key,["Esc","Escape"])){ return null; }if($event.ctrlKey||$event.shiftKey||$event.altKey||$event.metaKey){ return null; }return _vm.debounceBlur($event)}],"blur":_vm.debounceBlur,"focus":_vm.keepFocusing}}):_vm._e()]})],2):_vm._e()]:_vm._e()],2)])])}
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"08a1de70-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/vue-timepicker.vue?vue&type=template&id=616b7780&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"vue__time-picker time-picker",style:(_vm.inputWidthStyle)},[_c('input',{ref:"input",staticClass:"display-time",class:[_vm.inputClass, {'is-empty': _vm.inputIsEmpty, 'invalid': _vm.hasInvalidInput, 'all-selected': _vm.allValueSelected, 'disabled': _vm.disabled}],style:(_vm.inputWidthStyle),attrs:{"type":"text","id":_vm.id,"name":_vm.name,"placeholder":_vm.placeholder ? _vm.placeholder : _vm.formatString,"tabindex":_vm.disabled ? -1 : _vm.tabindex,"disabled":_vm.disabled,"readonly":!_vm.manualInput,"autocomplete":_vm.autocomplete},domProps:{"value":_vm.inputIsEmpty ? null : _vm.customDisplayTime},on:{"focus":_vm.onFocus,"change":_vm.onChange,"blur":_vm.debounceBlur,"mousedown":_vm.onMouseDown,"keydown":[_vm.keyDownHandler,function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"esc",27,$event.key,["Esc","Escape"])){ return null; }if($event.ctrlKey||$event.shiftKey||$event.altKey||$event.metaKey){ return null; }return _vm.escBlur($event)}],"compositionstart":_vm.onCompostionStart,"compositionend":_vm.onCompostionEnd,"paste":_vm.pasteHandler}}),(!_vm.showDropdown && _vm.showClearBtn)?_c('span',{staticClass:"clear-btn",attrs:{"tabindex":"-1"},on:{"click":_vm.clearTime}},[_vm._v("×")]):_vm._e(),(_vm.showDropdown)?_c('div',{staticClass:"time-picker-overlay",attrs:{"tabindex":"-1"},on:{"click":_vm.toggleDropdown}}):_vm._e(),_c('div',{directives:[{name:"show",rawName:"v-show",value:(_vm.showDropdown && !_vm.opts.hideDropdown),expression:"showDropdown && !opts.hideDropdown"}],staticClass:"dropdown",style:(_vm.inputWidthStyle),attrs:{"tabindex":"-1"},on:{"mouseup":_vm.keepFocusing,"click":function($event){$event.stopPropagation();}}},[_c('div',{staticClass:"select-list",style:(_vm.inputWidthStyle),attrs:{"tabindex":"-1"}},[(!_vm.opts.advancedKeyboard)?[_vm._l((_vm.columnsSequence),function(column){return [(column === 'hour')?_c('ul',{key:column,staticClass:"hours",on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.hourLabelText)}}),_vm._l((_vm.hours),function(hr,hIndex){return [(!_vm.opts.hideDisabledHours || (_vm.opts.hideDisabledHours && !_vm.isDisabled('hour', hr)))?_c('li',{key:hIndex,class:{active: _vm.hour === hr},attrs:{"disabled":_vm.isDisabled('hour', hr),"data-key":hr},domProps:{"textContent":_vm._s(hr)},on:{"click":function($event){return _vm.select('hour', hr)}}}):_vm._e()]})],2):_vm._e(),(column === 'minute')?_c('ul',{key:column,staticClass:"minutes",on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.minuteLabelText)}}),_vm._l((_vm.minutes),function(m,mIndex){return [(!_vm.opts.hideDisabledMinutes || (_vm.opts.hideDisabledMinutes && !_vm.isDisabled('minute', m)))?_c('li',{key:mIndex,class:{active: _vm.minute === m},attrs:{"disabled":_vm.isDisabled('minute', m),"data-key":m},domProps:{"textContent":_vm._s(m)},on:{"click":function($event){return _vm.select('minute', m)}}}):_vm._e()]})],2):_vm._e(),(column === 'second')?_c('ul',{key:column,staticClass:"seconds",on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.secondLabelText)}}),_vm._l((_vm.seconds),function(s,sIndex){return [(!_vm.opts.hideDisabledSeconds || (_vm.opts.hideDisabledSeconds && !_vm.isDisabled('second', s)))?_c('li',{key:sIndex,class:{active: _vm.second === s},attrs:{"disabled":_vm.isDisabled('second', s),"data-key":s},domProps:{"textContent":_vm._s(s)},on:{"click":function($event){return _vm.select('second', s)}}}):_vm._e()]})],2):_vm._e(),(column === 'apm')?_c('ul',{key:column,staticClass:"apms",on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",domProps:{"textContent":_vm._s(_vm.apmLabelText)}}),_vm._l((_vm.apms),function(a,aIndex){return [(!_vm.opts.hideDisabledHours || (_vm.opts.hideDisabledHours && !_vm.isDisabled('apm', a)))?_c('li',{key:aIndex,class:{active: _vm.apm === a},attrs:{"disabled":_vm.isDisabled('apm', a),"data-key":a},domProps:{"textContent":_vm._s(_vm.apmDisplayText(a))},on:{"click":function($event){return _vm.select('apm', a)}}}):_vm._e()]})],2):_vm._e()]})]:_vm._e(),(_vm.opts.advancedKeyboard)?[_vm._l((_vm.columnsSequence),function(column){return [(column === 'hour')?_c('ul',{key:column,staticClass:"hours",attrs:{"tabindex":"-1"},on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",attrs:{"tabindex":"-1"},domProps:{"textContent":_vm._s(_vm.hourLabelText)}}),_vm._l((_vm.hours),function(hr,hIndex){return [(!_vm.opts.hideDisabledHours || (_vm.opts.hideDisabledHours && !_vm.isDisabled('hour', hr)))?_c('li',{key:hIndex,class:{active: _vm.hour === hr},attrs:{"tabindex":_vm.isDisabled('hour', hr) ? -1 : _vm.tabindex,"data-key":hr,"disabled":_vm.isDisabled('hour', hr)},domProps:{"textContent":_vm._s(hr)},on:{"click":function($event){return _vm.select('hour', hr)},"keydown":[function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"space",32,$event.key,[" ","Spacebar"])){ return null; }$event.preventDefault();return _vm.select('hour', hr)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }$event.preventDefault();return _vm.select('hour', hr)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }$event.preventDefault();return _vm.prevItem('hour', hr)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }$event.preventDefault();return _vm.nextItem('hour', hr)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"left",37,$event.key,["Left","ArrowLeft"])){ return null; }if('button' in $event && $event.button !== 0){ return null; }$event.preventDefault();return _vm.toLeftColumn('hour')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"right",39,$event.key,["Right","ArrowRight"])){ return null; }if('button' in $event && $event.button !== 2){ return null; }$event.preventDefault();return _vm.toRightColumn('hour')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"esc",27,$event.key,["Esc","Escape"])){ return null; }if($event.ctrlKey||$event.shiftKey||$event.altKey||$event.metaKey){ return null; }return _vm.debounceBlur($event)}],"blur":_vm.debounceBlur,"focus":_vm.keepFocusing}}):_vm._e()]})],2):_vm._e(),(column === 'minute')?_c('ul',{key:column,staticClass:"minutes",attrs:{"tabindex":"-1"},on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",attrs:{"tabindex":"-1"},domProps:{"textContent":_vm._s(_vm.minuteLabelText)}}),_vm._l((_vm.minutes),function(m,mIndex){return [(!_vm.opts.hideDisabledMinutes || (_vm.opts.hideDisabledMinutes && !_vm.isDisabled('minute', m)))?_c('li',{key:mIndex,class:{active: _vm.minute === m},attrs:{"tabindex":_vm.isDisabled('minute', m) ? -1 : _vm.tabindex,"data-key":m,"disabled":_vm.isDisabled('minute', m)},domProps:{"textContent":_vm._s(m)},on:{"click":function($event){return _vm.select('minute', m)},"keydown":[function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"space",32,$event.key,[" ","Spacebar"])){ return null; }$event.preventDefault();return _vm.select('minute', m)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }$event.preventDefault();return _vm.select('minute', m)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }$event.preventDefault();return _vm.prevItem('minute', m)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }$event.preventDefault();return _vm.nextItem('minute', m)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"left",37,$event.key,["Left","ArrowLeft"])){ return null; }if('button' in $event && $event.button !== 0){ return null; }$event.preventDefault();return _vm.toLeftColumn('minute')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"right",39,$event.key,["Right","ArrowRight"])){ return null; }if('button' in $event && $event.button !== 2){ return null; }$event.preventDefault();return _vm.toRightColumn('minute')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"esc",27,$event.key,["Esc","Escape"])){ return null; }if($event.ctrlKey||$event.shiftKey||$event.altKey||$event.metaKey){ return null; }return _vm.debounceBlur($event)}],"blur":_vm.debounceBlur,"focus":_vm.keepFocusing}}):_vm._e()]})],2):_vm._e(),(column === 'second')?_c('ul',{key:column,staticClass:"seconds",attrs:{"tabindex":"-1"},on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",attrs:{"tabindex":"-1"},domProps:{"textContent":_vm._s(_vm.secondLabelText)}}),_vm._l((_vm.seconds),function(s,sIndex){return [(!_vm.opts.hideDisabledSeconds || (_vm.opts.hideDisabledSeconds && !_vm.isDisabled('second', s)))?_c('li',{key:sIndex,class:{active: _vm.second === s},attrs:{"tabindex":_vm.isDisabled('second', s) ? -1 : _vm.tabindex,"data-key":s,"disabled":_vm.isDisabled('second', s)},domProps:{"textContent":_vm._s(s)},on:{"click":function($event){return _vm.select('second', s)},"keydown":[function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"space",32,$event.key,[" ","Spacebar"])){ return null; }$event.preventDefault();return _vm.select('second', s)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }$event.preventDefault();return _vm.select('second', s)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }$event.preventDefault();return _vm.prevItem('second', s)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }$event.preventDefault();return _vm.nextItem('second', s)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"left",37,$event.key,["Left","ArrowLeft"])){ return null; }if('button' in $event && $event.button !== 0){ return null; }$event.preventDefault();return _vm.toLeftColumn('second')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"right",39,$event.key,["Right","ArrowRight"])){ return null; }if('button' in $event && $event.button !== 2){ return null; }$event.preventDefault();return _vm.toRightColumn('second')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"esc",27,$event.key,["Esc","Escape"])){ return null; }if($event.ctrlKey||$event.shiftKey||$event.altKey||$event.metaKey){ return null; }return _vm.debounceBlur($event)}],"blur":_vm.debounceBlur,"focus":_vm.keepFocusing}}):_vm._e()]})],2):_vm._e(),(column === 'apm')?_c('ul',{key:column,staticClass:"apms",attrs:{"tabindex":"-1"},on:{"scroll":_vm.keepFocusing}},[_c('li',{staticClass:"hint",attrs:{"tabindex":"-1"},domProps:{"textContent":_vm._s(_vm.apmLabelText)}}),_vm._l((_vm.apms),function(a,aIndex){return [(!_vm.opts.hideDisabledHours || (_vm.opts.hideDisabledHours && !_vm.isDisabled('apm', a)))?_c('li',{key:aIndex,class:{active: _vm.apm === a},attrs:{"tabindex":_vm.isDisabled('apm', a) ? -1 : _vm.tabindex,"data-key":a,"disabled":_vm.isDisabled('apm', a)},domProps:{"textContent":_vm._s(_vm.apmDisplayText(a))},on:{"click":function($event){return _vm.select('apm', a)},"keydown":[function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"space",32,$event.key,[" ","Spacebar"])){ return null; }$event.preventDefault();return _vm.select('apm', a)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }$event.preventDefault();return _vm.select('apm', a)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"up",38,$event.key,["Up","ArrowUp"])){ return null; }$event.preventDefault();return _vm.prevItem('apm', a)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"down",40,$event.key,["Down","ArrowDown"])){ return null; }$event.preventDefault();return _vm.nextItem('apm', a)},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"left",37,$event.key,["Left","ArrowLeft"])){ return null; }if('button' in $event && $event.button !== 0){ return null; }$event.preventDefault();return _vm.toLeftColumn('apm')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"right",39,$event.key,["Right","ArrowRight"])){ return null; }if('button' in $event && $event.button !== 2){ return null; }$event.preventDefault();return _vm.toRightColumn('apm')},function($event){if(!$event.type.indexOf('key')&&_vm._k($event.keyCode,"esc",27,$event.key,["Esc","Escape"])){ return null; }if($event.ctrlKey||$event.shiftKey||$event.altKey||$event.metaKey){ return null; }return _vm.debounceBlur($event)}],"blur":_vm.debounceBlur,"focus":_vm.keepFocusing}}):_vm._e()]})],2):_vm._e()]})]:_vm._e()],2)])])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/vue-timepicker.vue?vue&type=template&id=b36a12fc&
+// CONCATENATED MODULE: ./src/vue-timepicker.vue?vue&type=template&id=616b7780&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.concat.js
 var es_array_concat = __webpack_require__("99af");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.filter.js
 var es_array_filter = __webpack_require__("4de4");
-
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.find.js
-var es_array_find = __webpack_require__("7db0");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.find-index.js
 var es_array_find_index = __webpack_require__("c740");
@@ -4390,6 +4381,9 @@ var es_array_includes = __webpack_require__("caad");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.index-of.js
 var es_array_index_of = __webpack_require__("c975");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.join.js
+var es_array_join = __webpack_require__("a15b");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.map.js
 var es_array_map = __webpack_require__("d81d");
@@ -4772,6 +4766,7 @@ var DEFAULT_OPTIONS = {
       apm: '',
       fullValues: undefined,
       bakDisplayTime: undefined,
+      doClearApmChecking: false,
       selectionTimer: undefined,
       kbInputTimer: undefined,
       kbInputLog: '',
@@ -4900,6 +4895,28 @@ var DEFAULT_OPTIONS = {
     formatString: function formatString() {
       return this.opts.format || DEFAULT_OPTIONS.format;
     },
+    inUse: function inUse() {
+      var _this = this;
+
+      var typesInUse = CONFIG.BASIC_TYPES.filter(function (type) {
+        return _this.getTokenByType(type);
+      }); // Sort types and tokens by their sequence in the "format" string
+
+      typesInUse.sort(function (l, r) {
+        return _this.formatString.indexOf(_this.getTokenByType(l) || null) - _this.formatString.indexOf(_this.getTokenByType(r) || null);
+      });
+      var tokensInUse = typesInUse.map(function (type) {
+        return _this.getTokenByType(type);
+      });
+      return {
+        hour: !!this.hourType,
+        minute: !!this.minuteType,
+        second: !!this.secondType,
+        apm: !!this.apmType,
+        types: typesInUse || [],
+        tokens: tokensInUse || []
+      };
+    },
     displayTime: function displayTime() {
       var formatString = String(this.formatString);
 
@@ -4932,11 +4949,16 @@ var DEFAULT_OPTIONS = {
       return this.formatString === this.displayTime;
     },
     allValueSelected: function allValueSelected() {
-      if (!this.hour || !this.hour.length || !this.minute || !this.minute.length || this.secondType && (!this.second || !this.second.length) || this.apmType && (!this.apm || !this.apm.length)) {
+      if (this.inUse.hour && !this.hour || this.inUse.minute && !this.minute || this.inUse.second && !this.second || this.inUse.apm && !this.apm) {
         return false;
       }
 
       return true;
+    },
+    columnsSequence: function columnsSequence() {
+      return this.inUse.types.map(function (type) {
+        return type;
+      }) || [];
     },
     showClearBtn: function showClearBtn() {
       if (this.hideClearButton || this.disabled) {
@@ -4949,9 +4971,9 @@ var DEFAULT_OPTIONS = {
       return this.hourType === 'h' || this.hourType === 'hh';
     },
     hourRangeIn24HrFormat: function hourRangeIn24HrFormat() {
-      var _this = this;
+      var _this2 = this;
 
-      if (!this.opts.hourRange) {
+      if (!this.hourType || !this.opts.hourRange) {
         return false;
       }
 
@@ -4962,19 +4984,19 @@ var DEFAULT_OPTIONS = {
       var range = [];
       this.opts.hourRange.forEach(function (value) {
         if (value instanceof Array) {
-          if (value.length > 2 && _this.debugMode) {
-            _this.debugLog("Nested array within \"hour-range\" must contain no more than two items. Only the first two items of ".concat(JSON.stringify(value), " will be taken into account."));
+          if (value.length > 2 && _this2.debugMode) {
+            _this2.debugLog("Nested array within \"hour-range\" must contain no more than two items. Only the first two items of ".concat(JSON.stringify(value), " will be taken into account."));
           }
 
           var start = value[0];
           var end = value[1] || value[0];
 
-          if (_this.is12hRange(start)) {
-            start = _this.translate12hRange(start);
+          if (_this2.is12hRange(start)) {
+            start = _this2.translate12hRange(start);
           }
 
-          if (_this.is12hRange(end)) {
-            end = _this.translate12hRange(end);
+          if (_this2.is12hRange(end)) {
+            end = _this2.translate12hRange(end);
           }
 
           for (var i = +start; i <= +end; i++) {
@@ -4987,8 +5009,8 @@ var DEFAULT_OPTIONS = {
             }
           }
         } else {
-          if (_this.is12hRange(value)) {
-            value = _this.translate12hRange(value);
+          if (_this2.is12hRange(value)) {
+            value = _this2.translate12hRange(value);
           } else {
             value = +value;
           }
@@ -5031,7 +5053,7 @@ var DEFAULT_OPTIONS = {
       return this.hourRangeIn24HrFormat;
     },
     validHoursList: function validHoursList() {
-      var _this2 = this;
+      var _this3 = this;
 
       if (!this.manualInput) {
         return false;
@@ -5044,11 +5066,9 @@ var DEFAULT_OPTIONS = {
           list = this.restrictedHourRange.map(function (hr) {
             var l = hr.substr(0, hr.length - 1);
             var r = hr.substr(-1);
-            return "".concat(_this2.formatValue(_this2.hourType, l)).concat(r);
+            return "".concat(_this3.formatValue(_this3.hourType, l)).concat(r);
           });
-          var am12Index = list.findIndex(function (hr) {
-            return hr === '12a';
-          });
+          var am12Index = list.indexOf('12a');
 
           if (am12Index > 0) {
             // Make '12a' the first item in h/hh
@@ -5059,7 +5079,7 @@ var DEFAULT_OPTIONS = {
         }
 
         list = this.restrictedHourRange.map(function (hr) {
-          return _this2.formatValue(_this2.hourType, hr);
+          return _this3.formatValue(_this3.hourType, hr);
         });
 
         if (list.length > 1 && list[0] && list[0] === '24') {
@@ -5082,15 +5102,21 @@ var DEFAULT_OPTIONS = {
     },
     has: function has() {
       var result = {
-        am: true,
-        pm: true,
         customApmText: false
       };
+      var apmEnabled = !!this.apmType;
 
-      if (this.hourRangeIn24HrFormat && this.hourRangeIn24HrFormat.length) {
+      if (apmEnabled && this.hourRangeIn24HrFormat && this.hourRangeIn24HrFormat.length) {
         var range = [].concat([], this.hourRangeIn24HrFormat);
-        result.am = range.some(this.hasAm);
-        result.pm = range.some(this.hasPm);
+        result.am = range.some(function (value) {
+          return value < 12 || value === 24;
+        });
+        result.pm = range.some(function (value) {
+          return value >= 12 && value < 24;
+        });
+      } else {
+        result.am = apmEnabled;
+        result.pm = apmEnabled;
       }
 
       if (this.amText && this.amText.length || this.pmText && this.pmText.length) {
@@ -5100,9 +5126,7 @@ var DEFAULT_OPTIONS = {
       return result;
     },
     minuteRangeList: function minuteRangeList() {
-      var _this3 = this;
-
-      if (!this.opts.minuteRange) {
+      if (!this.minuteType || !this.opts.minuteRange) {
         return false;
       }
 
@@ -5110,60 +5134,10 @@ var DEFAULT_OPTIONS = {
         return [];
       }
 
-      var range = [];
-      var formatedValue;
-      this.opts.minuteRange.forEach(function (value) {
-        if (value instanceof Array) {
-          if (value.length > 2 && _this3.debugMode) {
-            _this3.debugLog("Nested array within \"minute-range\" must contain no more than two items. Only the first two items of ".concat(JSON.stringify(value), " will be taken into account."));
-          }
-
-          var start = value[0];
-          var end = value[1] || value[0];
-
-          for (var i = +start; i <= +end; i++) {
-            if (i < 0 || i > 59) {
-              continue;
-            }
-
-            formatedValue = _this3.formatValue(_this3.minuteType, i);
-
-            if (!range.includes(formatedValue)) {
-              range.push(formatedValue);
-            }
-          }
-        } else {
-          if (+value < 0 || +value > 59) {
-            return;
-          }
-
-          formatedValue = _this3.formatValue(_this3.minuteType, value);
-
-          if (!range.includes(formatedValue)) {
-            range.push(formatedValue);
-          }
-        }
-      });
-      range.sort(function (l, r) {
-        return l - r;
-      }); // Debug Mode
-
-      if (this.debugMode) {
-        var validItems = (this.minutes || []).filter(function (item) {
-          return range.includes(item);
-        });
-
-        if (!validItems || !validItems.length) {
-          this.debugLog("The minute list is empty due to the \"minute-range\" config\nminute-range: ".concat(JSON.stringify(this.minuteRange), "\nminute-interval: ").concat(this.opts.minuteInterval));
-        }
-      }
-
-      return range;
+      return this.renderRangeList(this.opts.minuteRange, 'minute');
     },
     secondRangeList: function secondRangeList() {
-      var _this4 = this;
-
-      if (!this.opts.secondRange) {
+      if (!this.secondType || !this.opts.secondRange) {
         return false;
       }
 
@@ -5171,55 +5145,7 @@ var DEFAULT_OPTIONS = {
         return [];
       }
 
-      var range = [];
-      var formatedValue;
-      this.opts.secondRange.forEach(function (value) {
-        if (value instanceof Array) {
-          if (value.length > 2 && _this4.debugMode) {
-            _this4.debugLog("Nested array within \"second-range\" must contain no more than two items. Only the first two items of ".concat(JSON.stringify(value), " will be taken into account."));
-          }
-
-          var start = value[0];
-          var end = value[1] || value[0];
-
-          for (var i = +start; i <= +end; i++) {
-            if (i < 0 || i > 59) {
-              continue;
-            }
-
-            formatedValue = _this4.formatValue(_this4.secondType, i);
-
-            if (!range.includes(formatedValue)) {
-              range.push(formatedValue);
-            }
-          }
-        } else {
-          if (+value < 0 || +value > 59) {
-            return;
-          }
-
-          formatedValue = _this4.formatValue(_this4.secondType, value);
-
-          if (!range.includes(formatedValue)) {
-            range.push(formatedValue);
-          }
-        }
-      });
-      range.sort(function (l, r) {
-        return l - r;
-      }); // Debug Mode
-
-      if (this.debugMode) {
-        var validItems = (this.seconds || []).filter(function (item) {
-          return range.includes(item);
-        });
-
-        if (!validItems || !validItems.length) {
-          this.debugLog("The second list is empty due to the \"second-range\" config\nsecond-range: ".concat(JSON.stringify(this.secondRange), "\nsecond-interval: ").concat(this.opts.secondInterval));
-        }
-      }
-
-      return range;
+      return this.renderRangeList(this.opts.secondRange, 'second');
     },
     hourLabelText: function hourLabelText() {
       return this.hourLabel || this.hourType;
@@ -5243,21 +5169,7 @@ var DEFAULT_OPTIONS = {
       };
     },
     tokenRegexBase: function tokenRegexBase() {
-      if (!this.manualInput && !this.useStringValue) {
-        return false;
-      }
-
-      var regexStr = "".concat(this.hourType, "|").concat(this.minuteType);
-
-      if (this.secondType) {
-        regexStr += "|".concat(this.secondType);
-      }
-
-      if (this.apmType) {
-        regexStr += "|".concat(this.apmType);
-      }
-
-      return regexStr;
+      return this.inUse.tokens.join('|');
     },
     tokenChunks: function tokenChunks() {
       if (!this.manualInput && !this.useStringValue) {
@@ -5265,7 +5177,7 @@ var DEFAULT_OPTIONS = {
       }
 
       var formatString = String(this.formatString);
-      var tokensRegxStr = "[(".concat(this.tokenRegexBase, ")]+");
+      var tokensRegxStr = "(".concat(this.tokenRegexBase, ")+?");
       var tokensMatchAll = this.getMatchAllByRegex(formatString, tokensRegxStr);
       var tokenChunks = [];
 
@@ -5303,7 +5215,7 @@ var DEFAULT_OPTIONS = {
       });
     },
     tokenChunksPos: function tokenChunksPos() {
-      var _this5 = this;
+      var _this4 = this;
 
       if (!this.manualInput) {
         return false;
@@ -5325,16 +5237,16 @@ var DEFAULT_OPTIONS = {
       this.tokenChunks.forEach(function (chk) {
         var chunkCurrentLen; // Adjust for customized AM/PM text
 
-        if (chk.type === 'apm' && _this5.has.customApmText) {
-          if (_this5.apm && _this5.apm.length) {
-            var customApmText = _this5.apm.toLowerCase() === 'am' ? _this5.amText : _this5.pmText;
+        if (chk.type === 'apm' && _this4.has.customApmText) {
+          if (_this4.apm && _this4.apm.length) {
+            var customApmText = _this4.apm.toLowerCase() === 'am' ? _this4.amText : _this4.pmText;
             chunkCurrentLen = customApmText && customApmText.length ? customApmText.length : chk.len;
           } else {
             chunkCurrentLen = chk.len;
           } // Others
 
         } else {
-          chunkCurrentLen = _this5[chk.type] && _this5[chk.type].length ? _this5[chk.type].length : chk.len;
+          chunkCurrentLen = _this4[chk.type] && _this4[chk.type].length ? _this4[chk.type].length : chk.len;
         }
 
         list.push({
@@ -5361,19 +5273,19 @@ var DEFAULT_OPTIONS = {
 
       var result = [];
 
-      if (!this.isEmptyValue(this.hourType, this.hour) && (!this.isValidValue(this.hourType, this.hour) || this.isDisabled('hour', this.hour))) {
+      if (this.inUse.hour && !this.isEmptyValue(this.hourType, this.hour) && (!this.isValidValue(this.hourType, this.hour) || this.isDisabled('hour', this.hour))) {
         result.push('hour');
       }
 
-      if (!this.isEmptyValue(this.minuteType, this.minute) && (!this.isValidValue(this.minuteType, this.minute) || this.isDisabled('minute', this.minute) || this.notInMinuteInterval(this.minute))) {
+      if (this.inUse.minute && !this.isEmptyValue(this.minuteType, this.minute) && (!this.isValidValue(this.minuteType, this.minute) || this.isDisabled('minute', this.minute) || this.notInInterval('minute', this.minute))) {
         result.push('minute');
       }
 
-      if (this.secondType && !this.isEmptyValue(this.secondType, this.second) && (!this.isValidValue(this.secondType, this.second) || this.isDisabled('second', this.second) || this.notInSecondInterval(this.second))) {
+      if (this.inUse.second && !this.isEmptyValue(this.secondType, this.second) && (!this.isValidValue(this.secondType, this.second) || this.isDisabled('second', this.second) || this.notInInterval('second', this.second))) {
         result.push('second');
       }
 
-      if (this.apmType && !this.isEmptyValue(this.apmType, this.apm) && (!this.isValidValue(this.apmType, this.apm) || this.isDisabled('apm', this.apm))) {
+      if (this.inUse.apm && !this.isEmptyValue(this.apmType, this.apm) && (!this.isValidValue(this.apmType, this.apm) || this.isDisabled('apm', this.apm))) {
         result.push('apm');
       }
 
@@ -5422,6 +5334,10 @@ var DEFAULT_OPTIONS = {
   },
   methods: {
     formatValue: function formatValue(token, i) {
+      if (!this.isNumber(i)) {
+        return '';
+      }
+
       i = +i;
 
       switch (token) {
@@ -5451,7 +5367,7 @@ var DEFAULT_OPTIONS = {
           return '';
       }
     },
-    checkAcceptingType: function checkAcceptingType(validValues, formatString, fallbackValue) {
+    checkAcceptingType: function checkAcceptingType(validValues, formatString) {
       if (!validValues || !formatString || !formatString.length) {
         return '';
       }
@@ -5462,33 +5378,34 @@ var DEFAULT_OPTIONS = {
         }
       }
 
-      return fallbackValue || '';
+      return '';
     },
     renderFormat: function renderFormat(newFormat) {
-      var _this6 = this;
+      var _this5 = this;
 
       newFormat = newFormat || this.opts.format || DEFAULT_OPTIONS.format;
-      this.hourType = this.checkAcceptingType(CONFIG.HOUR_TOKENS, newFormat, 'HH');
-      this.minuteType = this.checkAcceptingType(CONFIG.MINUTE_TOKENS, newFormat, 'mm');
+      var hourType = this.checkAcceptingType(CONFIG.HOUR_TOKENS, newFormat);
+      var minuteType = this.checkAcceptingType(CONFIG.MINUTE_TOKENS, newFormat);
       this.secondType = this.checkAcceptingType(CONFIG.SECOND_TOKENS, newFormat);
-      this.apmType = this.checkAcceptingType(CONFIG.APM_TOKENS, newFormat);
-      this.renderHoursList();
-      this.renderList('minute');
+      this.apmType = this.checkAcceptingType(CONFIG.APM_TOKENS, newFormat); // Failsafe checking
 
-      if (this.secondType) {
-        this.renderList('second');
-      } else {
-        this.seconds = [];
+      if (!hourType && !minuteType && !this.secondType && !this.apmType) {
+        if (this.debugMode && this.format) {
+          this.debugLog("No valid tokens found in your defined \"format\" string \"".concat(this.format, "\". Fallback to the default \"HH:mm\" format."));
+        }
+
+        hourType = 'HH';
+        minuteType = 'mm';
       }
 
-      if (this.apmType) {
-        this.renderApmList();
-      } else {
-        this.apms = [];
-      }
-
+      this.hourType = hourType;
+      this.minuteType = minuteType;
+      this.hourType ? this.renderHoursList() : this.hours = [];
+      this.minuteType ? this.renderList('minute') : this.minutes = [];
+      this.secondType ? this.renderList('second') : this.seconds = [];
+      this.apmType ? this.renderApmList() : this.apms = [];
       this.$nextTick(function () {
-        _this6.readValues();
+        _this5.readValues();
       });
     },
     renderHoursList: function renderHoursList() {
@@ -5506,7 +5423,7 @@ var DEFAULT_OPTIONS = {
       this.hours = hours;
     },
     renderList: function renderList(listType, interval) {
-      if (!['minute', 'second'].includes(listType)) {
+      if (!this.isMinuteOrSecond(listType)) {
         return;
       }
 
@@ -5539,7 +5456,7 @@ var DEFAULT_OPTIONS = {
       }
     },
     readObjectValues: function readObjectValues(objValue) {
-      var _this7 = this;
+      var _this6 = this;
 
       var timeValue = JSON.parse(JSON.stringify(objValue || {}));
       var values = Object.keys(timeValue); // Failsafe for empty `v-model` object
@@ -5549,16 +5466,16 @@ var DEFAULT_OPTIONS = {
         return;
       }
 
-      CONFIG.BASIC_TYPES.forEach(function (section) {
-        var sectionType = _this7["".concat(section, "Type")];
+      CONFIG.BASIC_TYPES.forEach(function (type) {
+        var token = _this6.getTokenByType(type);
 
-        if (values.indexOf(sectionType) > -1) {
-          var sanitizedValue = _this7.sanitizedValue(sectionType, timeValue[sectionType]);
+        if (values.indexOf(token) > -1) {
+          var sanitizedValue = _this6.sanitizedValue(token, timeValue[token]);
 
-          _this7[section] = sanitizedValue;
-          timeValue[sectionType] = sanitizedValue;
+          _this6[type] = sanitizedValue;
+          timeValue[token] = sanitizedValue;
         } else {
-          _this7[section] = '';
+          _this6[type] = '';
         }
       });
       this.timeValue = timeValue;
@@ -5569,7 +5486,7 @@ var DEFAULT_OPTIONS = {
       return needsPolyfill ? this.polyfillMatchAll(testString, regexString) : testString.matchAll(new RegExp(regexString, 'g'));
     },
     readStringValues: function readStringValues(stringValue) {
-      var _this8 = this;
+      var _this7 = this;
 
       // Failsafe for empty `v-model` string
       if (!stringValue || !stringValue.length) {
@@ -5578,7 +5495,7 @@ var DEFAULT_OPTIONS = {
       }
 
       var formatString = String(this.formatString);
-      var tokensRegxStr = "[(".concat(this.tokenRegexBase, ")]+");
+      var tokensRegxStr = "(".concat(this.tokenRegexBase, ")+?");
       var othersRegxStr = "[^(".concat(this.tokenRegexBase, ")]+");
       var tokensMatchAll = this.getMatchAllByRegex(formatString, tokensRegxStr);
       var othersMatchAll = this.getMatchAllByRegex(formatString, othersRegxStr);
@@ -5628,7 +5545,7 @@ var DEFAULT_OPTIONS = {
       var regexCombo = '';
       chunks.forEach(function (chunk) {
         if (chunk.isValueToken) {
-          var tokenRegex = _this8.getTokenRegex(chunk.token) || '';
+          var tokenRegex = _this7.getTokenRegex(chunk.token) || '';
           regexCombo += tokenRegex;
         } else {
           var safeChars = chunk.token.replace(/\\{0}(\*|\?|\.|\+)/g, '\\$1');
@@ -5644,7 +5561,7 @@ var DEFAULT_OPTIONS = {
         valueResults.forEach(function (value, vrIndex) {
           if (tokenChunks[vrIndex]) {
             var targetToken = tokenChunks[vrIndex].token;
-            timeValue[targetToken] = _this8.setValueFromString(value, targetToken);
+            timeValue[targetToken] = _this7.setValueFromString(value, targetToken);
           }
         });
         this.timeValue = timeValue;
@@ -5696,18 +5613,12 @@ var DEFAULT_OPTIONS = {
       return result;
     },
     addFallbackValues: function addFallbackValues() {
+      var _this8 = this;
+
       var timeValue = {};
-      timeValue[this.hourType] = '';
-      timeValue[this.minuteType] = '';
-
-      if (this.secondType) {
-        timeValue[this.secondType] = '';
-      }
-
-      if (this.apmType) {
-        timeValue[this.apmType] = '';
-      }
-
+      this.inUse.types.forEach(function (type) {
+        timeValue[_this8.getTokenByType(type)] = '';
+      });
       this.timeValue = timeValue;
     },
     setValueFromString: function setValueFromString(parsedValue, token) {
@@ -5721,7 +5632,7 @@ var DEFAULT_OPTIONS = {
         return '';
       }
 
-      var stdValue = parsedValue !== this["".concat(tokenType, "Type")] ? parsedValue : '';
+      var stdValue = parsedValue !== this.getTokenByType(tokenType) ? parsedValue : '';
       this[tokenType] = stdValue;
       return stdValue;
     },
@@ -5731,104 +5642,81 @@ var DEFAULT_OPTIONS = {
       var fullValues = {};
       var baseHour = this.hour;
       var baseHourType = this.hourType;
-      var hourValue = this.isNumber(baseHour) ? +baseHour : '';
-      var apmValue = this.baseOn12Hours && this.apm ? this.lowerCasedApm(this.apm) : false;
-      CONFIG.HOUR_TOKENS.forEach(function (token) {
-        if (token === baseHourType) {
-          fullValues[token] = baseHour;
-          return;
-        }
+      var apmValue; // Hour type or hour value is NOT set in the "format" string
 
-        var value;
-        var apm;
+      if (!baseHourType || !this.isNumber(baseHour)) {
+        CONFIG.HOUR_TOKENS.forEach(function (token) {
+          return fullValues[token] = '';
+        });
+        apmValue = this.lowerCasedApm(this.apm || '');
+        fullValues.a = apmValue;
+        fullValues.A = apmValue.toUpperCase(); // Both Hour type and value are set
+      } else {
+        var hourValue = +baseHour;
 
-        switch (token) {
-          case 'H':
-          case 'HH':
-            if (!String(hourValue).length) {
-              fullValues[token] = '';
-              return;
-            } else if (_this9.baseOn12Hours) {
-              if (apmValue === 'pm') {
-                value = hourValue < 12 ? hourValue + 12 : hourValue;
+        var _apmValue = this.baseOn12Hours && this.apm ? this.lowerCasedApm(this.apm) : false;
+
+        CONFIG.HOUR_TOKENS.forEach(function (token) {
+          if (token === baseHourType) {
+            fullValues[token] = baseHour;
+            return;
+          }
+
+          var value;
+          var apm;
+
+          switch (token) {
+            case 'H':
+            case 'HH':
+            case 'k':
+            case 'kk':
+              if (_this9.baseOn12Hours) {
+                if (_apmValue === 'pm') {
+                  value = hourValue < 12 ? hourValue + 12 : hourValue;
+                } else if (['k', 'kk'].includes(token)) {
+                  value = hourValue === 12 ? 24 : hourValue;
+                } else {
+                  value = hourValue % 12;
+                }
               } else {
-                value = hourValue % 12;
+                if (['k', 'kk'].includes(token)) {
+                  value = hourValue === 0 ? 24 : hourValue;
+                } else {
+                  value = hourValue % 24;
+                }
               }
-            } else {
-              value = hourValue % 24;
-            }
 
-            fullValues[token] = token === 'HH' && value < 10 ? "0".concat(value) : String(value);
-            break;
+              fullValues[token] = _this9.formatValue(token, value);
+              break;
 
-          case 'k':
-          case 'kk':
-            if (!String(hourValue).length) {
-              fullValues[token] = '';
-              return;
-            } else if (_this9.baseOn12Hours) {
-              if (apmValue === 'pm') {
-                value = hourValue < 12 ? hourValue + 12 : hourValue;
+            case 'h':
+            case 'hh':
+              // h <-> hh
+              if (_this9.baseOn12Hours) {
+                value = hourValue;
+                apm = _apmValue || ''; // Read from other hour formats
               } else {
-                value = hourValue === 12 ? 24 : hourValue;
-              }
-            } else {
-              value = hourValue === 0 ? 24 : hourValue;
-            }
-
-            fullValues[token] = token === 'kk' && value < 10 ? "0".concat(value) : String(value);
-            break;
-
-          case 'h':
-          case 'hh':
-            if (apmValue) {
-              value = hourValue;
-              apm = apmValue || 'am';
-            } else {
-              if (!String(hourValue).length) {
-                fullValues[token] = '';
-                fullValues.a = '';
-                fullValues.A = '';
-                return;
-              } else if (hourValue > 11 && hourValue < 24) {
-                apm = 'pm';
-                value = hourValue === 12 ? 12 : hourValue % 12;
-              } else {
-                if (_this9.baseOn12Hours) {
-                  apm = '';
+                if (hourValue > 11 && hourValue < 24) {
+                  apm = 'pm';
+                  value = hourValue === 12 ? 12 : hourValue % 12;
                 } else {
                   apm = 'am';
+                  value = hourValue % 12 === 0 ? 12 : hourValue;
                 }
-
-                value = hourValue % 12 === 0 ? 12 : hourValue;
               }
-            }
 
-            fullValues[token] = token === 'hh' && value < 10 ? "0".concat(value) : String(value);
-            fullValues.a = apm;
-            fullValues.A = apm.toUpperCase();
-            break;
-        }
-      });
-
-      if (this.isNumber(this.minute)) {
-        var minuteValue = +this.minute;
-        fullValues.m = String(minuteValue);
-        fullValues.mm = minuteValue < 10 ? "0".concat(minuteValue) : String(minuteValue);
-      } else {
-        fullValues.m = '';
-        fullValues.mm = '';
+              fullValues[token] = _this9.formatValue(token, value);
+              fullValues.a = apm;
+              fullValues.A = apm.toUpperCase();
+              break;
+          }
+        });
       }
 
-      if (this.isNumber(this.second)) {
-        var secondValue = +this.second;
-        fullValues.s = String(secondValue);
-        fullValues.ss = secondValue < 10 ? "0".concat(secondValue) : String(secondValue);
-      } else {
-        fullValues.s = '';
-        fullValues.ss = '';
-      }
-
+      fullValues.m = this.formatValue('m', this.minute);
+      fullValues.mm = this.formatValue('mm', this.minute);
+      fullValues.s = this.formatValue('s', this.second);
+      fullValues.ss = this.formatValue('ss', this.second);
       this.fullValues = fullValues; // On lazy mode, emit `input` and `change` events only when:
       // - The user pick a new value and then close the dropdown
       // - The user click the ("x") clear button
@@ -5855,15 +5743,15 @@ var DEFAULT_OPTIONS = {
       }
 
       var fullValues = JSON.parse(JSON.stringify(this.fullValues));
-      var baseTimeValue = JSON.parse(JSON.stringify(this.timeValue || {}));
-      var timeValue = {};
-      Object.keys(baseTimeValue).forEach(function (key) {
-        timeValue[key] = fullValues[key] || '';
-      });
 
       if (this.useStringValue) {
         this.$emit('input', this.inputIsEmpty ? '' : String(this.displayTime));
       } else {
+        var tokensInUse = this.inUse.tokens || [];
+        var timeValue = {};
+        tokensInUse.forEach(function (token) {
+          timeValue[token] = fullValues[token] || '';
+        });
         this.$emit('input', JSON.parse(JSON.stringify(timeValue)));
       }
 
@@ -5873,7 +5761,7 @@ var DEFAULT_OPTIONS = {
       });
     },
     translate12hRange: function translate12hRange(value) {
-      var valueT = value.match(/^(\d{1,2})(a|p|A|P)$/);
+      var valueT = this.match12hRange(value);
 
       if (+valueT[1] === 12) {
         return +valueT[1] + (valueT[2].toLowerCase() === 'p' ? 0 : 12);
@@ -5881,14 +5769,8 @@ var DEFAULT_OPTIONS = {
 
       return +valueT[1] + (valueT[2].toLowerCase() === 'p' ? 12 : 0);
     },
-    hasAm: function hasAm(value) {
-      return value < 12 || value === 24;
-    },
-    hasPm: function hasPm(value) {
-      return value >= 12 && value < 24;
-    },
     isDisabled: function isDisabled(type, value) {
-      if (!this.isBasicType(type)) {
+      if (!this.isBasicType(type) || !this.inUse[type]) {
         return true;
       }
 
@@ -5936,39 +5818,100 @@ var DEFAULT_OPTIONS = {
 
       return !this.restrictedHourRange.includes(+value);
     },
-    notInMinuteInterval: function notInMinuteInterval(value) {
-      if (this.opts.minuteInterval === 1) {
+    notInInterval: function notInInterval(section, value) {
+      if (!section || !this.isMinuteOrSecond(section)) {
+        return;
+      }
+
+      if (this.opts["".concat(section, "Interval")] === 1) {
         return false;
       }
 
-      return +value % this.opts.minuteInterval !== 0;
+      return +value % this.opts["".concat(section, "Interval")] !== 0;
     },
-    notInSecondInterval: function notInSecondInterval(value) {
-      if (this.opts.secondInterval === 1) {
-        return false;
+    renderRangeList: function renderRangeList(rawRange, section) {
+      var _this10 = this;
+
+      if (!rawRange || !section || !this.isMinuteOrSecond(section)) {
+        return [];
       }
 
-      return +value % this.opts.secondInterval !== 0;
+      var range = [];
+      var formatedValue;
+      rawRange.forEach(function (value) {
+        if (value instanceof Array) {
+          if (value.length > 2 && _this10.debugMode) {
+            _this10.debugLog("Nested array within \"".concat(section, "-range\" must contain no more than two items. Only the first two items of ").concat(JSON.stringify(value), " will be taken into account."));
+          }
+
+          var start = value[0];
+          var end = value[1] || value[0];
+
+          for (var i = +start; i <= +end; i++) {
+            if (i < 0 || i > 59) {
+              continue;
+            }
+
+            formatedValue = _this10.formatValue(_this10.getTokenByType(section), i);
+
+            if (!range.includes(formatedValue)) {
+              range.push(formatedValue);
+            }
+          }
+        } else {
+          if (+value < 0 || +value > 59) {
+            return;
+          }
+
+          formatedValue = _this10.formatValue(_this10.getTokenByType(section), value);
+
+          if (!range.includes(formatedValue)) {
+            range.push(formatedValue);
+          }
+        }
+      });
+      range.sort(function (l, r) {
+        return l - r;
+      }); // Debug Mode
+
+      if (this.debugMode) {
+        var fullList = (section === 'minute' ? this.minutes : this.seconds) || [];
+        var validItems = fullList.filter(function (item) {
+          return range.includes(item);
+        });
+
+        if (!validItems || !validItems.length) {
+          if (section === 'minute') {
+            this.debugLog("The minute list is empty due to the \"minute-range\" config\nminute-range: ".concat(JSON.stringify(this.minuteRange), "\nminute-interval: ").concat(this.opts.minuteInterval));
+          } else {
+            this.debugLog("The second list is empty due to the \"second-range\" config\nsecond-range: ".concat(JSON.stringify(this.secondRange), "\nsecond-interval: ").concat(this.opts.secondInterval));
+          }
+        }
+      }
+
+      return range;
     },
     forceApmSelection: function forceApmSelection() {
-      if (!this.apm || !this.apm.length) {
+      if (this.apmType && !this.apm) {
         if (this.manualInput) {
           // In Manual Input Mode
           // Skip this to allow users to paste a string value from clipboard
           return;
         }
 
-        if (this.has.am) {
-          this.apm = this.apmType === 'A' ? 'AM' : 'am';
-        } else if (this.has.pm) {
-          this.apm = this.apmType === 'A' ? 'PM' : 'pm';
+        if (this.has.am || this.has.pm) {
+          this.doClearApmChecking = true;
+          var apmValue = this.has.am ? 'am' : 'pm';
+          this.apm = this.apmType === 'A' ? apmValue.toUpperCase() : apmValue;
         }
       }
     },
     emptyApmSelection: function emptyApmSelection() {
-      if (this.hour === '' && this.minute === '' && this.second === '') {
+      if (this.doClearApmChecking && this.hour === '' && this.minute === '' && this.second === '') {
         this.apm = '';
       }
+
+      this.doClearApmChecking = false;
     },
     apmDisplayText: function apmDisplayText(apmValue) {
       if (this.amText && this.lowerCasedApm(apmValue) === 'am') {
@@ -5982,6 +5925,8 @@ var DEFAULT_OPTIONS = {
       return apmValue;
     },
     toggleDropdown: function toggleDropdown() {
+      var _this11 = this;
+
       if (this.disabled) {
         return;
       }
@@ -5998,6 +5943,15 @@ var DEFAULT_OPTIONS = {
 
         if (this.lazy) {
           this.bakDisplayTime = String(this.displayTime || '');
+        }
+
+        if (this.manualInput && !this.inputIsEmpty) {
+          this.$nextTick(function () {
+            if (_this11.$refs.input && _this11.$refs.input.selectionStart === 0 && _this11.$refs.input.selectionEnd === _this11.displayTime.length) {
+              // Select the first slot instead of the whole value string when tabbed in
+              _this11.selectFirstSlot();
+            }
+          });
         }
       } else {
         if (!this.opts.hideDropdown) {
@@ -6030,6 +5984,10 @@ var DEFAULT_OPTIONS = {
     select: function select(type, value) {
       if (this.isBasicType(type) && !this.isDisabled(type, value)) {
         this[type] = value;
+
+        if (this.doClearApmChecking) {
+          this.doClearApmChecking = false;
+        }
       }
     },
     clearTime: function clearTime() {
@@ -6054,7 +6012,7 @@ var DEFAULT_OPTIONS = {
     // Auto-Scroll
     //
     checkForAutoScroll: function checkForAutoScroll() {
-      var _this10 = this;
+      var _this12 = this;
 
       if (this.inputIsEmpty) {
         return;
@@ -6062,12 +6020,15 @@ var DEFAULT_OPTIONS = {
 
       if (this.autoScroll) {
         this.$nextTick(function () {
-          _this10.scrollToSelectedValues();
+          _this12.scrollToSelectedValues();
         });
       } else if (this.opts.advancedKeyboard) {
-        // Auto-focus on selected hour value for advanced-keyboard
+        // Auto-focus on selected value in the first column for advanced-keyboard
         this.$nextTick(function () {
-          _this10.scrollToSelected('hours');
+          var firstColumn = _this12.inUse.types[0];
+          var firstColumnClass = "".concat(firstColumn, "s");
+
+          _this12.scrollToSelected(firstColumnClass);
         });
       }
     },
@@ -6082,22 +6043,23 @@ var DEFAULT_OPTIONS = {
       if (targetList && targetValue) {
         targetList.scrollTop = targetValue.offsetTop || 0;
 
-        if (this.opts.advancedKeyboard && columnClass === 'hours') {
+        if (this.opts.advancedKeyboard) {
           targetValue.focus();
         }
       }
     },
     scrollToSelectedValues: function scrollToSelectedValues() {
+      var _this13 = this;
+
       if (!this.timeValue || this.inputIsEmpty) {
         return;
       }
 
-      this.scrollToSelected('hours');
-      this.scrollToSelected('minutes');
+      this.inUse.types.forEach(function (section) {
+        var columnClass = "".concat(section, "s");
 
-      if (this.secondType) {
-        this.scrollToSelected('seconds');
-      }
+        _this13.scrollToSelected(columnClass);
+      });
     },
     //
     // Additional Keyboard Navigation
@@ -6128,7 +6090,7 @@ var DEFAULT_OPTIONS = {
       }
     },
     debounceBlur: function debounceBlur() {
-      var _this11 = this;
+      var _this14 = this;
 
       if (this.disabled) {
         return;
@@ -6137,20 +6099,14 @@ var DEFAULT_OPTIONS = {
       this.isFocusing = false;
       window.clearTimeout(this.debounceTimer);
       this.debounceTimer = window.setTimeout(function () {
-        window.clearTimeout(_this11.debounceTimer);
+        window.clearTimeout(_this14.debounceTimer);
 
-        _this11.onBlur();
+        _this14.onBlur();
       }, this.opts.blurDelay);
     },
     onBlur: function onBlur() {
-      if (this.disabled) {
-        return;
-      }
-
-      if (!this.isFocusing) {
-        if (this.showDropdown) {
-          this.toggleDropdown();
-        }
+      if (!this.disabled && !this.isFocusing && this.showDropdown) {
+        this.toggleDropdown();
       }
     },
     keepFocusing: function keepFocusing() {
@@ -6158,15 +6114,17 @@ var DEFAULT_OPTIONS = {
         this.isFocusing = true;
       }
     },
-    validItemsInCol: function validItemsInCol(columnClass) {
+    validItemsInCol: function validItemsInCol(column) {
+      var columnClass = "".concat(column, "s");
       return this.$el.querySelectorAll("ul.".concat(columnClass, " > li:not(.hint):not([disabled])"));
     },
-    activeItemInCol: function activeItemInCol(columnClass) {
+    activeItemInCol: function activeItemInCol(column) {
+      var columnClass = "".concat(column, "s");
       return this.$el.querySelectorAll("ul.".concat(columnClass, " > li.active:not(.hint)"));
     },
-    getClosestSibling: function getClosestSibling(columnClass, dataKey) {
+    getClosestSibling: function getClosestSibling(column, dataKey) {
       var getPrevious = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-      var siblingsInCol = this.validItemsInCol(columnClass);
+      var siblingsInCol = this.validItemsInCol(column);
       var selfIndex = Array.prototype.findIndex.call(siblingsInCol, function (sbl) {
         return sbl.getAttribute('data-key') === dataKey;
       }); // Already the first item
@@ -6191,89 +6149,33 @@ var DEFAULT_OPTIONS = {
 
       return siblingsInCol[selfIndex + 1];
     },
-    prevItem: function prevItem(columnClass, dataKey) {
+    prevItem: function prevItem(column, dataKey) {
       var isManualInput = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-      var targetItem = this.getClosestSibling(columnClass, dataKey, true);
+      var targetItem = this.getClosestSibling(column, dataKey, true);
 
       if (targetItem) {
         return isManualInput ? targetItem : targetItem.focus();
       }
     },
-    nextItem: function nextItem(columnClass, dataKey) {
+    nextItem: function nextItem(column, dataKey) {
       var isManualInput = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-      var targetItem = this.getClosestSibling(columnClass, dataKey, false);
+      var targetItem = this.getClosestSibling(column, dataKey, false);
 
       if (targetItem) {
         return isManualInput ? targetItem : targetItem.focus();
       }
     },
-    getSideColumnClass: function getSideColumnClass(columnClass) {
+    getSideColumnName: function getSideColumnName(currentColumn) {
       var toLeft = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-      var targetColumn; // Nav to Left
+      var currentColumnIndex = this.inUse.types.indexOf(currentColumn);
 
-      if (toLeft) {
-        switch (columnClass) {
-          case 'hours':
-            targetColumn = -1;
-            break;
-
-          case 'minutes':
-            targetColumn = 'hours';
-            break;
-
-          case 'seconds':
-            targetColumn = 'minutes';
-            break;
-
-          case 'apms':
-            if (this.secondType) {
-              targetColumn = 'seconds';
-            } else {
-              targetColumn = 'minutes';
-            }
-
-            break;
-        } // Nav to Right
-
-      } else {
-        switch (columnClass) {
-          case 'hours':
-            targetColumn = 'minutes';
-            break;
-
-          case 'minutes':
-            if (this.secondType) {
-              targetColumn = 'seconds';
-            } else if (this.apmType) {
-              targetColumn = 'apms';
-            } else {
-              targetColumn = 1;
-            }
-
-            break;
-
-          case 'seconds':
-            if (this.apmType) {
-              targetColumn = 'apms';
-            } else {
-              targetColumn = 1;
-            }
-
-            break;
-
-          case 'apms':
-            targetColumn = 1;
-            break;
-        }
-      }
-
-      if (targetColumn === -1) {
+      if (toLeft && currentColumnIndex <= 0) {
         if (this.debugMode) {
           this.debugLog('You\'re in the leftmost list already');
         }
 
         return;
-      } else if (targetColumn === 1) {
+      } else if (!toLeft && currentColumnIndex === this.inUse.types.length - 1) {
         if (this.debugMode) {
           this.debugLog('You\'re in the rightmost list already');
         }
@@ -6281,45 +6183,45 @@ var DEFAULT_OPTIONS = {
         return;
       }
 
-      return targetColumn;
+      return this.inUse.types[toLeft ? currentColumnIndex - 1 : currentColumnIndex + 1];
     },
-    getFirstItemInSideColumn: function getFirstItemInSideColumn(columnClass) {
+    getFirstItemInSideColumn: function getFirstItemInSideColumn(currentColumn) {
       var toLeft = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-      var targetColumnClass = this.getSideColumnClass(columnClass, toLeft);
+      var targetColumn = this.getSideColumnName(currentColumn, toLeft);
 
-      if (!targetColumnClass) {
+      if (!targetColumn) {
         return;
       }
 
-      var listItems = this.validItemsInCol(targetColumnClass);
+      var listItems = this.validItemsInCol(targetColumn);
 
       if (listItems && listItems[0]) {
         return listItems[0];
       }
     },
-    getActiveItemInSideColumn: function getActiveItemInSideColumn(columnClass) {
+    getActiveItemInSideColumn: function getActiveItemInSideColumn(currentColumn) {
       var toLeft = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-      var targetColumnClass = this.getSideColumnClass(columnClass, toLeft);
+      var targetColumn = this.getSideColumnName(currentColumn, toLeft);
 
-      if (!targetColumnClass) {
+      if (!targetColumn) {
         return;
       }
 
-      var activeItems = this.activeItemInCol(targetColumnClass);
+      var activeItems = this.activeItemInCol(targetColumn);
 
       if (activeItems && activeItems[0]) {
         return activeItems[0];
       }
     },
-    toLeftColumn: function toLeftColumn(columnClass) {
-      var targetItem = this.getActiveItemInSideColumn(columnClass, true) || this.getFirstItemInSideColumn(columnClass, true);
+    toLeftColumn: function toLeftColumn(currentColumn) {
+      var targetItem = this.getActiveItemInSideColumn(currentColumn, true) || this.getFirstItemInSideColumn(currentColumn, true);
 
       if (targetItem) {
         targetItem.focus();
       }
     },
-    toRightColumn: function toRightColumn(columnClass) {
-      var targetItem = this.getActiveItemInSideColumn(columnClass, false) || this.getFirstItemInSideColumn(columnClass, false);
+    toRightColumn: function toRightColumn(currentColumn) {
+      var targetItem = this.getActiveItemInSideColumn(currentColumn, false) || this.getFirstItemInSideColumn(currentColumn, false);
 
       if (targetItem) {
         targetItem.focus();
@@ -6329,7 +6231,7 @@ var DEFAULT_OPTIONS = {
     // Manual Input
     //
     onMouseDown: function onMouseDown() {
-      var _this12 = this;
+      var _this15 = this;
 
       if (!this.manualInput) {
         return;
@@ -6337,12 +6239,12 @@ var DEFAULT_OPTIONS = {
 
       window.clearTimeout(this.selectionTimer);
       this.selectionTimer = window.setTimeout(function () {
-        window.clearTimeout(_this12.selectionTimer);
+        window.clearTimeout(_this15.selectionTimer);
 
-        if (_this12.$refs && _this12.$refs.input) {
-          var nearestSlot = _this12.getNearestChunkByPos(_this12.$refs.input.selectionStart || 0);
+        if (_this15.$refs && _this15.$refs.input) {
+          var nearestSlot = _this15.getNearestChunkByPos(_this15.$refs.input.selectionStart || 0);
 
-          _this12.debounceSetInputSelection(nearestSlot);
+          _this15.debounceSetInputSelection(nearestSlot);
         }
       }, 50);
     },
@@ -6383,7 +6285,7 @@ var DEFAULT_OPTIONS = {
       return false;
     },
     onCompostionEnd: function onCompostionEnd(evt) {
-      var _this13 = this;
+      var _this16 = this;
 
       evt.preventDefault();
       evt.stopPropagation();
@@ -6400,16 +6302,16 @@ var DEFAULT_OPTIONS = {
 
       this.$refs.input.value = this.has.customApmText ? this.customDisplayTime : this.displayTime;
       this.$nextTick(function () {
-        if (_this13.bakCurrentPos) {
-          var bakPos = JSON.parse(JSON.stringify(_this13.bakCurrentPos));
+        if (_this16.bakCurrentPos) {
+          var bakPos = JSON.parse(JSON.stringify(_this16.bakCurrentPos));
 
           if (inputIsCustomApmText) {
             bakPos.end = bakPos.start + cpsData.length;
           }
 
-          _this13.debounceSetInputSelection(bakPos);
+          _this16.debounceSetInputSelection(bakPos);
 
-          _this13.bakCurrentPos = null;
+          _this16.bakCurrentPos = null;
         }
       });
       return false;
@@ -6477,11 +6379,12 @@ var DEFAULT_OPTIONS = {
           return;
         }
 
+        var firstChunk = this.tokenChunksPos[0];
         var lastChunk = this.tokenChunksPos[this.tokenChunksPos.length - 1];
 
-        if (currentChunk.token !== lastChunk.token) {
+        if (evt.shiftKey && currentChunk.token !== firstChunk.token || !evt.shiftKey && currentChunk.token !== lastChunk.token) {
           evt.preventDefault();
-          this.toLateralToken(false);
+          this.toLateralToken(evt.shiftKey);
         }
       }
     },
@@ -6502,11 +6405,11 @@ var DEFAULT_OPTIONS = {
       this.kbInputLog = '';
     },
     debounceClearKbLog: function debounceClearKbLog() {
-      var _this14 = this;
+      var _this17 = this;
 
       window.clearTimeout(this.kbInputTimer);
       this.kbInputTimer = window.setTimeout(function () {
-        _this14.clearKbInputLog();
+        _this17.clearKbInputLog();
       }, this.opts.manualInputTimeout);
     },
     setKbInput: function setKbInput(value) {
@@ -6559,7 +6462,7 @@ var DEFAULT_OPTIONS = {
     },
     // Form Autofill
     onChange: function onChange() {
-      if (!this.$refs || !this.$refs.input || !this.manualInput) {
+      if (!this.manualInput || !this.$refs || !this.$refs.input) {
         return;
       }
 
@@ -6606,93 +6509,80 @@ var DEFAULT_OPTIONS = {
         return;
       }
 
-      var firstTokenType = this.tokenChunksPos[0].type;
+      var firstSlotType = this.tokenChunksPos[0].type;
 
-      if (firstTokenType) {
-        this.selectFirstValidValueInCol(firstTokenType);
-      }
-    },
-    selectFirstValidValueInCol: function selectFirstValidValueInCol(tokenType) {
-      if (tokenType === 'hour') {
-        this.selectFirstValidHour();
+      if (firstSlotType === 'hour') {
+        this.getClosestHourItem();
       } else {
-        this.getClosestValidItemInCol(tokenType, this[tokenType]);
+        this.getClosestValidItemInCol(firstSlotType, this[firstSlotType]);
       }
+
+      this.selectFirstSlot();
     },
-    selectFirstValidHour: function selectFirstValidHour() {
-      var _this15 = this;
+    getClosestHourItem: function getClosestHourItem(currentValue) {
+      var _this18 = this;
+
+      var direction = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'U';
 
       if (!this.validHoursList || !this.validHoursList.length) {
+        if (this.debugMode) {
+          this.debugLog("No valid hour values found, please check your \"hour-range\" config\nhour-range: ".concat(JSON.stringify(this.hourRange)));
+        }
+
         return;
       }
 
-      var hourChunk = this.tokenChunksPos.find(function (chk) {
-        return chk.token === _this15.hourType;
+      if (!currentValue) {
+        this.setManualHour(this.validHoursList[0]);
+        return;
+      }
+
+      var currentIndex = this.validHoursList.findIndex(function (item) {
+        if (!_this18.baseOn12Hours) {
+          return item === currentValue;
+        } else {
+          var valueKey = "".concat(currentValue).concat(_this18.lowerCasedApm(_this18.apm) === 'pm' ? 'p' : 'a');
+          return item === valueKey;
+        }
       });
+      var nextIndex;
 
-      if (!hourChunk) {
-        return;
+      if (currentIndex === -1) {
+        nextIndex = 0;
+      } else if (direction === 'D') {
+        nextIndex = currentIndex === 0 ? this.validHoursList.length - 1 : currentIndex - 1;
+      } else {
+        nextIndex = (currentIndex + 1) % this.validHoursList.length;
       }
 
-      var hourToken = hourChunk.token;
-      this.setManualHour(this.validHoursList[0]);
-      var newChunkPos = this.getChunkPosByToken(hourToken);
-      this.debounceSetInputSelection(newChunkPos);
+      var nextItem = this.validHoursList[nextIndex];
+      this.setManualHour(nextItem);
     },
     getClosestValidItemInCol: function getClosestValidItemInCol(column, currentValue) {
-      var _this16 = this;
-
       var direction = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'U';
 
       if (column === 'hour') {
-        if (!this.validHoursList || !this.validHoursList.length) {
-          if (this.debugMode) {
-            this.debugLog("No valid hour values found, please check your \"hour-range\" config\nhour-range: ".concat(JSON.stringify(this.hourRange)));
-          }
-
-          return;
-        }
-
-        var currentIndex = this.validHoursList.findIndex(function (item) {
-          if (!_this16.baseOn12Hours) {
-            return item === currentValue;
-          } else {
-            var valueKey = "".concat(currentValue).concat(_this16.lowerCasedApm(_this16.apm) === 'pm' ? 'p' : 'a');
-            return item === valueKey;
-          }
-        });
-        var nextIndex;
-
-        if (currentIndex === -1) {
-          nextIndex = 0;
-        } else if (direction === 'D') {
-          nextIndex = currentIndex === 0 ? this.validHoursList.length - 1 : currentIndex - 1;
-        } else {
-          nextIndex = (currentIndex + 1) % this.validHoursList.length;
-        }
-
-        var nextItem = this.validHoursList[nextIndex];
-        this.setManualHour(nextItem);
+        this.getClosestHourItem(currentValue, direction);
       } else {
-        var _nextItem = direction === 'D' ? this.prevItem("".concat(column, "s"), this[column], true) : this.nextItem("".concat(column, "s"), this[column], true);
+        var nextItem = direction === 'D' ? this.prevItem(column, this[column], true) : this.nextItem(column, this[column], true);
 
-        if (_nextItem) {
-          this.select(column, _nextItem.getAttribute('data-key'));
+        if (nextItem) {
+          this.select(column, nextItem.getAttribute('data-key'));
         }
       }
     },
     setSanitizedValueToSection: function setSanitizedValueToSection(section, inputValue) {
-      if (!section || !this["".concat(section, "Type")]) {
+      if (!section || !this.getTokenByType(section)) {
         return;
       } // NOTE: Disabled values are allowed here, followed by an 'error' event, though
 
 
-      var sanitizedValue = this.sanitizedValue(this["".concat(section, "Type")], inputValue);
+      var sanitizedValue = this.sanitizedValue(this.getTokenByType(section), inputValue);
       this[section] = sanitizedValue;
     },
     setManualHour: function setManualHour(nextItem) {
       if (this.is12hRange(nextItem)) {
-        var hourT = nextItem.match(/^(\d{1,2})(a|p|A|P)$/);
+        var hourT = this.match12hRange(nextItem);
         var apmValue = hourT[2] === 'a' ? 'AM' : 'PM';
         this.setSanitizedValueToSection('apm', this.apmType === 'a' ? apmValue.toLowerCase() : apmValue);
         this.setSanitizedValueToSection('hour', hourT[1]);
@@ -6701,21 +6591,21 @@ var DEFAULT_OPTIONS = {
       }
     },
     debounceSetInputSelection: function debounceSetInputSelection(_ref) {
-      var _this17 = this;
+      var _this19 = this;
 
       var _ref$start = _ref.start,
           start = _ref$start === void 0 ? 0 : _ref$start,
           _ref$end = _ref.end,
           end = _ref$end === void 0 ? 0 : _ref$end;
       this.$nextTick(function () {
-        _this17.setInputSelectionRange(start, end);
+        _this19.setInputSelectionRange(start, end);
       });
       window.clearTimeout(this.selectionTimer);
       this.selectionTimer = window.setTimeout(function () {
-        window.clearTimeout(_this17.selectionTimer); // Double-check selection for 12hr format
+        window.clearTimeout(_this19.selectionTimer); // Double-check selection for 12hr format
 
-        if (_this17.$refs.input && (_this17.$refs.input.selectionStart !== start || _this17.$refs.input.selectionEnd !== end)) {
-          _this17.setInputSelectionRange(start, end);
+        if (_this19.$refs.input && (_this19.$refs.input.selectionStart !== start || _this19.$refs.input.selectionEnd !== end)) {
+          _this19.setInputSelectionRange(start, end);
         }
       }, 30);
     },
@@ -6727,21 +6617,9 @@ var DEFAULT_OPTIONS = {
     getCurrentTokenChunk: function getCurrentTokenChunk() {
       return this.getNearestChunkByPos(this.$refs.input && this.$refs.input.selectionStart || 0);
     },
-    getChunkPosByToken: function getChunkPosByToken(token) {
-      if (!this.tokenChunksPos || !token) {
-        return {
-          start: 0,
-          end: 0
-        };
-      }
-
-      var targetChunk = this.tokenChunksPos.find(function (chk) {
-        return chk.token === token;
-      });
-      return targetChunk ? targetChunk : {
-        start: 0,
-        end: 0
-      };
+    selectFirstSlot: function selectFirstSlot() {
+      var firstChunkPos = this.getNearestChunkByPos(0);
+      this.debounceSetInputSelection(firstChunkPos);
     },
     toLateralToken: function toLateralToken(toLeft) {
       var currentChunk = this.getCurrentTokenChunk();
@@ -6752,7 +6630,7 @@ var DEFAULT_OPTIONS = {
       }
 
       var currentChunkIndex = this.tokenChunksPos.findIndex(function (chk) {
-        return chk.start === currentChunk.start;
+        return chk.token === currentChunk.token;
       });
 
       if (!toLeft && currentChunkIndex >= this.tokenChunksPos.length - 1 || toLeft && currentChunkIndex === 0) {
@@ -6799,6 +6677,9 @@ var DEFAULT_OPTIONS = {
     //
     is12hRange: function is12hRange(value) {
       return /^\d{1,2}(a|p|A|P)$/.test(value);
+    },
+    match12hRange: function match12hRange(value) {
+      return value.match(/^(\d{1,2})(a|p|A|P)$/);
     },
     isNumber: function isNumber(value) {
       return !isNaN(parseFloat(value)) && isFinite(value);
@@ -6875,18 +6756,16 @@ var DEFAULT_OPTIONS = {
       return '';
     },
     getTokenType: function getTokenType(token) {
-      var _this18 = this;
-
-      var typesInUse = CONFIG.BASIC_TYPES.filter(function (tokenType) {
-        return _this18["".concat(tokenType, "Type")];
-      });
-      var activeTokens = typesInUse.map(function (tokenType) {
-        return _this18["".concat(tokenType, "Type")];
-      });
-      return typesInUse[activeTokens.indexOf(token)] || '';
+      return this.inUse.types[this.inUse.tokens.indexOf(token)] || '';
+    },
+    getTokenByType: function getTokenByType(type) {
+      return this["".concat(type, "Type")] || '';
+    },
+    isMinuteOrSecond: function isMinuteOrSecond(type) {
+      return ['minute', 'second'].includes(type);
     },
     debugLog: function debugLog(logText) {
-      var _this19 = this;
+      var _this20 = this;
 
       if (!logText || !logText.length) {
         return;
@@ -6911,7 +6790,7 @@ var DEFAULT_OPTIONS = {
           inputClasses = [].concat([], this.inputClass);
         } else if (_typeof(this.inputClass) === 'object') {
           Object.keys(this.inputClass).forEach(function (clsName) {
-            if (_this19.inputClass[clsName]) {
+            if (_this20.inputClass[clsName]) {
               inputClasses.push(clsName);
             }
           });
