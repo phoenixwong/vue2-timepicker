@@ -222,7 +222,7 @@ export default {
 
     inUse () {
       const typesInUse = CONFIG.BASIC_TYPES.filter(type => this.getTokenByType(type))
-      // Sort types and token by their sequence in the "format" string
+      // Sort types and tokens by their sequence in the "format" string
       typesInUse.sort((l, r) => {
         return this.formatString.indexOf(this.getTokenByType(l) || null) - this.formatString.indexOf(this.getTokenByType(r) || null)
       })
@@ -446,7 +446,7 @@ export default {
       if (!this.manualInput && !this.useStringValue) { return false }
 
       const formatString = String(this.formatString)
-      const tokensRegxStr = `[(${this.tokenRegexBase})]+`
+      const tokensRegxStr = `(${this.tokenRegexBase})+?`
       const tokensMatchAll = this.getMatchAllByRegex(formatString, tokensRegxStr)
 
       const tokenChunks = []
@@ -720,7 +720,7 @@ export default {
       }
 
       const formatString = String(this.formatString)
-      const tokensRegxStr = `[(${this.tokenRegexBase})]+`
+      const tokensRegxStr = `(${this.tokenRegexBase})+?`
       const othersRegxStr = `[^(${this.tokenRegexBase})]+`
 
       const tokensMatchAll = this.getMatchAllByRegex(formatString, tokensRegxStr)
@@ -1096,6 +1096,14 @@ export default {
         if (this.lazy) {
           this.bakDisplayTime = String(this.displayTime || '')
         }
+        if (this.manualInput && !this.inputIsEmpty) {
+          this.$nextTick(() => {
+            if (this.$refs.input && this.$refs.input.selectionStart === 0 && this.$refs.input.selectionEnd === this.displayTime.length) {
+              // Select the first slot instead of the whole value string when tabbed in
+              this.selectFirstSlot()
+            }
+          })
+        }
       } else {
         if (!this.opts.hideDropdown) {
           this.$emit('close')
@@ -1461,7 +1469,7 @@ export default {
       if (!this.inputIsEmpty && this.tokenChunksPos && this.tokenChunksPos.length) {
         const currentChunk = this.getCurrentTokenChunk()
         if (!currentChunk) { return }
-        const firstChunk = this.tokenChunksPos[0];
+        const firstChunk = this.tokenChunksPos[0]
         const lastChunk = this.tokenChunksPos[this.tokenChunksPos.length - 1]
         if ((evt.shiftKey && currentChunk.token !== firstChunk.token) || (!evt.shiftKey && currentChunk.token !== lastChunk.token)) {
           evt.preventDefault()
@@ -1567,15 +1575,13 @@ export default {
 
     selectFirstValidValue () {
       if (!this.tokenChunksPos || !this.tokenChunksPos.length) { return }
-      const firstToken = this.tokenChunksPos[0].token
       const firstSlotType = this.tokenChunksPos[0].type
       if (firstSlotType === 'hour') {
         this.getClosestHourItem()
       } else {
         this.getClosestValidItemInCol(firstSlotType, this[firstSlotType])
       }
-      const newChunkPos = this.getChunkPosByToken(firstToken)
-      this.debounceSetInputSelection(newChunkPos)
+      this.selectFirstSlot()
     },
 
     getClosestHourItem (currentValue, direction = 'U') {
@@ -1662,10 +1668,9 @@ export default {
       return this.getNearestChunkByPos((this.$refs.input && this.$refs.input.selectionStart) || 0)
     },
 
-    getChunkPosByToken (token) {
-      if (!this.tokenChunksPos || !token) { return { start: 0, end: 0 } }
-      const targetChunk = this.tokenChunksPos.find(chk => chk.token === token)
-      return targetChunk || { start: 0, end: 0 }
+    selectFirstSlot () {
+      const firstChunkPos = this.getNearestChunkByPos(0)
+      this.debounceSetInputSelection(firstChunkPos)
     },
 
     toLateralToken (toLeft) {
