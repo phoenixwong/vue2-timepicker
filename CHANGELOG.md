@@ -2,6 +2,17 @@
 
 > The Change Log of Vue2 Timepicker `vue2-timepicker`
 
+## v 1.1.2
+
+### New
+
+More powerful `format` string parameter. E.g., you can hide the "hour" column by setting `format="mm:ss"`, or make AM/PM the first column by `format="A hh:ss"`, no extra CSS hacking needed. Please check the Demo page for more examples.
+
+### Improvements
+
+- Support `shift+tab` to navigate to the previous token slot in the Manual Input mode (Thanks to @jost-s).
+- Other minor keyboard navigation enhancements for Manual Input mode
+
 ## v 1.1.1
 
 ### Improvements
