@@ -52,6 +52,9 @@ export default {
       autoScrollData1: '08:40',
       autoScrollData2: '5:30:20 pm',
 
+      apmFirst1: 'AM 03:15',
+      apmFirst2: 'pm9時6分',
+
       sideNav: [
         { title: 'Default', anchor: 'default' },
         { title: '12 Hours', anchor: 'format12hours' },
@@ -74,7 +77,8 @@ export default {
         { title: '@focus and @blur event', anchor: 'focusAndBlur' },
         { title: 'Customized Picker Labels', anchor: 'customPickerLabels' },
         { title: 'Adjust Input Width', anchor: 'inputWidth' },
-        { title: 'Auto-Scroll', anchor: 'autoScroll' }
+        { title: 'Auto-Scroll', anchor: 'autoScroll' },
+        { title: 'More Powerful format String', anchor: 'morePowerfulFormat' }
       ]
     }
   },
@@ -704,14 +708,14 @@ section#mostlyUsedSamples
           | &lt;vue-timepicker hour-label="heure" minute-label="minute"&gt;&lt;/vue-timepicker&gt;
           |
           | &lt;!-- 12-hour format with customized am/pm text --&gt;
-          | &lt;vue-timepicker hour-label="時" minute-label="分" second-label="秒" apm-label="午" am-text="上午" pm-text="下午" format="h:mm:ss a"&gt;&lt;/vue-timepicker&gt;
+          | &lt;vue-timepicker hour-label="时" minute-label="分" second-label="秒" apm-label="午" am-text="上午" pm-text="下午" format="h:mm:ss a"&gt;&lt;/vue-timepicker&gt;
     template(v-slot:preview)
       b 24-hour format with customized hour and minute label
       p
         vue-timepicker(hour-label="heure" minute-label="minute")
       b 12-hour format with customized am/pm text
       p
-        vue-timepicker(hour-label="時" minute-label="分" second-label="秒" apm-label="午" am-text="上午" pm-text="下午" format="h:mm:ss a")
+        vue-timepicker(hour-label="时" minute-label="分" second-label="秒" apm-label="午" am-text="上午" pm-text="下午" format="h:mm:ss a")
 
   //- Adjust Input Width
   sample-block#inputWidth
@@ -764,6 +768,80 @@ section#mostlyUsedSamples
       b 12-hour format
       p
         vue-timepicker(auto-scroll format="h:mm:ss a" v-model="autoScrollData2")
+
+  //- More Powerful format String
+  sample-block#morePowerfulFormat
+    template(v-slot:title) More Powerful <code>format</code> String
+    template(slot="description")
+      p The <code>format</code> parameter becomes even more powerful started from <code>v1.1.2</code>.
+    template(v-slot:codes)
+      highlight-code(lang="html" data-title="HTML")
+        pre
+          | &lt;!-- Use without "hour" --&gt;
+          | &lt;vue-timepicker format="mm:ss"&gt;&lt;/vue-timepicker&gt;
+          | &lt;vue-timepicker format="m:s"&gt;&lt;/vue-timepicker&gt;
+          | &nbsp;
+          | &lt;!-- Make AM/PM the first column in the dropdown --&gt;
+          | &lt;vue-timepicker format="A hh:mm" v-model="apmFirst1"&gt;&lt;/vue-timepicker&gt;
+          | &lt;vue-timepicker format="ah時m分" v-model="apmFirst2" am-text="午前" pm-text="午後"&gt;&lt;/vue-timepicker&gt;
+          | &nbsp;
+          | &lt;!-- Hour + APM only --&gt;
+          | &lt;vue-timepicker format="ha"&gt;&lt;/vue-timepicker&gt;
+          | &lt;vue-timepicker format="hh A"&gt;&lt;/vue-timepicker&gt;
+          | &nbsp;
+          | &lt;!-- One slot only --&gt;
+          | &lt;!-- Not recommended, though :) --&gt;
+          | &lt;vue-timepicker format="h" input-width="60px"&gt;&lt;/vue-timepicker&gt;
+          | &lt;vue-timepicker format="mm" input-width="60px"&gt;&lt;/vue-timepicker&gt;
+          | &lt;vue-timepicker format="ss" input-width="60px"&gt;&lt;/vue-timepicker&gt;
+          | &lt;vue-timepicker format="a" input-width="60px"&gt;&lt;/vue-timepicker&gt;
+      highlight-code(lang="javascript" data-title="JS")
+        pre
+          | // Initial values
+          | data () {
+          |   return {
+          |     apmFirst1: 'AM 03:15',
+          |     // -> Equivalent to:
+          |     // apmFirst1: {
+          |     //   A: 'AM',
+          |     //   hh: '03',
+          |     //   mm: '15'
+          |     // }
+          |
+          |     apmFirst2: 'pm9時6分'
+          |     // -> Equivalent to:
+          |     // apmFirst2: {
+          |     //   a: 'pm',
+          |     //   h: '9',
+          |     //   m: '6'
+          |     // }
+          |   }
+          | }
+    template(v-slot:preview)
+      b Use without "hour"
+      p
+        vue-timepicker(format="mm:ss")
+        | &nbsp;
+        vue-timepicker(format="m:s")
+      b Make AM/PM the first column in the dropdown
+      p
+        vue-timepicker(format="A hh:mm" v-model="apmFirst1")
+        | &nbsp;
+        vue-timepicker(format="ah時m分" v-model="apmFirst2" am-text="午前" pm-text="午後")
+      b Hour + APM only
+      p
+        vue-timepicker(format="ha")
+        | &nbsp;
+        vue-timepicker(format="hh A")
+      b One slot only
+      p
+        vue-timepicker(format="h" input-width="60px")
+        | &nbsp;
+        vue-timepicker(format="mm" input-width="60px")
+        | &nbsp;
+        vue-timepicker(format="ss" input-width="60px")
+        | &nbsp;
+        vue-timepicker(format="a" input-width="60px")
 
   //- Footer Links
   .footer-links
