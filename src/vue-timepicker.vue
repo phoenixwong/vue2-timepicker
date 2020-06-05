@@ -1127,10 +1127,10 @@ export default {
       }
 
       if (this.showDropdown) {
-        if (this.manualInput) { return }
         if (this.restrictedHourRange && this.baseOn12Hours) {
           this.forceApmSelection()
         }
+
         this.checkForAutoScroll()
       } else if (this.restrictedHourRange && this.baseOn12Hours) {
         this.emptyApmSelection()
