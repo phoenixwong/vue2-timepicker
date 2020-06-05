@@ -1211,7 +1211,7 @@ export default {
       if (!this.isFocusing) {
         this.isFocusing = true
       }
-      if (!this.showDropdown && this.showDropdownBtn) {
+      if (!this.showDropdown && !this.showDropdownBtn) {
         this.toggleDropdown()
       }
     },
