@@ -1852,7 +1852,7 @@ export default {
 </script>
 
 <template>
-<span class="vue__time-picker time-picker" :style="inputWidthStyle">
+<span class="vue__time-picker" :style="inputWidthStyle">
   <input type="text" class="display-time" ref="input"
          :class="[inputClass, {'is-empty': inputIsEmpty, 'invalid': hasInvalidInput, 'all-selected': allValueSelected, 'disabled': disabled}]"
          :style="inputWidthStyle"
