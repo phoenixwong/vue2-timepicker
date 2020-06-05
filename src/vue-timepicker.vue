@@ -1884,6 +1884,9 @@ export default {
          @paste="pasteHandler"
          @keydown.esc.exact="escBlur" />
   <div class="vue__time-picker controls" v-if="showClearBtn || showDropdownBtn">
+    <a class="clear-btn" v-if="!showDropdown && showClearBtn" @click="clearTime" tabindex="-1">&times;</a>
+    <a class="show-drop-down-btn" v-if="showDropdownBtn && !showDropdown" @click="toggleDropdown" tabindex="-1">&#9737;</a>
+  </div>
   <div class="time-picker-overlay" v-if="showDropdown" @click="toggleDropdown" tabindex="-1"></div>
   <div class="dropdown" v-show="showDropdown && !opts.hideDropdown" :style="inputWidthStyle" tabindex="-1" @mouseup="keepFocusing" @click.stop="">
     <div class="select-list" :style="inputWidthStyle" tabindex="-1">
@@ -2105,7 +2108,6 @@ export default {
   font-size: 1.1em;
   line-height: 1em;
   vertical-align: middle;
-  color: #d2d2d2;
   background: rgba(255,255,255,0);
   text-align: center;
   font-style: normal;
@@ -2115,15 +2117,6 @@ export default {
 
   -webkit-transition: color .2s;
   transition: color .2s;
-}
-
-.vue__time-picker .clear-btn:hover {
-  color: #797979;
-  cursor: pointer;
-}
-
-.vue__time-picker .clear-btn:active {
-  outline: 0;
 }
 
 .vue__time-picker .time-picker-overlay {
