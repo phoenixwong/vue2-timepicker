@@ -20,6 +20,7 @@ const DEFAULT_OPTIONS = {
   hideDisabledItems: false,
   advancedKeyboard: false,
   hideDropdown: false,
+  showDropdownBtn: false,
   blurDelay: 300,
   manualInputTimeout: 1000
 }
@@ -68,6 +69,7 @@ export default {
     manualInput: { type: Boolean, default: false },
     manualInputTimeout: { type: [ Number, String ] },
     hideDropdown: { type: Boolean, default: false },
+    showDropdownBtn: { type: Boolean, default: false },
 
     debugMode: { type: Boolean, default: false }
   },
@@ -190,6 +192,14 @@ export default {
           options.hideDropdown = true
         } else if (this.debugMode) {
           this.debugLog('"hide-dropdown" only works with "manual-input" mode')
+        }
+      }
+
+      if (this.showDropdownBtn) {
+        if (this.manualInput) {
+          options.showDropdownBtn = true
+        } else if (this.debugMode) {
+          this.debugLog('"open-dropdown-btn" only works with "manual-input" mode');
         }
       }
 
@@ -1201,7 +1211,7 @@ export default {
       if (!this.isFocusing) {
         this.isFocusing = true
       }
-      if (!this.showDropdown) {
+      if (!this.showDropdown && this.showDropdownBtn) {
         this.toggleDropdown()
       }
     },
@@ -1873,7 +1883,7 @@ export default {
          @compositionend="onCompostionEnd"
          @paste="pasteHandler"
          @keydown.esc.exact="escBlur" />
-  <span class="clear-btn" v-if="!showDropdown && showClearBtn" @click="clearTime" tabindex="-1">&times;</span>
+  <div class="vue__time-picker controls" v-if="showClearBtn || showDropdownBtn">
   <div class="time-picker-overlay" v-if="showDropdown" @click="toggleDropdown" tabindex="-1"></div>
   <div class="dropdown" v-show="showDropdown && !opts.hideDropdown" :style="inputWidthStyle" tabindex="-1" @mouseup="keepFocusing" @click.stop="">
     <div class="select-list" :style="inputWidthStyle" tabindex="-1">
@@ -2064,15 +2074,32 @@ export default {
   color: #d2d2d2;
 }
 
-.vue__time-picker .clear-btn {
+.vue__time-picker .controls {
   position: absolute;
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-  align-items: center;
   top: 0;
   right: 0;
-  bottom: 0;
+  height: 100%;
+  width: 30%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0.3em 0.5em;
+}
+
+.vue__time-picker .controls > * {
+  cursor: pointer;
+  color: #d2d2d2;
+}
+
+.vue__time-picker .controls > *:hover {
+  color: #797979;
+}
+
+.vue__time-picker .controls > *:focus {
+  outline: 0;
+}
+
+.vue__time-picker .clear-btn {
   width: 1.3em;
   z-index: 3;
   font-size: 1.1em;
