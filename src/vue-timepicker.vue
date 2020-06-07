@@ -2082,6 +2082,21 @@ export default {
 .vue__time-picker .controls > * {
   cursor: pointer;
   color: #d2d2d2;
+  line-height: 1em;
+  font-size: 1.1em;
+  font-style: normal;
+
+  /* Vertical align fixes for webkit browsers only */
+  -webkit-margin-before: -0.15em;
+
+  -webkit-transition: color .2s;
+  transition: color .2s;
+  z-index: 3;
+  background: rgba(255,255,255,0);
+}
+
+.vue__time-picker .controls > *:not(:last-of-type) {
+  margin-right: .3em;
 }
 
 .vue__time-picker .controls > *:hover {
@@ -2090,23 +2105,6 @@ export default {
 
 .vue__time-picker .controls > *:focus {
   outline: 0;
-}
-
-.vue__time-picker .clear-btn {
-  width: 1.3em;
-  z-index: 3;
-  font-size: 1.1em;
-  line-height: 1em;
-  vertical-align: middle;
-  background: rgba(255,255,255,0);
-  text-align: center;
-  font-style: normal;
-
-  /* Vertical align fixes for webkit browsers only */
-  -webkit-margin-before: -0.15em;
-
-  -webkit-transition: color .2s;
-  transition: color .2s;
 }
 
 .vue__time-picker .time-picker-overlay {
