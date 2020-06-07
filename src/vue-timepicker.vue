@@ -1092,7 +1092,7 @@ export default {
         }
         this.isFocusing = true
         this.$emit('focus')
-        // Record to check if value did changed in the later phase
+        // Record to check if value did change in the later phase
         if (this.lazy) {
           this.bakDisplayTime = String(this.displayTime || '')
         }
@@ -1117,10 +1117,10 @@ export default {
       }
 
       if (this.showDropdown) {
-        if (this.manualInput) { return }
         if (this.restrictedHourRange && this.baseOn12Hours) {
           this.forceApmSelection()
         }
+
         this.checkForAutoScroll()
       } else if (this.restrictedHourRange && this.baseOn12Hours) {
         this.emptyApmSelection()
@@ -1201,7 +1201,7 @@ export default {
       if (!this.isFocusing) {
         this.isFocusing = true
       }
-      if (!this.showDropdown) {
+      if (!this.showDropdown && !this.hideDropdown) {
         this.toggleDropdown()
       }
     },
@@ -1873,9 +1873,12 @@ export default {
          @compositionend="onCompostionEnd"
          @paste="pasteHandler"
          @keydown.esc.exact="escBlur" />
-  <span class="clear-btn" v-if="!showDropdown && showClearBtn" @click="clearTime" tabindex="-1">&times;</span>
+  <div class="vue__time-picker controls" v-if="showClearBtn || opts.hideDropdown">
+    <a class="clear-btn" v-if="!showDropdown && showClearBtn" @click="clearTime" tabindex="-1">&times;</a>
+    <a class="show-drop-down-btn" v-if="opts.hideDropdown && !showDropdown" @click="toggleDropdown" tabindex="-1">&dtrif;</a>
+  </div>
   <div class="time-picker-overlay" v-if="showDropdown" @click="toggleDropdown" tabindex="-1"></div>
-  <div class="dropdown" v-show="showDropdown && !opts.hideDropdown" :style="inputWidthStyle" tabindex="-1" @mouseup="keepFocusing" @click.stop="">
+  <div class="dropdown" v-show="showDropdown" :style="inputWidthStyle" tabindex="-1" @mouseup="keepFocusing" @click.stop="">
     <div class="select-list" :style="inputWidthStyle" tabindex="-1">
       <!-- Common Keyboard Support: less event listeners -->
       <template v-if="!opts.advancedKeyboard">
@@ -2064,23 +2067,23 @@ export default {
   color: #d2d2d2;
 }
 
-.vue__time-picker .clear-btn {
+.vue__time-picker .controls {
   position: absolute;
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-  align-items: center;
   top: 0;
   right: 0;
-  bottom: 0;
-  width: 1.3em;
-  z-index: 3;
-  font-size: 1.1em;
-  line-height: 1em;
-  vertical-align: middle;
+  height: 100%;
+  width: 30%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0.3em 0.5em;
+}
+
+.vue__time-picker .controls > * {
+  cursor: pointer;
   color: #d2d2d2;
-  background: rgba(255,255,255,0);
-  text-align: center;
+  line-height: 1em;
+  font-size: 1.1em;
   font-style: normal;
 
   /* Vertical align fixes for webkit browsers only */
@@ -2088,14 +2091,19 @@ export default {
 
   -webkit-transition: color .2s;
   transition: color .2s;
+  z-index: 3;
+  background: rgba(255,255,255,0);
 }
 
-.vue__time-picker .clear-btn:hover {
+.vue__time-picker .controls > *:not(:last-of-type) {
+  margin-right: .3em;
+}
+
+.vue__time-picker .controls > *:hover {
   color: #797979;
-  cursor: pointer;
 }
 
-.vue__time-picker .clear-btn:active {
+.vue__time-picker .controls > *:focus {
   outline: 0;
 }
 
