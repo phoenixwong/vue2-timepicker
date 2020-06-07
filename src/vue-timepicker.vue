@@ -2072,7 +2072,7 @@ export default {
   top: 0;
   right: 0;
   height: 100%;
-  width: 30%;
+  width: auto;
   display: flex;
   justify-content: flex-end;
   align-items: center;
