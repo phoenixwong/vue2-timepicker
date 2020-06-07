@@ -20,7 +20,6 @@ const DEFAULT_OPTIONS = {
   hideDisabledItems: false,
   advancedKeyboard: false,
   hideDropdown: false,
-  showDropdownBtn: false,
   blurDelay: 300,
   manualInputTimeout: 1000
 }
@@ -69,7 +68,6 @@ export default {
     manualInput: { type: Boolean, default: false },
     manualInputTimeout: { type: [ Number, String ] },
     hideDropdown: { type: Boolean, default: false },
-    showDropdownBtn: { type: Boolean, default: false },
 
     debugMode: { type: Boolean, default: false }
   },
@@ -192,14 +190,6 @@ export default {
           options.hideDropdown = true
         } else if (this.debugMode) {
           this.debugLog('"hide-dropdown" only works with "manual-input" mode')
-        }
-      }
-
-      if (this.showDropdownBtn) {
-        if (this.manualInput) {
-          options.showDropdownBtn = true
-        } else if (this.debugMode) {
-          this.debugLog('"open-dropdown-btn" only works with "manual-input" mode');
         }
       }
 
@@ -1102,7 +1092,7 @@ export default {
         }
         this.isFocusing = true
         this.$emit('focus')
-        // Record to check if value did changed in the later phase
+        // Record to check if value did change in the later phase
         if (this.lazy) {
           this.bakDisplayTime = String(this.displayTime || '')
         }
@@ -1211,7 +1201,7 @@ export default {
       if (!this.isFocusing) {
         this.isFocusing = true
       }
-      if (!this.showDropdown && !this.showDropdownBtn) {
+      if (!this.showDropdown && !this.hideDropdown) {
         this.toggleDropdown()
       }
     },
@@ -1883,12 +1873,12 @@ export default {
          @compositionend="onCompostionEnd"
          @paste="pasteHandler"
          @keydown.esc.exact="escBlur" />
-  <div class="vue__time-picker controls" v-if="showClearBtn || showDropdownBtn">
+  <div class="vue__time-picker controls" v-if="showClearBtn || opts.hideDropdown">
     <a class="clear-btn" v-if="!showDropdown && showClearBtn" @click="clearTime" tabindex="-1">&times;</a>
-    <a class="show-drop-down-btn" v-if="showDropdownBtn && !showDropdown" @click="toggleDropdown" tabindex="-1">&#9737;</a>
+    <a class="show-drop-down-btn" v-if="opts.hideDropdown && !showDropdown" @click="toggleDropdown" tabindex="-1">&#9737;</a>
   </div>
   <div class="time-picker-overlay" v-if="showDropdown" @click="toggleDropdown" tabindex="-1"></div>
-  <div class="dropdown" v-show="showDropdown && !opts.hideDropdown" :style="inputWidthStyle" tabindex="-1" @mouseup="keepFocusing" @click.stop="">
+  <div class="dropdown" v-show="showDropdown" :style="inputWidthStyle" tabindex="-1" @mouseup="keepFocusing" @click.stop="">
     <div class="select-list" :style="inputWidthStyle" tabindex="-1">
       <!-- Common Keyboard Support: less event listeners -->
       <template v-if="!opts.advancedKeyboard">

@@ -73,7 +73,6 @@ export default {
         { title: 'Lazy Event Mode', anchor: 'lazyEvents' },
         { title: 'Keyboard Support', anchor: 'kbSupport' },
         { title: 'Manual Input', anchor: 'manualInput'},
-        { title: 'Manual Input with dropdown button', anchor: 'showDropdownBtn'},
         { title: '@open and @close event', anchor: 'openAndClose' },
         { title: '@focus and @blur event', anchor: 'focusAndBlur' },
         { title: 'Customized Picker Labels', anchor: 'customPickerLabels' },
@@ -640,19 +639,6 @@ section#mostlyUsedSamples
       b Manual input + hide dropdown
       p
         vue-timepicker(manual-input hide-dropdown)
-
-  //- Show dropdown button
-  sample-block#showDropdownBtn
-    template(v-slot:title) Manual Input with button to show dropdown
-    p(slot="description")
-      | Show dropdown when the button was clicked
-    template(v-slot:codes)
-      highlight-code(lang="html" data-title="HTML")
-        pre
-          | &lt;!-- Manual input + open dropdown on click --&gt;
-          | &lt;vue-timepicker manual-input show-dropdown-btn&gt;&lt;/vue-timepicker&gt;
-    template(v-slot:preview)
-      vue-timepicker(manual-input show-dropdown-btn closeOnComplete auto-scroll format="hh:mm A")
 
   //- Open And Close Event
   sample-block#openAndClose
