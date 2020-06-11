@@ -622,6 +622,9 @@ section#mostlyUsedSamples
           |
           | &lt;!-- Manual input + hide dropdown --&gt;
           | &lt;vue-timepicker manual-input hide-dropdown&gt;&lt;/vue-timepicker&gt;
+          |
+          | &lt;!-- Manual input + hide dropdown + auto-scroll --&gt;
+          | &lt;vue-timepicker manual-input hide-dropdown&gt;&lt;/vue-timepicker&gt;
       highlight-code(lang="javascript" data-title="JS")
         pre
           | data () {
@@ -639,6 +642,14 @@ section#mostlyUsedSamples
       b Manual input + hide dropdown
       p
         vue-timepicker(manual-input hide-dropdown)
+      b Manual input + hide dropdown + auto-scroll
+      p
+        vue-timepicker(manual-input hide-dropdown auto-scroll)
+      b Manual input + hide dropdown + auto-scroll + custom icon
+      p
+        vue-timepicker(manual-input hide-dropdown auto-scroll)
+          template(v-slot:show-dropdown-icon)
+            img(src="../assets/icons/clock.svg" style="vertical-align: middle;")
 
   //- Open And Close Event
   sample-block#openAndClose

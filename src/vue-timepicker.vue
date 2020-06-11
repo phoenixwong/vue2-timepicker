@@ -1875,7 +1875,7 @@ export default {
          @keydown.esc.exact="escBlur" />
   <div class="vue__time-picker controls" v-if="showClearBtn || opts.hideDropdown">
     <a class="clear-btn" v-if="!showDropdown && showClearBtn" @click="clearTime" tabindex="-1">&times;</a>
-    <a class="show-drop-down-btn" v-if="opts.hideDropdown && !showDropdown" @click="toggleDropdown" tabindex="-1">&dtrif;</a>
+    <a v-if="opts.hideDropdown && !showDropdown" @click="toggleDropdown" tabindex="-1"><slot name="show-dropdown-icon">&dtrif;</slot></a>
   </div>
   <div class="time-picker-overlay" v-if="showDropdown" @click="toggleDropdown" tabindex="-1"></div>
   <div class="dropdown" v-show="showDropdown" :style="inputWidthStyle" tabindex="-1" @mouseup="keepFocusing" @click.stop="">
