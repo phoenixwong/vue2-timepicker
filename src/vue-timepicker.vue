@@ -926,7 +926,7 @@ export default {
       }
 
       if (this.closeOnComplete && this.allValueSelected && this.showDropdown) {
-        this.toggleDropdown()
+        this.toggleActive()
       }
     },
 
@@ -1087,7 +1087,7 @@ export default {
       return apmValue
     },
 
-    toggleDropdown () {
+    toggleActive () {
       if (this.disabled) { return }
       this.isActive = !this.isActive
 
@@ -1217,7 +1217,7 @@ export default {
         this.isFocusing = true
       }
       if (!this.isActive) {
-        this.toggleDropdown()
+        this.toggleActive()
       }
     },
 
@@ -1243,7 +1243,7 @@ export default {
 
     onBlur () {
       if (!this.disabled && !this.isFocusing && this.isActive) {
-        this.toggleDropdown()
+        this.toggleActive()
       }
     },
 
@@ -1895,7 +1895,7 @@ export default {
     <span class="clear-btn" v-if="!isActive && showClearBtn" @click="clearTime" tabindex="-1">&times;</span>
     <span class="show-dropdown-btn" v-if="opts.hideDropdown && isActive && !showDropdown" @click="setDropdownState(true, true)" @mousedown="keepFocusing" tabindex="-1">&dtrif;</span>
   </div>
-  <div class="time-picker-overlay" v-if="showDropdown" @click="toggleDropdown" tabindex="-1"></div>
+  <div class="time-picker-overlay" v-if="showDropdown" @click="toggleActive" tabindex="-1"></div>
   <div class="dropdown" v-show="showDropdown" :style="inputWidthStyle" tabindex="-1" @mouseup="keepFocusing" @click.stop="">
     <div class="select-list" :style="inputWidthStyle" tabindex="-1">
       <!-- Common Keyboard Support: less event listeners -->
