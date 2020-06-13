@@ -194,14 +194,6 @@ export default {
         }
       }
 
-      if (this.advancedKeyboard) {
-        if (!(this.hideDropdown && this.manualInput)) {
-          options.advancedKeyboard = true
-        } else if (this.debugMode) {
-          this.debugLog('"advanced-keyboard" has no effect when dropdown is force hidden by "hide-dropdown"')
-        }
-      }
-
       if (this.blurDelay && +this.blurDelay > 0) {
         options.blurDelay = +this.blurDelay
       }
@@ -1177,23 +1169,26 @@ export default {
         this.$nextTick(() => {
           this.scrollToSelectedValues()
         })
-      } else if (this.opts.advancedKeyboard) {
+      } else if (this.advancedKeyboard) {
         // Auto-focus on selected value in the first column for advanced-keyboard
         this.$nextTick(() => {
           const firstColumn = this.inUse.types[0]
-          const firstColumnClass = `${firstColumn}s`
-          this.scrollToSelected(firstColumnClass)
+          this.scrollToSelected(firstColumn, true)
         })
       }
     },
 
-    scrollToSelected (columnClass) {
+    scrollToSelected (column, allowFallback = false) {
       if (!this.timeValue || this.inputIsEmpty) { return }
-      const targetList = this.$el.querySelectorAll(`ul.${columnClass}`)[0]
-      const targetValue = this.$el.querySelectorAll(`ul.${columnClass} li.active:not(.hint)`)[0]
+      const targetList = this.$el.querySelectorAll(`ul.${column}s`)[0]
+      let targetValue = this.activeItemInCol(column)[0]
+      if (!targetValue && allowFallback) {
+        // No value selected in the target column, fallback to the first found valid item
+        targetValue = this.validItemsInCol(column)[0]
+      }
       if (targetList && targetValue) {
         targetList.scrollTop = targetValue.offsetTop || 0
-        if (this.opts.advancedKeyboard) {
+        if (this.advancedKeyboard) {
           targetValue.focus()
         }
       }
@@ -1202,8 +1197,7 @@ export default {
     scrollToSelectedValues () {
       if (!this.timeValue || this.inputIsEmpty) { return }
       this.inUse.types.forEach(section => {
-        const columnClass = `${section}s`
-        this.scrollToSelected(columnClass)
+        this.scrollToSelected(section)
       })
     },
 
@@ -1899,7 +1893,7 @@ export default {
   <div class="dropdown" v-show="showDropdown" :style="inputWidthStyle" tabindex="-1" @mouseup="keepFocusing" @click.stop="">
     <div class="select-list" :style="inputWidthStyle" tabindex="-1">
       <!-- Common Keyboard Support: less event listeners -->
-      <template v-if="!opts.advancedKeyboard">
+      <template v-if="!advancedKeyboard">
         <template v-for="column in columnsSequence">
           <ul v-if="column === 'hour'" :key="column" class="hours" @scroll="keepFocusing">
             <li class="hint" v-text="hourLabelText"></li>
@@ -1956,7 +1950,7 @@ export default {
         Advanced Keyboard Support
         Addeds hundreds of additional event lisenters
       -->
-      <template v-if="opts.advancedKeyboard">
+      <template v-if="advancedKeyboard">
         <template v-for="column in columnsSequence">
           <ul v-if="column === 'hour'" :key="column" class="hours" tabindex="-1" @scroll="keepFocusing">
             <li class="hint" v-text="hourLabelText" tabindex="-1"></li>
