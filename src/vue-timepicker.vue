@@ -2088,13 +2088,14 @@ export default {
 .vue__time-picker .controls {
   position: absolute;
   top: 0;
+  bottom: 0;
   right: 0;
-  height: 100%;
-  width: 30%;
+  z-index: 3;
+
   display: flex;
+  flex-flow: row nowrap;
   justify-content: flex-end;
-  align-items: center;
-  padding: 0.3em 0.5em;
+  align-items: stretch;
 
   /* Prevent browser focusing on the controls layer */
   pointer-events: none;
@@ -2102,6 +2103,14 @@ export default {
 
 .vue__time-picker .controls > * {
   cursor: pointer;
+
+  width: 1.3em;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
   color: #d2d2d2;
   line-height: 1em;
   font-size: 1.1em;
@@ -2115,19 +2124,14 @@ export default {
 
   -webkit-transition: color .2s;
   transition: color .2s;
-  z-index: 3;
-  background: rgba(255,255,255,0);
-}
-
-.vue__time-picker .controls > *:not(:last-of-type) {
-  margin-right: .3em;
 }
 
 .vue__time-picker .controls > *:hover {
   color: #797979;
 }
 
-.vue__time-picker .controls > *:focus {
+.vue__time-picker .controls > *:focus,
+.vue__time-picker .controls > *:active {
   outline: 0;
 }
 
