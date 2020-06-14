@@ -2,6 +2,14 @@
 
 > The Change Log of Vue2 Timepicker `vue2-timepicker`
 
+## v 1.1.3
+
+### Improvements
+
+- Enhanced `hide-dropdown` feature -- When the dropdown is hidden by default, users can choose to open the dropdown by clicking the triangle button "&dtrif;" (Thanks to @jost-s).
+- Refined `focus` and `blur` event.
+- Minor fixes for the Advanced Keyboard mode.
+
 ## v 1.1.2
 
 ### New
