@@ -519,6 +519,19 @@ For example, when a user focuses on the **hour** slot (`HH`) of a `"HH:mm"` form
 - **Case 1:** User first inputs `1`, and then inputs `2` _500ms_ later -> Timepicker takes `12` as the final value and set it to the `"HH"` slot.
 - **Case 2:** User inputs `1`, and then presses the key `2` _1200ms_ later -> Timepicker takes `2` as the final value and set it to `02` for the `"HH"` slot.
 
+### Hide Dropdown
+
+> **NOTE:** To use this feature, you MUST ENABLE the `manual-input` mode _(v.1.1.0+)_ in the first place.
+
+It makes the dropdown picker hidden by default.
+
+```html
+<vue-timepicker manual-input hide-dropdown></vue-timepicker>
+```
+
+Users can still choose to open the dropdown by clicking the triangle ("&dtrif;") button on the right. _(v.1.1.3+)_
+
+
 ### Lazy Event Mode
 
 ```html
@@ -528,7 +541,7 @@ For example, when a user focuses on the **hour** slot (`HH`) of a `"HH:mm"` form
 When `lazy` event mode is toggled on, only an actual user behavior can trigger the `input` and `change` events. Which are:
 
 - The user opened the dropdown and picked a new value
-- The user clicked the ("x") clear button
+- The user clicked the ("&times;") clear button
 
 In other words, on `lazy` mode, Timepicker won't emit `input` and `change` events on mounted, nor after the value got modified programmatically.
 
@@ -601,6 +614,7 @@ Prop                      | Type               | Required | Default Value
 **blur-delay**            | _Number_           | no       | 300
 **manual-input**          | _Boolean_          | no       | false
 **manual-input-timeout**  | _Number_           | no       | 1000
+**hide-dropdown**         | _Boolean_          | no       | false
 **lazy**                  | _Boolean_          | no       | false
 **auto-scroll**           | _Boolean_          | no       | false
 **debug-mode**            | _Boolean_          | no       | false
@@ -737,8 +751,8 @@ Event          | Arguments      | Description
 **change**     | (_eventData_)  | Emit after value changes
 **open**       | &nbsp;         | Emit when the dropdown opens
 **close**      | &nbsp;         | Emit when the dropdown closes
-**focus**      | &nbsp;         | Emit when the user start focusing on the Timepicker
-**blur**       | &nbsp;         | Emit when the user blurs the Timepicker
+**focus**      | &nbsp;         | Emit when the user start focusing on the `<input>`
+**blur**       | &nbsp;         | Emit when the user blurs the `<input>`
 **error**      | (_eventData_)  | Emit when the input value becomes invalid
 
 ### The `open` and `close` Event of the Dropdown Picker
@@ -761,7 +775,7 @@ data () {
 
 ### The `focus` and `blur` Event
 
-Help to identify focus/blur state of the Vue Timepicker. Especially useful in cases where the dropdown is force hidden by `hide-dropdown` under the Manual Input mode. 
+It works with the Manual Input mode, aimed to identify the focus/blur state of the `<input>` box. Specially useful in cases where the dropdown is force hidden by `hide-dropdown`.
 
 ```javascript
 data () {
@@ -772,7 +786,7 @@ data () {
 ```
 
 ```html
-<p>Focus State: I'm {{focusState}}!</p>
+<p>Focus State: {{focusState}}</p>
 
 <vue-timepicker manual-input hide-dropdown @focus="focusState = 'focused'" @blur="focusState = 'blurred'"></vue-timepicker>
 ```

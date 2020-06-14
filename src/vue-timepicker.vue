@@ -81,6 +81,7 @@ export default {
       seconds: [],
       apms: [],
 
+      isActive: false,
       showDropdown: false,
       isFocusing: false,
       debounceTimer: undefined,
@@ -190,14 +191,6 @@ export default {
           options.hideDropdown = true
         } else if (this.debugMode) {
           this.debugLog('"hide-dropdown" only works with "manual-input" mode')
-        }
-      }
-
-      if (this.advancedKeyboard) {
-        if (!(this.hideDropdown && this.manualInput)) {
-          options.advancedKeyboard = true
-        } else if (this.debugMode) {
-          this.debugLog('"advanced-keyboard" has no effect when dropdown is force hidden by "hide-dropdown"')
         }
       }
 
@@ -558,9 +551,14 @@ export default {
       this.fillValues()
     },
     disabled (toDisabled) {
-      // Force close the dropdown when disabled
-      if (toDisabled && this.showDropdown) {
-        this.showDropdown = false
+      if (toDisabled) {
+        // Force close dropdown and reset status when disabled
+        if (this.isActive) {
+          this.isActive = false
+        }
+        if (this.showDropdown) {
+          this.showDropdown = false
+        }
       }
     },
     'invalidValues.length' (newLength, oldLength) {
@@ -920,7 +918,7 @@ export default {
       }
 
       if (this.closeOnComplete && this.allValueSelected && this.showDropdown) {
-        this.toggleDropdown()
+        this.toggleActive()
       }
     },
 
@@ -1051,12 +1049,11 @@ export default {
     },
 
     forceApmSelection () {
+      if (this.manualInput) {
+        // Skip this to allow users to paste a string value from the clipboard in Manual Input mode
+        return
+      }
       if (this.apmType && !this.apm) {
-        if (this.manualInput) {
-          // In Manual Input Mode
-          // Skip this to allow users to paste a string value from clipboard
-          return
-        }
         if (this.has.am || this.has.pm) {
           this.doClearApmChecking = true
           const apmValue = this.has.am ? 'am' : 'pm'
@@ -1082,17 +1079,19 @@ export default {
       return apmValue
     },
 
-    toggleDropdown () {
+    toggleActive () {
       if (this.disabled) { return }
-      this.showDropdown = !this.showDropdown
+      this.isActive = !this.isActive
 
-      if (this.showDropdown) {
-        if (!this.opts.hideDropdown) {
-          this.$emit('open')
-        }
+      if (this.isActive) {
         this.isFocusing = true
-        this.$emit('focus')
-        // Record to check if value did changed in the later phase
+        if (this.manualInput) {
+          this.$emit('focus')
+        }
+        if (!this.opts.hideDropdown) {
+          this.setDropdownState(true)
+        }
+        // Record to check if value did change in the later phase
         if (this.lazy) {
           this.bakDisplayTime = String(this.displayTime || '')
         }
@@ -1105,25 +1104,44 @@ export default {
           })
         }
       } else {
-        if (!this.opts.hideDropdown) {
-          this.$emit('close')
+        if (this.showDropdown) {
+          this.setDropdownState(false)
+        } else if (this.manualInput) {
+          this.$emit('blur')
         }
         this.isFocusing = false
-        this.$emit('blur')
         if (this.lazy) {
           this.fillValues(true)
           this.bakDisplayTime = undefined
         }
       }
 
+      if (this.restrictedHourRange && this.baseOn12Hours) {
+        this.showDropdown ? this.forceApmSelection() : this.emptyApmSelection()
+      }
       if (this.showDropdown) {
-        if (this.manualInput) { return }
-        if (this.restrictedHourRange && this.baseOn12Hours) {
-          this.forceApmSelection()
-        }
         this.checkForAutoScroll()
-      } else if (this.restrictedHourRange && this.baseOn12Hours) {
-        this.emptyApmSelection()
+      }
+    },
+
+    setDropdownState (toShow, fromUserClick = false) {
+      this.showDropdown = toShow
+      if (toShow) {
+        this.keepFocusing()
+        this.$emit('open') 
+        if (fromUserClick) {
+          this.$emit('blur')
+          this.checkForAutoScroll()
+        }
+      } else {
+        this.$emit('close')
+      }
+    },
+
+    blurEvent () {
+      if (this.manualInput && !this.opts.hideDropdown) {
+        // hideDropdown's `blur` event is handled somewhere else
+        this.$emit('blur')
       }
     },
 
@@ -1162,23 +1180,26 @@ export default {
         this.$nextTick(() => {
           this.scrollToSelectedValues()
         })
-      } else if (this.opts.advancedKeyboard) {
+      } else if (this.advancedKeyboard) {
         // Auto-focus on selected value in the first column for advanced-keyboard
         this.$nextTick(() => {
           const firstColumn = this.inUse.types[0]
-          const firstColumnClass = `${firstColumn}s`
-          this.scrollToSelected(firstColumnClass)
+          this.scrollToSelected(firstColumn, true)
         })
       }
     },
 
-    scrollToSelected (columnClass) {
+    scrollToSelected (column, allowFallback = false) {
       if (!this.timeValue || this.inputIsEmpty) { return }
-      const targetList = this.$el.querySelectorAll(`ul.${columnClass}`)[0]
-      const targetValue = this.$el.querySelectorAll(`ul.${columnClass} li.active:not(.hint)`)[0]
+      const targetList = this.$el.querySelectorAll(`ul.${column}s`)[0]
+      let targetValue = this.activeItemInCol(column)[0]
+      if (!targetValue && allowFallback) {
+        // No value selected in the target column, fallback to the first found valid item
+        targetValue = this.validItemsInCol(column)[0]
+      }
       if (targetList && targetValue) {
         targetList.scrollTop = targetValue.offsetTop || 0
-        if (this.opts.advancedKeyboard) {
+        if (this.advancedKeyboard) {
           targetValue.focus()
         }
       }
@@ -1187,8 +1208,7 @@ export default {
     scrollToSelectedValues () {
       if (!this.timeValue || this.inputIsEmpty) { return }
       this.inUse.types.forEach(section => {
-        const columnClass = `${section}s`
-        this.scrollToSelected(columnClass)
+        this.scrollToSelected(section)
       })
     },
 
@@ -1201,13 +1221,14 @@ export default {
       if (!this.isFocusing) {
         this.isFocusing = true
       }
-      if (!this.showDropdown) {
-        this.toggleDropdown()
+      if (!this.isActive) {
+        this.toggleActive()
       }
     },
 
     escBlur () {
       if (this.disabled) { return }
+      window.clearTimeout(this.debounceTimer)
       this.isFocusing = false
       const inputBox = this.$el.querySelectorAll('input.display-time')[0]
       if (inputBox) {
@@ -1226,12 +1247,14 @@ export default {
     },
 
     onBlur () {
-      if (!this.disabled && !this.isFocusing && this.showDropdown) {
-        this.toggleDropdown()
+      if (!this.disabled && !this.isFocusing && this.isActive) {
+        this.toggleActive()
       }
     },
 
     keepFocusing () {
+      if (this.disabled) { return }
+      window.clearTimeout(this.debounceTimer)
       if (!this.isFocusing) {
         this.isFocusing = true
       }
@@ -1866,19 +1889,22 @@ export default {
          :autocomplete="autocomplete"
          @focus="onFocus"
          @change="onChange"
-         @blur="debounceBlur"
+         @blur="debounceBlur(); blurEvent()"
          @mousedown="onMouseDown"
          @keydown="keyDownHandler"
          @compositionstart="onCompostionStart"
          @compositionend="onCompostionEnd"
          @paste="pasteHandler"
          @keydown.esc.exact="escBlur" />
-  <span class="clear-btn" v-if="!showDropdown && showClearBtn" @click="clearTime" tabindex="-1">&times;</span>
-  <div class="time-picker-overlay" v-if="showDropdown" @click="toggleDropdown" tabindex="-1"></div>
-  <div class="dropdown" v-show="showDropdown && !opts.hideDropdown" :style="inputWidthStyle" tabindex="-1" @mouseup="keepFocusing" @click.stop="">
+  <div class="controls" v-if="showClearBtn || opts.hideDropdown" tabindex="-1">
+    <span class="clear-btn" v-if="!isActive && showClearBtn" @click="clearTime" tabindex="-1">&times;</span>
+    <span class="show-dropdown-btn" v-if="opts.hideDropdown && isActive && !showDropdown" @click="setDropdownState(true, true)" @mousedown="keepFocusing" tabindex="-1">&dtrif;</span>
+  </div>
+  <div class="time-picker-overlay" v-if="showDropdown" @click="toggleActive" tabindex="-1"></div>
+  <div class="dropdown" v-show="showDropdown" :style="inputWidthStyle" tabindex="-1" @mouseup="keepFocusing" @click.stop="">
     <div class="select-list" :style="inputWidthStyle" tabindex="-1">
       <!-- Common Keyboard Support: less event listeners -->
-      <template v-if="!opts.advancedKeyboard">
+      <template v-if="!advancedKeyboard">
         <template v-for="column in columnsSequence">
           <ul v-if="column === 'hour'" :key="column" class="hours" @scroll="keepFocusing">
             <li class="hint" v-text="hourLabelText"></li>
@@ -1935,7 +1961,7 @@ export default {
         Advanced Keyboard Support
         Addeds hundreds of additional event lisenters
       -->
-      <template v-if="opts.advancedKeyboard">
+      <template v-if="advancedKeyboard">
         <template v-for="column in columnsSequence">
           <ul v-if="column === 'hour'" :key="column" class="hours" tabindex="-1" @scroll="keepFocusing">
             <li class="hint" v-text="hourLabelText" tabindex="-1"></li>
@@ -2064,24 +2090,39 @@ export default {
   color: #d2d2d2;
 }
 
-.vue__time-picker .clear-btn {
+.vue__time-picker .controls {
   position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 3;
+
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  align-items: stretch;
+
+  /* Prevent browser focusing on the controls layer */
+  pointer-events: none;
+}
+
+.vue__time-picker .controls > * {
+  cursor: pointer;
+
+  width: 1.3em;
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 1.3em;
-  z-index: 3;
-  font-size: 1.1em;
-  line-height: 1em;
-  vertical-align: middle;
-  color: #d2d2d2;
-  background: rgba(255,255,255,0);
   text-align: center;
+
+  color: #d2d2d2;
+  line-height: 1em;
+  font-size: 1.1em;
   font-style: normal;
+
+  /* Resume pointer-events on children components */
+  pointer-events: initial;
 
   /* Vertical align fixes for webkit browsers only */
   -webkit-margin-before: -0.15em;
@@ -2090,12 +2131,12 @@ export default {
   transition: color .2s;
 }
 
-.vue__time-picker .clear-btn:hover {
+.vue__time-picker .controls > *:hover {
   color: #797979;
-  cursor: pointer;
 }
 
-.vue__time-picker .clear-btn:active {
+.vue__time-picker .controls > *:focus,
+.vue__time-picker .controls > *:active {
   outline: 0;
 }
 
