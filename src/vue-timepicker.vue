@@ -1085,7 +1085,9 @@ export default {
 
       if (this.isActive) {
         this.isFocusing = true
-        this.$emit('focus')
+        if (this.manualInput) {
+          this.$emit('focus')
+        }
         if (!this.opts.hideDropdown) {
           this.setDropdownState(true)
         }
@@ -1104,9 +1106,10 @@ export default {
       } else {
         if (this.showDropdown) {
           this.setDropdownState(false)
+        } else if (this.manualInput) {
+          this.$emit('blur')
         }
         this.isFocusing = false
-        this.$emit('blur')
         if (this.lazy) {
           this.fillValues(true)
           this.bakDisplayTime = undefined
@@ -1127,10 +1130,18 @@ export default {
         this.keepFocusing()
         this.$emit('open') 
         if (fromUserClick) {
+          this.$emit('blur')
           this.checkForAutoScroll()
         }
       } else {
         this.$emit('close')
+      }
+    },
+
+    blurEvent () {
+      if (this.manualInput && !this.opts.hideDropdown) {
+        // hideDropdown's `blur` event is handled somewhere else
+        this.$emit('blur')
       }
     },
 
@@ -1878,7 +1889,7 @@ export default {
          :autocomplete="autocomplete"
          @focus="onFocus"
          @change="onChange"
-         @blur="debounceBlur"
+         @blur="debounceBlur(); blurEvent()"
          @mousedown="onMouseDown"
          @keydown="keyDownHandler"
          @compositionstart="onCompostionStart"
