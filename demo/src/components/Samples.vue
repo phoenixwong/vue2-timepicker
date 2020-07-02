@@ -35,7 +35,9 @@ export default {
       demoArgs: undefined,
 
       dropdownStatus: 'closed',
+      
       focusState: 'blurred',
+      dropdownState: 'closed',
 
       lazyData: {
         hh: '06',
@@ -679,7 +681,7 @@ section#mostlyUsedSamples
       code close
       | &nbsp;event
     p(slot="description")
-      | Help identifying current status of the dropdown picker
+      | Help to identify the current state of the dropdown picker.
     template(v-slot:codes)
       highlight-code(lang="javascript" data-title="JS")
         pre
@@ -707,25 +709,31 @@ section#mostlyUsedSamples
       code blur
       | &nbsp;event
     p(slot="description")
-      | Help to identify the focus/blur state of the Timepicker when the dropdown is force hidden by <code>hide-dropdown</code>.
+      | It works with Manual Input mode. Helps to identify the focus/blur state of the Timepicker's input. Especially useful when the dropdown is force hidden by <code>hide-dropdown</code>.
     template(v-slot:codes)
       highlight-code(lang="javascript" data-title="JS")
         pre
-          | // Define a variable for logging the status
           | data () {
           |   return {
-          |     focusState: 'blurred'
+          |     // variable for the input state
+          |     focusState: 'blurred',
+          |
+          |     // variable for the dropdown state
+          |     dropdownState: 'closed'
           |   }
           | }
       highlight-code(lang="html" data-title="HTML")
         pre
-          | &lt;p&gt;Focus Status: I'm <span>{{</span>focusState<span>}}</span>!&lt;/p&gt;
+          | &lt;span&gt;Focus State: <span>{{</span>focusState<span>}}</span>&lt;/span&gt;
+          | &lt;span&gt;Dropdown State: <span>{{</span>dropdownState<span>}}</span>&lt;/span&gt;
           | &nbsp;
-          | &lt;vue-timepicker manual-input hide-dropdown @focus="focusState = 'focused'" @blur="focusState = 'blurred'"&gt;&lt;/vue-timepicker&gt;
+          | &lt;vue-timepicker manual-input hide-dropdown @focus="focusState = 'focused'" @blur="focusState = 'blurred'" @open="dropdownState = 'opened'" @close="dropdownState = 'closed'"&gt;&lt;/vue-timepicker&gt;
     template(v-slot:preview)
-      b Focus State: I'm {{focusState}}!
+      b Focus State: {{focusState}}
+      span &emsp;/&emsp;
+      b Dropdown State: {{ dropdownState }}
       p
-        vue-timepicker(manual-input hide-dropdown @focus="focusState = 'focused'" @blur="focusState = 'blurred'")
+        vue-timepicker(manual-input hide-dropdown @focus="focusState = 'focused'" @blur="focusState = 'blurred'" @open="dropdownState = 'opened'" @close="dropdownState = 'closed'")
 
   //- Custom Labels
   sample-block#customPickerLabels

@@ -142,11 +142,6 @@ export default {
       return this.hideDropdown
     },
 
-    useAdvancedKeyboard () {
-      if (this.toHideDropdown) { return false }
-      return this.advancedKeyboard
-    },
-
     showErroredData () {
       return Boolean(this.playgroundErroredData && this.playgroundErroredData.length)
     },
@@ -208,7 +203,7 @@ export default {
         start += ('\n  hide-dropdown')
       }
 
-      if (this.useAdvancedKeyboard) {
+      if (this.advancedKeyboard) {
         start += ('\n  advanced-keyboard')
       }
 
@@ -805,7 +800,7 @@ section#playground
             input(v-model="hideDropdown" type="radio" id="hide_dropdown_false" name="hide_dropdown", :value="false")
             | &nbsp;Disable
 
-      #advancedKeyboard.config-block(v-if="!toHideDropdown")
+      #advancedKeyboard.config-block
         h3.subtitle
           a.anchor #
           | Advanced Keyboard Support
@@ -883,7 +878,7 @@ section#playground
                        :minute-range="customRange.minute ? minuteRange : null"
                        :second-range="(showSeconds && customRange.second) ? secondRange : null"
                        :close-on-complete="closeOnComplete"
-                       :advanced-keyboard="useAdvancedKeyboard"
+                       :advanced-keyboard="advancedKeyboard"
                        :manual-input="manualInput"
                        :hide-dropdown="toHideDropdown"
                        :blur-delay="blurDelay"
