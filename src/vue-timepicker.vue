@@ -1898,9 +1898,7 @@ export default {
          @keydown.esc.exact="escBlur" />
   <div class="controls" v-if="showClearBtn || opts.hideDropdown" tabindex="-1">
     <span class="clear-btn" v-if="!isActive && showClearBtn" @click="clearTime" tabindex="-1"><slot name="clear-btn-icon"><span class="char">&times;</span></slot></span>
-    <!-- <span class="clear-btn" @click="clearTime" tabindex="-1"><slot name="clear-btn-icon">&times;</slot></span> -->
-    <span @click="setDropdownState(true, true)" @mousedown="keepFocusing" tabindex="-1"><slot name="show-dropdown-icon"><span class="char">&dtrif;</span></slot></span>
-    <!-- <span v-if="opts.hideDropdown && isActive && !showDropdown" @click="setDropdownState(true, true)" @mousedown="keepFocusing" tabindex="-1"><slot name="show-dropdown-icon">&dtrif;</slot></span> -->
+    <span v-if="opts.hideDropdown && isActive && !showDropdown" @click="setDropdownState(true, true)" @mousedown="keepFocusing" tabindex="-1"><slot name="show-dropdown-icon"><span class="char">&dtrif;</span></slot></span>
   </div>
   <div class="time-picker-overlay" v-if="showDropdown" @click="toggleActive" tabindex="-1"></div>
   <div class="dropdown" v-show="showDropdown" :style="inputWidthStyle" tabindex="-1" @mouseup="keepFocusing" @click.stop="">
