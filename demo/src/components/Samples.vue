@@ -671,7 +671,7 @@ section#mostlyUsedSamples
       p
         vue-timepicker(manual-input hide-dropdown auto-scroll)
           template(v-slot:show-dropdown-icon)
-            img(src="../assets/icons/clock.svg" style="vertical-align: middle;")
+            img(src="../assets/icons/clock.svg")
 
   //- Open And Close Event
   sample-block#openAndClose
