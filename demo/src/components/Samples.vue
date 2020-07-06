@@ -50,6 +50,7 @@ export default {
       lazyEventTs: undefined,
 
       manualStringValue: '8:15 pm',
+      customCloseStringValue: '10:05:00',
 
       autoScrollData1: '08:40',
       autoScrollData2: '5:30:20 pm',
@@ -70,6 +71,7 @@ export default {
         { title: 'Hide Disabled Items', anchor: 'hideDisabledItems' },
         { title: 'Close on Complete', anchor: 'closeOnComplete' },
         { title: 'Hide Clear Button', anchor: 'hideClearButton' },
+        { title: 'Custom Clear Button', anchor: 'customClearButton' },
         { title: 'Disable Picker', anchor: 'disablePicker' },
         { title: 'The @change Event', anchor: 'onChangeSample' },
         { title: 'Lazy Event Mode', anchor: 'lazyEvents' },
@@ -462,6 +464,24 @@ section#mostlyUsedSamples
     template(v-slot:preview)
       vue-timepicker(hide-clear-button)
 
+  //- Custom Clear Button
+  sample-block#customClearButton
+    template(v-slot:title) Custom Clear Button
+    p(slot="description")
+      | You can provide your own icon for the clear button using
+    template(v-slot:codes)
+      highlight-code(lang="html" data-title="HTML")
+        pre
+          | &lt;vue-time-picker&gt;
+          |   &lt;template v-slot:clear-btn-icon&gt;
+          |     &lt;img src="../assets/close.png" /&gt;     
+          |   &lt;/template&gt;
+          | &lt;/vue-time-picker&gt;
+    template(v-slot:preview)
+      vue-timepicker(format="hh:mm:ss" v-model="customCloseStringValue")
+        template(v-slot:clear-btn-icon)
+          img(src="../assets/icons/close.png" width="14px")
+
   //- Disable Picker
   sample-block#disablePicker
     template(v-slot:title) Disable Picker
@@ -624,6 +644,9 @@ section#mostlyUsedSamples
           |
           | &lt;!-- Manual input + hide dropdown --&gt;
           | &lt;vue-timepicker manual-input hide-dropdown&gt;&lt;/vue-timepicker&gt;
+          |
+          | &lt;!-- Manual input + hide dropdown + auto-scroll --&gt;
+          | &lt;vue-timepicker manual-input hide-dropdown&gt;&lt;/vue-timepicker&gt;
       highlight-code(lang="javascript" data-title="JS")
         pre
           | data () {
@@ -641,6 +664,14 @@ section#mostlyUsedSamples
       b Manual input + hide dropdown
       p
         vue-timepicker(manual-input hide-dropdown)
+      b Manual input + hide dropdown + auto-scroll
+      p
+        vue-timepicker(manual-input hide-dropdown auto-scroll)
+      b Manual input + hide dropdown + auto-scroll + custom icon
+      p
+        vue-timepicker(manual-input hide-dropdown auto-scroll)
+          template(v-slot:show-dropdown-icon)
+            img(src="../assets/icons/clock.svg")
 
   //- Open And Close Event
   sample-block#openAndClose

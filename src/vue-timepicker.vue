@@ -1897,8 +1897,8 @@ export default {
          @paste="pasteHandler"
          @keydown.esc.exact="escBlur" />
   <div class="controls" v-if="showClearBtn || opts.hideDropdown" tabindex="-1">
-    <span class="clear-btn" v-if="!isActive && showClearBtn" @click="clearTime" tabindex="-1">&times;</span>
-    <span class="show-dropdown-btn" v-if="opts.hideDropdown && isActive && !showDropdown" @click="setDropdownState(true, true)" @mousedown="keepFocusing" tabindex="-1">&dtrif;</span>
+    <span class="clear-btn" v-if="!isActive && showClearBtn" @click="clearTime" tabindex="-1"><slot name="clear-btn-icon"><span class="char">&times;</span></slot></span>
+    <span v-if="opts.hideDropdown && isActive && !showDropdown" @click="setDropdownState(true, true)" @mousedown="keepFocusing" tabindex="-1"><slot name="show-dropdown-icon"><span class="char">&dtrif;</span></slot></span>
   </div>
   <div class="time-picker-overlay" v-if="showDropdown" @click="toggleActive" tabindex="-1"></div>
   <div class="dropdown" v-show="showDropdown" :style="inputWidthStyle" tabindex="-1" @mouseup="keepFocusing" @click.stop="">
@@ -2095,40 +2095,29 @@ export default {
   top: 0;
   bottom: 0;
   right: 0;
-  z-index: 3;
-
+  width: auto;
   display: flex;
-  flex-flow: row nowrap;
-  justify-content: flex-end;
-  align-items: stretch;
-
-  /* Prevent browser focusing on the controls layer */
-  pointer-events: none;
+  align-items: center;
+  padding: 0 .5em;
+  z-index: 3;
 }
 
 .vue__time-picker .controls > * {
   cursor: pointer;
-
-  width: 1.3em;
+  
   display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-
   color: #d2d2d2;
   line-height: 1em;
   font-size: 1.1em;
   font-style: normal;
 
-  /* Resume pointer-events on children components */
-  pointer-events: initial;
-
-  /* Vertical align fixes for webkit browsers only */
-  -webkit-margin-before: -0.15em;
-
   -webkit-transition: color .2s;
   transition: color .2s;
+}
+
+.vue__time-picker .controls > * > .char {
+  /* Vertical align fixes for webkit browsers only */
+  -webkit-margin-before: -0.15em;
 }
 
 .vue__time-picker .controls > *:hover {
