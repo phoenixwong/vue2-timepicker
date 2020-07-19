@@ -50,7 +50,8 @@ export default {
       lazyEventTs: undefined,
 
       manualStringValue: '8:15 pm',
-      customCloseStringValue: '10:05:00',
+
+      customCloseBtnValue: '10:05',
 
       autoScrollData1: '08:40',
       autoScrollData2: '5:30:20 pm',
@@ -71,7 +72,6 @@ export default {
         { title: 'Hide Disabled Items', anchor: 'hideDisabledItems' },
         { title: 'Close on Complete', anchor: 'closeOnComplete' },
         { title: 'Hide Clear Button', anchor: 'hideClearButton' },
-        { title: 'Custom Clear Button', anchor: 'customClearButton' },
         { title: 'Disable Picker', anchor: 'disablePicker' },
         { title: 'The @change Event', anchor: 'onChangeSample' },
         { title: 'Lazy Event Mode', anchor: 'lazyEvents' },
@@ -82,7 +82,8 @@ export default {
         { title: 'Customized Picker Labels', anchor: 'customPickerLabels' },
         { title: 'Adjust Input Width', anchor: 'inputWidth' },
         { title: 'Auto-Scroll', anchor: 'autoScroll' },
-        { title: 'More Powerful format String', anchor: 'morePowerfulFormat' }
+        { title: 'More Powerful format String', anchor: 'morePowerfulFormat' },
+        { title: 'Customized Buttons And Icon', anchor: 'customButtonIcon' }
       ]
     }
   },
@@ -464,23 +465,6 @@ section#mostlyUsedSamples
     template(v-slot:preview)
       vue-timepicker(hide-clear-button)
 
-  //- Custom Clear Button
-  sample-block#customClearButton
-    template(v-slot:title) Custom Clear Button
-    p(slot="description")
-      | You can provide your own icon for the clear button using
-    template(v-slot:codes)
-      highlight-code(lang="html" data-title="HTML")
-        pre
-          | &lt;vue-time-picker&gt;
-          |   &lt;template v-slot:clear-btn-icon&gt;
-          |     &lt;img src="../assets/close.png" /&gt;     
-          |   &lt;/template&gt;
-          | &lt;/vue-time-picker&gt;
-    template(v-slot:preview)
-      vue-timepicker(format="hh:mm:ss" v-model="customCloseStringValue")
-        template(v-slot:clear-btn-icon)
-          img(src="../assets/icons/close.png" width="14px")
 
   //- Disable Picker
   sample-block#disablePicker
@@ -667,11 +651,6 @@ section#mostlyUsedSamples
       b Manual input + hide dropdown + auto-scroll
       p
         vue-timepicker(manual-input hide-dropdown auto-scroll)
-      b Manual input + hide dropdown + auto-scroll + custom icon
-      p
-        vue-timepicker(manual-input hide-dropdown auto-scroll)
-          template(v-slot:show-dropdown-icon)
-            img(src="../assets/icons/clock.svg")
 
   //- Open And Close Event
   sample-block#openAndClose
@@ -881,6 +860,72 @@ section#mostlyUsedSamples
         vue-timepicker(format="ss" input-width="60px")
         | &nbsp;
         vue-timepicker(format="a" input-width="60px")
+
+  //- Custom Button And Icon
+  sample-block#customButtonIcon
+    template(v-slot:title) Customized Buttons And Input Icon
+    template(v-slot:description)
+      p Start from <code>v1.1.4+</code>, you can customize the clear button and dropdown button with your own icon/image. There's also an additional slot for the input icon.
+      p Please note that there's a significant update of the <b>Named Slots</b> syntax in Vue v2.6.0+. Check the <a href="https://vuejs.org/v2/guide/components-slots.html#Named-Slots" target="_black">official documentation</a> for more information.
+
+    template(v-slot:codes)
+      highlight-code(lang="html" data-title="HTML")
+        pre
+          | &lt;!-- For Vue 2.6.0+ --&gt;
+          |
+          | &lt;!-- Input Icon --&gt;
+          | &lt;vue-timepicker&gt;
+          |   &lt;template v-slot:icon&gt;
+          |     &lt;img src="$YOUR_ICON_SRC" width="16px" height="16px" /&gt;     
+          |   &lt;/template&gt;
+          | &lt;/vue-timepicker&gt;
+          |
+          | &lt;!-- Customized clear button, with an image --&gt;
+          | &lt;vue-timepicker&gt;
+          |   &lt;template v-slot:clearButton&gt;
+          |     &lt;img src="$YOUR_CUSTOM_IMAGE_SRC" width="16px" height="16px" /&gt;
+          |   &lt;/template&gt;
+          | &lt;/vue-timepicker&gt;
+          |
+          | &lt;!-- Customized dropdown button, with a character entity --&gt;
+          | &lt;vue-timepicker manual-input hide-dropdown&gt;
+          |   &lt;template v-slot:dropdownButton&gt;&amp;#x02263;&lt;/template&gt;
+          | &lt;/vue-timepicker&gt;
+
+      highlight-code(lang="html" data-title="HTML")
+        pre
+          | &lt;!-- For Vue version < 2.6.0 --&gt;
+          |
+          | &lt;!-- Input Icon --&gt;
+          | &lt;vue-timepicker&gt;
+          |   &lt;img slot="icon" src="$YOUR_ICON_SRC" width="16px" height="16px" /&gt;     
+          | &lt;/vue-timepicker&gt;
+          |
+          | &lt;!-- Customized clear button, with an image --&gt;
+          | &lt;vue-timepicker&gt;
+          |   &lt;img slot="clearButton" src="$YOUR_CUSTOM_IMAGE_SRC" width="16px" height="16px" /&gt;
+          | &lt;/vue-timepicker&gt;
+          |
+          | &lt;!-- Customized dropdown button, with a character entity --&gt;
+          | &lt;vue-timepicker&gt;
+          |   &lt;template slot="dropdownButton"&gt;&amp;#x02263;&lt;/template&gt;
+          | &lt;/vue-timepicker&gt;
+
+    template(v-slot:preview)
+      b Input Icon
+      p
+        vue-timepicker
+          template(v-slot:icon)
+            img(src="https://i.postimg.cc/CLkZcW46/custom-clock.png" width="16px" height="16px")
+      b Customized clear button, with an image
+      p
+        vue-timepicker(v-model="customCloseBtnValue")
+          template(v-slot:clearButton)
+            img(src="https://i.postimg.cc/T5YwG56B/custom-close.png" width="16px" height="16px")
+      b Customized dropdown button, with a character entity
+      p
+        vue-timepicker(manual-input hide-dropdown)
+          template(v-slot:dropdownButton) &#x02263;
 
   //- Footer Links
   .footer-links
