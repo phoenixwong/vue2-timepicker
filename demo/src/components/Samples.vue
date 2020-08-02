@@ -628,9 +628,6 @@ section#mostlyUsedSamples
           |
           | &lt;!-- Manual input + hide dropdown --&gt;
           | &lt;vue-timepicker manual-input hide-dropdown&gt;&lt;/vue-timepicker&gt;
-          |
-          | &lt;!-- Manual input + hide dropdown + auto-scroll --&gt;
-          | &lt;vue-timepicker manual-input hide-dropdown&gt;&lt;/vue-timepicker&gt;
       highlight-code(lang="javascript" data-title="JS")
         pre
           | data () {
@@ -648,9 +645,6 @@ section#mostlyUsedSamples
       b Manual input + hide dropdown
       p
         vue-timepicker(manual-input hide-dropdown)
-      b Manual input + hide dropdown + auto-scroll
-      p
-        vue-timepicker(manual-input hide-dropdown auto-scroll)
 
   //- Open And Close Event
   sample-block#openAndClose
@@ -876,39 +870,27 @@ section#mostlyUsedSamples
           | &lt;!-- Input Icon --&gt;
           | &lt;vue-timepicker&gt;
           |   &lt;template v-slot:icon&gt;
-          |     &lt;img src="$YOUR_ICON_SRC" width="16px" height="16px" /&gt;     
+          |     &lt;img src="$YOUR_ICON_SRC" /&gt;
           |   &lt;/template&gt;
           | &lt;/vue-timepicker&gt;
           |
-          | &lt;!-- Customized clear button, with an image --&gt;
+          | &lt;!-- Customized clear button (image) --&gt;
           | &lt;vue-timepicker&gt;
           |   &lt;template v-slot:clearButton&gt;
-          |     &lt;img src="$YOUR_CUSTOM_IMAGE_SRC" width="16px" height="16px" /&gt;
+          |     &lt;img src="$YOUR_CUSTOM_IMAGE_SRC" /&gt;
           |   &lt;/template&gt;
           | &lt;/vue-timepicker&gt;
           |
-          | &lt;!-- Customized dropdown button, with a character entity --&gt;
+          | &lt;!-- Customized dropdown button (character entity) --&gt;
           | &lt;vue-timepicker manual-input hide-dropdown&gt;
           |   &lt;template v-slot:dropdownButton&gt;&amp;#x02263;&lt;/template&gt;
           | &lt;/vue-timepicker&gt;
-
-      highlight-code(lang="html" data-title="HTML")
-        pre
-          | &lt;!-- For Vue version < 2.6.0 --&gt;
           |
-          | &lt;!-- Input Icon --&gt;
-          | &lt;vue-timepicker&gt;
-          |   &lt;img slot="icon" src="$YOUR_ICON_SRC" width="16px" height="16px" /&gt;     
-          | &lt;/vue-timepicker&gt;
-          |
-          | &lt;!-- Customized clear button, with an image --&gt;
-          | &lt;vue-timepicker&gt;
-          |   &lt;img slot="clearButton" src="$YOUR_CUSTOM_IMAGE_SRC" width="16px" height="16px" /&gt;
-          | &lt;/vue-timepicker&gt;
-          |
-          | &lt;!-- Customized dropdown button, with a character entity --&gt;
-          | &lt;vue-timepicker&gt;
-          |   &lt;template slot="dropdownButton"&gt;&amp;#x02263;&lt;/template&gt;
+          | &lt;!-- Customized + Fixed dropdown button (image) --&gt;
+          | &lt;vue-timepicker fixed-dropdown-button&gt;
+          |   &lt;template v-slot:dropdownButton&gt;
+          |     &lt;img src="$YOUR_BUTTON_IMAGE_SRC" /&gt; 
+          |   &lt;/template&gt;
           | &lt;/vue-timepicker&gt;
 
     template(v-slot:preview)
@@ -916,17 +898,22 @@ section#mostlyUsedSamples
       p
         vue-timepicker
           template(v-slot:icon)
-            img(src="https://i.postimg.cc/CLkZcW46/custom-clock.png" width="16px" height="16px")
-      b Customized clear button, with an image
+            img(src="https://i.postimg.cc/CLkZcW46/custom-clock.png")
+      b Customized clear button (image)
       p
         vue-timepicker(v-model="customCloseBtnValue")
           template(v-slot:clearButton)
-            img(src="https://i.postimg.cc/T5YwG56B/custom-close.png" width="16px" height="16px")
-      b Customized dropdown button, with a character entity
+            img(src="https://i.postimg.cc/T5YwG56B/custom-close.png")
+      b Customized dropdown button (character entity)
       p
         vue-timepicker(manual-input hide-dropdown)
           template(v-slot:dropdownButton) &#x02263;
-
+      b Customized + Fixed dropdown button (image)
+      p
+        vue-timepicker(fixed-dropdown-button)
+          template(v-slot:dropdownButton)
+            img(src="https://i.postimg.cc/CLkZcW46/custom-clock.png")
+  
   //- Footer Links
   .footer-links
     slot(name="footer-links")

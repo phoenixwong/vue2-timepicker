@@ -62,12 +62,14 @@ export default {
 
     blurDelay: { type: [ Number, String ] },
     advancedKeyboard: { type: Boolean, default: false },
-    lazy: { type: Boolean, default: false },
 
+    lazy: { type: Boolean, default: false },
     autoScroll: { type: Boolean, default: false },
+
     manualInput: { type: Boolean, default: false },
     manualInputTimeout: { type: [ Number, String ] },
     hideDropdown: { type: Boolean, default: false },
+    fixedDropdownButton: { type: Boolean, default: false },
 
     debugMode: { type: Boolean, default: false }
   },
@@ -279,6 +281,14 @@ export default {
         return false
       }
       return !this.inputIsEmpty
+    },
+
+    showDropdownBtn () {
+      if (this.fixedDropdownButton) { return true }
+      if (this.opts.hideDropdown && this.isActive && !this.showDropdown) {
+        return true
+      }
+      return false
     },
 
     baseOn12Hours () {
@@ -1130,6 +1140,9 @@ export default {
         this.keepFocusing()
         this.$emit('open') 
         if (fromUserClick) {
+          if (this.fixedDropdownButton) {
+            this.isActive = true
+          }
           this.$emit('blur')
           this.checkForAutoScroll()
         }
@@ -1896,15 +1909,15 @@ export default {
          @compositionend="onCompostionEnd"
          @paste="pasteHandler"
          @keydown.esc.exact="escBlur" />
-  <div class="controls" v-if="showClearBtn || opts.hideDropdown" tabindex="-1">
+  <div class="controls" v-if="showClearBtn || showDropdownBtn" tabindex="-1">
     <span v-if="!isActive && showClearBtn" class="clear-btn" tabindex="-1"
           :class="{'has-custom-btn': $slots && $slots.clearButton }"
           @click="clearTime">
       <slot name="clearButton"><span class="char">&times;</span></slot>
     </span>
-    <span v-if="opts.hideDropdown && isActive && !showDropdown" class="dropdown-btn" tabindex="-1"
+    <span v-if="showDropdownBtn" class="dropdown-btn" tabindex="-1"
           :class="{'has-custom-btn': $slots && $slots.dropdownButton }"
-          @click="setDropdownState(true, true)"
+          @click="setDropdownState(fixedDropdownButton ? !showDropdown : true, true)"
           @mousedown="keepFocusing">
       <slot name="dropdownButton"><span class="char">&dtrif;</span></slot>
     </span>
@@ -2109,7 +2122,7 @@ export default {
   top: 0;
   bottom: 0;
   right: 0;
-  z-index: 4;
+  z-index: 3;
 
   display: flex;
   flex-flow: row nowrap;
@@ -2129,7 +2142,7 @@ export default {
   justify-content: center;
   align-items: center;
 
-  padding: 0 6px;
+  padding: 0 0.35em;
 
   color: #d2d2d2;
   line-height: 100%;
@@ -2178,12 +2191,16 @@ export default {
 .vue__time-picker .custom-icon img,
 .vue__time-picker .controls img {
   display: inline-block;
+  vertical-align: middle;
+  margin: 0;
   border: 0;
   outline: 0;
+  max-width: 1em;
+  height: auto;
 }
 
 .vue__time-picker .time-picker-overlay {
-  z-index: 3;
+  z-index: 4;
   position: fixed;
   top: 0;
   left: 0;
