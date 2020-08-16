@@ -869,6 +869,42 @@ Furthermore, you can replace those _am/pm_ (or _AM/PM_) string by setting the `a
 <vue-timepicker hour-label="時" minute-label="分" second-label="秒" apm-label="午" am-text="上午" pm-text="下午" format="h:mm:ss a"></vue-timepicker>
 ```
 
+
+## Slots
+
+We introduce three slots in `v.1.1.4` to help you customize the clear button, the dropdown button, and the input icon with your own icon/image.
+
+Slot Name          | Position | Description   
+------------------ | -------- | --------------
+**icon**           | _left_   | On the lefthand side of the `<input>`
+**clearButton**    | _right_  | In the same spot of the default clear button
+**dropdownButton** | _right_  | In the same spot of the default dropdown button
+
+> Please note that Vue v2.6.0+ introduces a significant update of the Named Slots syntax. Check the [official documentation](https://vuejs.org/v2/guide/components-slots.html#Named-Slots) for more information.
+
+```html
+<!-- For Vue 2.6.0+ -->
+
+<!-- Input icon (image) -->
+<vue-timepicker>
+  <template v-slot:icon>
+    <img src="$YOUR_ICON_SRC" />
+  </template>
+</vue-timepicker>
+
+<!-- Customized clear button (image) -->
+<vue-timepicker>
+  <template v-slot:clearButton>
+    <img src="$YOUR_CUSTOM_IMAGE_SRC" />
+  </template>
+</vue-timepicker>
+
+<!-- Customized dropdown button (character entity) -->
+<vue-timepicker manual-input hide-dropdown>
+  <template v-slot:dropdownButton>&#x02263;</template>
+</vue-timepicker>
+```
+
 ## Contribution
 
 Please feel free to fork and help developing. Check [CONTRIBUTING.md](https://github.com/phoenixwong/vue2-timepicker/blob/master/CONTRIBUTING.md) for more details.

@@ -2189,7 +2189,9 @@ export default {
 }
 
 .vue__time-picker .custom-icon img,
-.vue__time-picker .controls img {
+.vue__time-picker .custom-icon svg,
+.vue__time-picker .controls img,
+.vue__time-picker .controls svg {
   display: inline-block;
   vertical-align: middle;
   margin: 0;
