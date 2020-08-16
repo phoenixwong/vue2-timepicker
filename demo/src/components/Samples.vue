@@ -51,6 +51,8 @@ export default {
 
       manualStringValue: '8:15 pm',
 
+      customCloseBtnValue: '10:05',
+
       autoScrollData1: '08:40',
       autoScrollData2: '5:30:20 pm',
 
@@ -80,7 +82,9 @@ export default {
         { title: 'Customized Picker Labels', anchor: 'customPickerLabels' },
         { title: 'Adjust Input Width', anchor: 'inputWidth' },
         { title: 'Auto-Scroll', anchor: 'autoScroll' },
-        { title: 'More Powerful format String', anchor: 'morePowerfulFormat' }
+        { title: 'More Powerful format String', anchor: 'morePowerfulFormat' },
+        { title: 'Customized Buttons And Icon', anchor: 'customButtonIcon' },
+        { title: 'Fixed Dropdown Button', anchor: 'fixedDropdownButton' }
       ]
     }
   },
@@ -461,6 +465,7 @@ section#mostlyUsedSamples
         | &lt;vue-timepicker hide-clear-button&gt;&lt;/vue-timepicker&gt;
     template(v-slot:preview)
       vue-timepicker(hide-clear-button)
+
 
   //- Disable Picker
   sample-block#disablePicker
@@ -851,6 +856,97 @@ section#mostlyUsedSamples
         | &nbsp;
         vue-timepicker(format="a" input-width="60px")
 
+  //- Custom Button And Icon
+  sample-block#customButtonIcon
+    template(v-slot:title) Customized Buttons And Input Icon
+    template(v-slot:description)
+      p You can customize the clear button, and the dropdown button with your own icon/image starts from <code>v1.1.4+</code>. There's an additional slot for the input icon as well.
+      p Please note that Vue v2.6.0+ introduces a significant update of the <b>Named Slots</b> syntax. Check the <a href="https://vuejs.org/v2/guide/components-slots.html#Named-Slots" target="_black">official documentation</a> for more information.
+
+    template(v-slot:codes)
+      highlight-code(lang="html" data-title="HTML")
+        pre
+          | &lt;!-- For Vue 2.6.0+ --&gt;
+          |
+          | &lt;!-- Input icon (image) --&gt;
+          | &lt;vue-timepicker&gt;
+          |   &lt;template v-slot:icon&gt;
+          |     &lt;img src="$YOUR_ICON_SRC" /&gt;
+          |   &lt;/template&gt;
+          | &lt;/vue-timepicker&gt;
+          |
+          | &lt;!-- Customized clear button (image) --&gt;
+          | &lt;vue-timepicker&gt;
+          |   &lt;template v-slot:clearButton&gt;
+          |     &lt;img src="$YOUR_CUSTOM_IMAGE_SRC" /&gt;
+          |   &lt;/template&gt;
+          | &lt;/vue-timepicker&gt;
+          |
+          | &lt;!-- Customized dropdown button (character entity) --&gt;
+          | &lt;vue-timepicker manual-input hide-dropdown&gt;
+          |   &lt;template v-slot:dropdownButton&gt;&amp;#x02263;&lt;/template&gt;
+          | &lt;/vue-timepicker&gt;
+
+    template(v-slot:preview)
+      b Input icon (image)
+      p
+        vue-timepicker
+          template(v-slot:icon)
+            img(src="https://i.postimg.cc/CLkZcW46/custom-clock.png")
+      b Customized clear button (image)
+      p
+        vue-timepicker(v-model="customCloseBtnValue")
+          template(v-slot:clearButton)
+            img(src="https://i.postimg.cc/Y0f6RHF8/custom-close.png")
+      b Customized dropdown button (character entity)
+      p
+        vue-timepicker(manual-input hide-dropdown)
+          template(v-slot:dropdownButton) &#x02263;
+
+
+  //- Fixed Dropdown Button
+  sample-block#fixedDropdownButton
+    template(v-slot:title) Fixed Dropdown Button
+    template(v-slot:description)
+      p You can make the dropdown button always visible in the UI with <code>fixed-dropdown-button</code>.
+      p When paired with a customized dropdown button, it's similar to an input icon on the righthand side.
+
+    template(v-slot:codes)
+      highlight-code(lang="html" data-title="HTML")
+        pre
+          | &lt;!-- Default dropdown button --&gt;
+          | &lt;vue-timepicker fixed-dropdown-button&gt;&lt;/vue-timepicker&gt;
+          |
+          | &lt;!-- Customized + fixed dropdown button --&gt;
+          | &lt;vue-timepicker fixed-dropdown-button&gt;
+          |   &lt;template v-slot:dropdownButton&gt;
+          |     &lt;img src="$YOUR_BUTTON_IMAGE_SRC" /&gt; 
+          |   &lt;/template&gt;
+          | &lt;/vue-timepicker&gt;
+          |
+          | &lt;!-- To display only one button on the right --&gt;
+          | &lt;!-- Customized + fixed dropdown button + hide clear button --&gt;
+          | &lt;vue-timepicker fixed-dropdown-button hide-clear-button&gt;
+          |   &lt;template v-slot:dropdownButton&gt;
+          |     &lt;img src="$YOUR_BUTTON_IMAGE_SRC" /&gt; 
+          |   &lt;/template&gt;
+          | &lt;/vue-timepicker&gt;
+
+    template(v-slot:preview)
+      b Default dropdown button
+      p
+        vue-timepicker(fixed-dropdown-button)
+      b Customized + fixed dropdown button
+      p
+        vue-timepicker(fixed-dropdown-button)
+          template(v-slot:dropdownButton)
+            img(src="https://i.postimg.cc/CLkZcW46/custom-clock.png")
+      b Customized + fixed dropdown button + hide clear button
+      p
+        vue-timepicker(fixed-dropdown-button hide-clear-button)
+          template(v-slot:dropdownButton)
+            img(src="https://i.postimg.cc/CLkZcW46/custom-clock.png")
+
   //- Footer Links
   .footer-links
     slot(name="footer-links")
@@ -889,6 +985,8 @@ section#mostlyUsedSamples
     width: 20%
     bottom: 0
     left: 0
+    max-height: calc(100vh - 50px)
+    overflow-y: auto
 
     ul
       padding: 0 0 0.5em 1.5em

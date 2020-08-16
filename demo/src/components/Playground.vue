@@ -70,6 +70,7 @@ export default {
       advancedKeyboard: false,
       manualInput: false,
       hideDropdown: false,
+      fixedDropdownBtn: false,
       lazyMode: false,
       autoScroll: false,
       skipErrorStyle: false,
@@ -205,6 +206,10 @@ export default {
 
       if (this.advancedKeyboard) {
         start += ('\n  advanced-keyboard')
+      }
+
+      if (this.fixedDropdownBtn) {
+        start += ('\n  fixed-dropdown-button')
       }
 
       if (this.hideClearBtn) {
@@ -800,6 +805,18 @@ section#playground
             input(v-model="hideDropdown" type="radio" id="hide_dropdown_false" name="hide_dropdown", :value="false")
             | &nbsp;Disable
 
+      #manualInputTimeout.config-block(v-if="manualInput")
+        h3.subtitle
+          a.anchor #
+          | Customized Manual Input Timeout
+        config-row(is-group)
+          label.options
+            input(v-model="customManualInputTimeout" type="checkbox" @input="toggleManualInputTimeout")
+            | &nbsp;Set Manual Input Timeout
+          label.range-wrapper(v-if="customManualInputTimeout")
+            input(v-model.number="manualInputTimeout" type="range" min="50" max="5000" step="50")
+            span(v-text="manualInputTimeout")
+
       #advancedKeyboard.config-block
         h3.subtitle
           a.anchor #
@@ -824,17 +841,17 @@ section#playground
             input(v-model.number="blurDelay" type="range" min="50" max="1500" step="50")
             span(v-text="blurDelay")
 
-      #manualInputTimeout.config-block(v-if="manualInput")
+      #fixedDropdownBtn.config-block
         h3.subtitle
           a.anchor #
-          | Customized Manual Input Timeout
+          | Fixed Dropdown Button
         config-row(is-group)
-          label.options
-            input(v-model="customManualInputTimeout" type="checkbox" @input="toggleManualInputTimeout")
-            | &nbsp;Set Manual Input Timeout
-          label.range-wrapper(v-if="customManualInputTimeout")
-            input(v-model.number="manualInputTimeout" type="range" min="50" max="5000" step="50")
-            span(v-text="manualInputTimeout")
+          label.options(for="fixed_dd_btn_true")
+            input(v-model="fixedDropdownBtn" type="radio" id="fixed_dd_btn_true" name="fixed_dd_btn", :value="true")
+            | &nbsp;Enable
+          label.options(for="fixed_dd_btn_false")
+            input(v-model="fixedDropdownBtn" type="radio" id="fixed_dd_btn_false" name="fixed_dd_btn", :value="false")
+            | &nbsp;Disable
 
       #skipErrorStyle.config-block
         h3.subtitle
@@ -884,6 +901,7 @@ section#playground
                        :blur-delay="blurDelay"
                        :manual-input-timeout="manualInputTimeout"
                        :hide-clear-button="hideClearBtn"
+                       :fixed-dropdown-button="fixedDropdownBtn"
                        :disabled="disablePicker"
                        :lazy="lazyMode"
                        :auto-scroll="autoScroll"
