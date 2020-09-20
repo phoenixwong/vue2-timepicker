@@ -84,7 +84,8 @@ export default {
         { title: 'Auto-Scroll', anchor: 'autoScroll' },
         { title: 'More Powerful format String', anchor: 'morePowerfulFormat' },
         { title: 'Customized Buttons And Icon', anchor: 'customButtonIcon' },
-        { title: 'Fixed Dropdown Button', anchor: 'fixedDropdownButton' }
+        { title: 'Fixed Dropdown Button', anchor: 'fixedDropdownButton' },
+        { title: 'Drop Direction', anchor: 'dropDirection' }
       ]
     }
   },
@@ -149,7 +150,7 @@ section#mostlyUsedSamples
     template(v-slot:codes)
       highlight-code(lang="html" data-title="HTML")
         pre
-          | &lt;!-- 12-hour sampleaa 1 --&gt;
+          | &lt;!-- 12-hour sample 1 --&gt;
           | &lt;vue-timepicker format="hh:mm A"&gt;&lt;/vue-timepicker&gt;
           | &nbsp;
           | &lt;!-- 12-hour sample 2 --&gt;
@@ -947,6 +948,52 @@ section#mostlyUsedSamples
           template(v-slot:dropdownButton)
             img(src="https://i.postimg.cc/CLkZcW46/custom-clock.png")
 
+  //- Drop Direction
+  sample-block#dropDirection
+    template(v-slot:title) Drop Direction
+    template(v-slot:description)
+      p Change dropdown direction when needed (<code>v1.1.5+</code>).  Accepting values:
+      ul
+        li
+          b down
+          | : Default value.
+        li
+          b up
+          | : Force open the dropdown above the input.
+        li
+          b auto
+          | : Auto detects available height and opens the dropdown on top if there are not enough spaces below the input.
+
+    template(v-slot:codes)
+      highlight-code(lang="html" data-title="HTML")
+        pre
+          | &lt;!-- Drop Direction Up --&gt;
+          | &lt;vue-timepicker drop-direction="up"&gt;&lt;/vue-timepicker&gt;
+          | &nbsp;
+          | &lt;!-- Auto Drop Direction --&gt;
+          | &lt;div id="auto-dropdown-containter"&gt;
+          |   &lt;!-- Defined Container --&gt;
+          |   &lt;vue-timepicker drop-direction="auto" container-id="auto-dropdown-containter"&gt;&lt;/vue-timepicker&gt;
+          |   &lt;!-- Default (document body) --&gt;
+          |   &lt;vue-timepicker drop-direction="auto"&gt;&lt;/vue-timepicker&gt;
+          | &lt;/div&gt;
+    template(v-slot:preview)
+      b Drop Direction Up
+      p
+        vue-timepicker(drop-direction="up")
+      #auto-dropdown-containter
+        .demo-title
+          b Auto Drop Direction
+        .demo-body
+          .inner
+            b Defined Container
+            p
+              vue-timepicker(drop-direction="auto" container-id="auto-dropdown-containter")
+          .inner
+            b Default (document body)
+            p
+              vue-timepicker(drop-direction="auto")
+
   //- Footer Links
   .footer-links
     slot(name="footer-links")
@@ -1006,4 +1053,24 @@ section#mostlyUsedSamples
     height: 2.2em
     padding: 0.3em 0.5em
     font-size: 1em
+  
+  // Drop Direction Demo
+  #auto-dropdown-containter
+    margin-top: 1em
+    padding: 1em
+    background: rgba(0, 0, 0, 0.05)
+    border-radius: 5px
+    .demo-title
+      font-weight: 600
+      padding: 0 0 0.5em 0
+
+    .demo-body
+      display: flex
+      flex-flow: row nowrap
+      justify-content: flex-start
+      align-items: flex-start
+      .inner
+        margin-right: 0.5em
+      b
+        font-weight: normal
 </style>

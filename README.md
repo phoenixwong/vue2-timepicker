@@ -413,6 +413,17 @@ Automatically close the dropdown when the user finishes selecting **all** of the
 <vue-timepicker close-on-complete></vue-timepicker>
 ```
 
+### Auto-Scroll
+
+```html
+<vue-timepicker auto-scroll></vue-timepicker>
+```
+
+Auto-scroll to selected values on dropdown open. It works with both:
+
+- Programmatically defined value. E.g., the initial value from `v-model`
+- Values manually picked by the user.
+
 ### Define Hour Range
 
 Sometimes you may want to limit hours picker to a specific range. The `hour-range` parameter is here to help.
@@ -531,6 +542,57 @@ It makes the dropdown picker hidden by default.
 
 Users can still choose to open the dropdown by clicking the triangle ("&dtrif;") button on the right. _(v.1.1.3+)_
 
+### Fixed Dropdown Button
+
+```html
+<vue-timepicker fixed-dropdown-button></vue-timepicker>
+```
+
+Make the dropdown button always visible in the UI. _(v.1.1.4+)_
+
+### Drop Direction
+
+Change dropdown direction when needed _(v.1.1.5+)_. Accepting values:
+
+- **down**: Default value.
+- **up**: Force open the dropdown above the input.
+- **auto**: Auto detects available height and opens the dropdown on top if there are not enough spaces below the input.
+
+```html
+<!-- Force drop up -->
+<vue-timepicker drop-direction="up"></vue-timepicker>
+
+<!-- Auto drop direction  -->
+<vue-timepicker drop-direction="auto"></vue-timepicker>
+```
+
+#### Container ID
+
+Works with `drop-direction="auto"`. It defines the parent container where the timepicker should calculate the free spaces from. If this value is not set, timepicker will watch `document.body` instead.
+
+```html
+<!-- Parent Container ID: "auto-dropdown-containter" -->
+<div id="auto-dropdown-containter">
+  <!-- Defined Container -->
+  <vue-timepicker drop-direction="auto" container-id="auto-dropdown-containter"></vue-timepicker>
+
+  <!-- Default (document body) -->
+  <vue-timepicker drop-direction="auto"></vue-timepicker>
+</div>
+```
+
+#### Drop Offset Height
+
+Works with `drop-direction="auto"` either. Defaults to `160` (unit: _px_) if the value is not set.
+
+```html
+<!--
+  When the available bottom space is less than 200px,
+  open the dropdown above the input.
+-->
+<vue-timepicker drop-direction="auto" :drop-offset-height="200"></vue-timepicker>
+```
+
 
 ### Lazy Event Mode
 
@@ -544,18 +606,6 @@ When `lazy` event mode is toggled on, only an actual user behavior can trigger t
 - The user clicked the ("&times;") clear button
 
 In other words, on `lazy` mode, Timepicker won't emit `input` and `change` events on mounted, nor after the value got modified programmatically.
-
-### Auto-Scroll
-
-```html
-<vue-timepicker auto-scroll></vue-timepicker>
-```
-
-Auto-scroll to selected values on dropdown open. It works with both:
-
-- Programmatically defined value. E.g., the initial value from `v-model`
-- Values manually picked by the user.
-
 
 ### Enable Debug Mode
 
@@ -603,6 +653,7 @@ Prop                      | Type               | Required | Default Value
 **hide-clear-button**     | _Boolean_          | no       | false
 **disabled**              | _Boolean_          | no       | false
 **close-on-complete**     | _Boolean_          | no       | false
+**auto-scroll**           | _Boolean_          | no       | false
 **hour-range**            | _Array_            | no       | _undefined_
 **minute-range**          | _Array_            | no       | _undefined_
 **second-range**          | _Array_            | no       | _undefined_
@@ -615,8 +666,11 @@ Prop                      | Type               | Required | Default Value
 **manual-input**          | _Boolean_          | no       | false
 **manual-input-timeout**  | _Number_           | no       | 1000
 **hide-dropdown**         | _Boolean_          | no       | false
+**fixed-dropdown-button** | _Boolean_          | no       | false
+**drop-direction**        | _String_           | no       | "down"
+**container-id**          | _String_           | no       | _undefined_
+**drop-offset-height**    | _Number_           | no       | 160
 **lazy**                  | _Boolean_          | no       | false
-**auto-scroll**           | _Boolean_          | no       | false
 **debug-mode**            | _Boolean_          | no       | false
 
 
