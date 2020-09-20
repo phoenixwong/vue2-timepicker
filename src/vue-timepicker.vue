@@ -21,7 +21,8 @@ const DEFAULT_OPTIONS = {
   advancedKeyboard: false,
   hideDropdown: false,
   blurDelay: 300,
-  manualInputTimeout: 1000
+  manualInputTimeout: 1000,
+  dropOffsetHeight: 160
 }
 
 export default {
@@ -66,6 +67,10 @@ export default {
     lazy: { type: Boolean, default: false },
     autoScroll: { type: Boolean, default: false },
 
+    dropDirection: { type: String, default: 'down' },
+    dropOffsetHeight: { type: [ Number, String ] },
+    containerId: { type: String },
+
     manualInput: { type: Boolean, default: false },
     manualInputTimeout: { type: [ Number, String ] },
     hideDropdown: { type: Boolean, default: false },
@@ -103,7 +108,8 @@ export default {
       selectionTimer: undefined,
       kbInputTimer: undefined,
       kbInputLog: '',
-      bakCurrentPos: null
+      bakCurrentPos: undefined,
+      forceDropOnTop: false
     }
   },
 
@@ -202,6 +208,10 @@ export default {
 
       if (this.manualInputTimeout && +this.manualInputTimeout > 0) {
         options.manualInputTimeout = +this.manualInputTimeout
+      }
+
+      if (this.dropOffsetHeight && +this.dropOffsetHeight > 0) {
+        options.dropOffsetHeight = +this.dropOffsetHeight
       }
 
       return options
@@ -538,6 +548,17 @@ export default {
 
     hasInvalidInput () {
       return Boolean(this.invalidValues && this.invalidValues.length)
+    },
+
+    autoDirectionEnabled () {
+      return this.dropDirection === 'auto'
+    },
+
+    dropdownDirClass () {
+      if (this.autoDirectionEnabled) {
+        return this.forceDropOnTop ? 'drop-up' : 'drop-down'
+      }
+      return this.dropDirection === 'up' ? 'drop-up' : 'drop-down'      
     }
   },
 
@@ -1135,9 +1156,12 @@ export default {
     },
 
     setDropdownState (toShow, fromUserClick = false) {
-      this.showDropdown = toShow
       if (toShow) {
         this.keepFocusing()
+        if (this.autoDirectionEnabled) {
+          this.checkDropDirection()
+        }
+        this.showDropdown = true
         this.$emit('open') 
         if (fromUserClick) {
           if (this.fixedDropdownButton) {
@@ -1147,6 +1171,7 @@ export default {
           this.checkForAutoScroll()
         }
       } else {
+        this.showDropdown = false
         this.$emit('close')
       }
     },
@@ -1750,6 +1775,28 @@ export default {
       return inputString
     },
 
+    checkDropDirection () {
+      if (!this.$el) { return }
+      let container
+      if (this.containerId && this.containerId.length) {
+        container = document.getElementById(this.containerId)
+        if (!container && this.debugMode) {
+          this.debugLog(`Container with id "${this.containerId}" not found. Fallback to document body.`)
+        }
+      }
+      const el = this.$el
+      let spaceDown
+      if (container && container.offsetHeight) {
+        // Valid container found
+        spaceDown = (container.offsetTop + container.offsetHeight) - (el.offsetTop + el.offsetHeight)
+      } else {
+        // Fallback to document body
+        const docHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight, document.body.offsetHeight, document.documentElement.offsetHeight, document.body.clientHeight, document.documentElement.clientHeight)
+        spaceDown = docHeight - (el.offsetTop + el.offsetHeight)
+      }
+      this.forceDropOnTop = this.opts.dropOffsetHeight > spaceDown
+    },
+
     //
     // Helpers
     //
@@ -1924,7 +1971,9 @@ export default {
   </div>
   <div class="custom-icon" v-if="$slots && $slots.icon"><slot name="icon"></slot></div>
   <div class="time-picker-overlay" v-if="showDropdown" @click="toggleActive" tabindex="-1"></div>
-  <div class="dropdown" v-show="showDropdown" :style="inputWidthStyle" tabindex="-1" @mouseup="keepFocusing" @click.stop="">
+  <div class="dropdown" v-show="showDropdown" tabindex="-1"
+       :class="[dropdownDirClass]" :style="inputWidthStyle"
+       @mouseup="keepFocusing" @click.stop="">
     <div class="select-list" :style="inputWidthStyle" tabindex="-1">
       <!-- Common Keyboard Support: less event listeners -->
       <template v-if="!advancedKeyboard">
@@ -2220,6 +2269,11 @@ export default {
   width: 10em;
   height: 10em;
   font-weight: normal;
+}
+
+.vue__time-picker .dropdown.drop-up {
+  top: auto;
+  bottom: calc(2.2em + 1px);
 }
 
 .vue__time-picker .dropdown .select-list {
