@@ -2,6 +2,13 @@
 
 > The Change Log of Vue2 Timepicker `vue2-timepicker`
 
+## v 1.1.5
+
+### New
+
+- Support changing dropdown direction with the `drop-direction` property. It accepts three string values: `"up"`, `"auto"` and `"down"` _(default)_.
+- Additional `container-id` and `drop-offset-height` as helpers for the **"auto"** drop direction. Please check the documentation for more info.
+
 ## v 1.1.4
 
 ### New
