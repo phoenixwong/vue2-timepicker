@@ -839,9 +839,9 @@ Event          | Arguments      | Description
 **input**      | (_value_)      | Emit after value changes
 **change**     | (_eventData_)  | Emit after value changes
 **open**       | &nbsp;         | Emit when the dropdown opens
-**close**      | &nbsp;         | Emit when the dropdown closes
+**close**      | (_eventData_)  | Emit when the dropdown closes
 **focus**      | &nbsp;         | Emit when the user start focusing on the `<input>`
-**blur**       | &nbsp;         | Emit when the user blurs the `<input>`
+**blur**       | (_eventData_)  | Emit when the user blurs the `<input>`
 **error**      | (_eventData_)  | Emit when the input value becomes invalid
 
 ### The `open` and `close` Event of the Dropdown Picker
