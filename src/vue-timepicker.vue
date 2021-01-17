@@ -1440,6 +1440,11 @@ export default {
       } else if (evt.keyCode === 9) {
         this.clearKbInputLog()
         this.tabHandler(evt)
+      // Colon|Space
+      } else if (evt.keyCode === 186 || evt.keyCode === 32) {
+        evt.preventDefault()
+        this.clearKbInputLog()
+        this.toNextSlot()
       // Prevent any Non-ESC and non-pasting inputs
       } else if (evt.keyCode !== 27 && !(evt.metaKey || evt.ctrlKey)) {
         evt.preventDefault()
@@ -1732,6 +1737,17 @@ export default {
     selectFirstSlot () {
       const firstChunkPos = this.getNearestChunkByPos(0)
       this.debounceSetInputSelection(firstChunkPos)
+    },
+
+    toNextSlot () {
+      if (!this.inputIsEmpty && this.tokenChunksPos && this.tokenChunksPos.length) {
+        const currentChunk = this.getCurrentTokenChunk()
+        if (!currentChunk) { return }
+        const lastChunk = this.tokenChunksPos[this.tokenChunksPos.length - 1]
+        if (currentChunk.token !== lastChunk.token) {
+          this.toLateralToken(false)
+        }
+      }
     },
 
     toLateralToken (toLeft) {
