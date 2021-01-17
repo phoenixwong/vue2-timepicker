@@ -2,6 +2,17 @@
 
 > The Change Log of Vue2 Timepicker `vue2-timepicker`
 
+## v 1.1.6
+
+### New
+
+- Support appending the dropdown menu to the document body with `append-to-body`
+
+### Improvements
+
+- In Manual Input mode, support jumping to the next token slot with a colon (`:`) or space (` `) key.
+- Return full data on `blur` and `close` events as per the `change` event.
+
 ## v 1.1.5
 
 ### New

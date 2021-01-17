@@ -74,6 +74,7 @@ export default {
       lazyMode: false,
       autoScroll: false,
       skipErrorStyle: false,
+      appendToBody: false,
       debugMode: false,
 
       customBlurDelay: false,
@@ -218,6 +219,10 @@ export default {
 
       if (this.autoScroll) {
         start += ('\n  auto-scroll')
+      }
+
+      if (this.appendToBody) {
+        start += ('\n  append-to-body')
       }
 
       if (this.disablePicker) {
@@ -865,6 +870,18 @@ section#playground
             input(v-model="skipErrorStyle" type="radio" id="skip_error_false" name="skip_error", :value="false")
             | &nbsp;Disable
 
+      #appendToBody.config-block
+        h3.subtitle
+          a.anchor #
+          | Append To Body
+        config-row(is-group)
+          label.options(for="append_to_body_true")
+            input(v-model="appendToBody" type="radio" id="append_to_body_true" name="append_to_body", :value="true")
+            | &nbsp;Enable
+          label.options(for="append_to_body_false")
+            input(v-model="appendToBody" type="radio" id="append_to_body_false" name="append_to_body", :value="false")
+            | &nbsp;Disable
+
       #debugMode.config-block
         h3.subtitle
           a.anchor #
@@ -905,6 +922,7 @@ section#playground
                        :disabled="disablePicker"
                        :lazy="lazyMode"
                        :auto-scroll="autoScroll"
+                       :append-to-body="appendToBody"
                        :debug-mode="debugMode"
                        :input-class="skipErrorStyle ? 'skip-error-style' : null"
                        @change="changeHandler"

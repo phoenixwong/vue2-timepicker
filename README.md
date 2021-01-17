@@ -593,7 +593,6 @@ Works with `drop-direction="auto"` either. Defaults to `160` (unit: _px_) if the
 <vue-timepicker drop-direction="auto" :drop-offset-height="200"></vue-timepicker>
 ```
 
-
 ### Lazy Event Mode
 
 ```html
@@ -604,8 +603,43 @@ When `lazy` event mode is toggled on, only an actual user behavior can trigger t
 
 - The user opened the dropdown and picked a new value
 - The user clicked the ("&times;") clear button
+- The user inputted a new value or clear the existing value in the Manual Input mode
 
 In other words, on `lazy` mode, Timepicker won't emit `input` and `change` events on mounted, nor after the value got modified programmatically.
+
+
+### Append To Body
+
+Append the dropdown menu to the end of the document `<body>`. Try this if you have `z-index` or `overflow` layout issue with the dropdown.
+
+```html
+<vue-timepicker append-to-body></vue-timepicker>
+```
+
+The body-appended dropdown's CSS class is `vue__time-picker-dropdown`. Its default `z-index` is `100`. You can change the value by adding the following style in your app -- 
+
+```css
+/* E.g. set the z-index to 5000 */
+.vue__time-picker-dropdown {
+  z-index: 5000;
+}
+```
+
+**NOTE**: If you have to override some of the CSS styles within the dropdown, you will need to update their selectors' class names as well. Simply change any `.vue__time-picker .dropdown` selector to `.vue__time-picker-dropdown`.
+
+For example, when you have a customized background color set for selected values:
+
+```css
+/* Default override (not using "append-to-body") */
+.vue__time-picker .dropdown ul li:not([disabled]).active {
+  background: steelblue;
+}
+
+/* When using "append-to-body" */
+.vue__time-picker-dropdown ul li:not([disabled]).active {
+  background: steelblue;
+}
+```
 
 ### Enable Debug Mode
 
@@ -671,6 +705,7 @@ Prop                      | Type               | Required | Default Value
 **container-id**          | _String_           | no       | _undefined_
 **drop-offset-height**    | _Number_           | no       | 160
 **lazy**                  | _Boolean_          | no       | false
+**append-to-body**        | _Boolean_          | no       | false
 **debug-mode**            | _Boolean_          | no       | false
 
 
