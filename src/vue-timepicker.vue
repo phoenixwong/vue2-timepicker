@@ -953,9 +953,17 @@ export default {
       }
     },
 
-    emitTimeValue () {
-      if (!this.fullValues) { return }
+    getFullData () {
+      if (!this.fullValues) {
+        this.fillValues()
+      }
+      return {
+        data: JSON.parse(JSON.stringify(this.fullValues)),
+        displayTime: this.inputIsEmpty ? '' : String(this.displayTime)
+      }
+    },
 
+    emitTimeValue () {
       if (this.lazy && this.bakDisplayTime === this.displayTime) {
         if (this.debugMode) {
           this.debugLog('The value does not change on `lazy` mode. Skip the emitting `input` and `change` event.')
@@ -963,11 +971,12 @@ export default {
         return
       }
 
-      const fullValues = JSON.parse(JSON.stringify(this.fullValues))
+      const fullData = this.getFullData()
 
       if (this.useStringValue) {
-        this.$emit('input', this.inputIsEmpty ? '' : String(this.displayTime))
+        this.$emit('input', fullData.displayTime)
       } else {
+        const fullValues = fullData.data
         const tokensInUse = this.inUse.tokens || []
         const timeValue = {}
         tokensInUse.forEach((token) => {
@@ -976,10 +985,7 @@ export default {
         this.$emit('input', JSON.parse(JSON.stringify(timeValue)))
       }
 
-      this.$emit('change', {
-        data: fullValues,
-        displayTime: this.inputIsEmpty ? '' : String(this.displayTime)
-      })
+      this.$emit('change', fullData)
     },
 
     translate12hRange (value) {
@@ -1138,7 +1144,7 @@ export default {
         if (this.showDropdown) {
           this.setDropdownState(false)
         } else if (this.manualInput) {
-          this.$emit('blur')
+          this.$emit('blur', this.getFullData())
         }
         this.isFocusing = false
         if (this.lazy) {
@@ -1170,12 +1176,12 @@ export default {
           if (this.fixedDropdownButton) {
             this.isActive = true
           }
-          this.$emit('blur')
+          this.$emit('blur', this.getFullData())
           this.checkForAutoScroll()
         }
       } else {
         this.showDropdown = false
-        this.$emit('close')
+        this.$emit('close', this.getFullData())
         if (this.appendToBody) {
           this.removeDropdownFromBody()
         }
@@ -1229,7 +1235,7 @@ export default {
     blurEvent () {
       if (this.manualInput && !this.opts.hideDropdown) {
         // hideDropdown's `blur` event is handled somewhere else
-        this.$emit('blur')
+        this.$emit('blur', this.getFullData())
       }
     },
 
