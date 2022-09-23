@@ -52,6 +52,7 @@ export default {
     tabindex: { type: [ Number, String ], default: 0 },
     inputWidth: { type: String },
     autocomplete: { type: String, default: 'off' },
+    inputOptions: { type: Object, default: () => ({})},
 
     hourLabel: { type: String },
     minuteLabel: { type: String },
@@ -2056,6 +2057,7 @@ export default {
          :disabled="disabled"
          :readonly="!manualInput"
          :autocomplete="autocomplete"
+         v-bind="inputOptions"
          @focus="onFocus"
          @change="onChange"
          @blur="debounceBlur(); blurEvent()"
