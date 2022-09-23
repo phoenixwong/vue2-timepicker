@@ -2045,7 +2045,7 @@ export default {
 
 <template>
 <span class="vue__time-picker time-picker" :style="inputWidthStyle">
-  <input type="text" class="display-time" ref="input"
+  <input type="time" class="display-time" ref="input"
          :class="[inputClass, {'is-empty': inputIsEmpty, 'invalid': hasInvalidInput, 'all-selected': allValueSelected, 'disabled': disabled, 'has-custom-icon': $slots && $slots.icon }]"
          :style="inputWidthStyle"
          :id="id"
@@ -2249,7 +2249,6 @@ export default {
   position: relative;
   font-size: 1em;
   width: 10em;
-  font-family: sans-serif;
   vertical-align: middle;
 }
 
@@ -2261,7 +2260,6 @@ export default {
   border: 1px solid #d2d2d2;
   width: 10em;
   height: 2.2em;
-  padding: 0.3em 0.5em;
   font-size: 1em;
 }
 
@@ -2459,7 +2457,7 @@ export default {
 .vue__time-picker-dropdown ul li:not([disabled]).active,
 .vue__time-picker-dropdown ul li:not([disabled]).active:hover,
 .vue__time-picker-dropdown ul li:not([disabled]).active:focus {
-  background: #41B883;
+  background: #0375ff;
   color: #fff;
 }
 
